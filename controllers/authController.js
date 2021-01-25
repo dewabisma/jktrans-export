@@ -32,4 +32,4 @@ const logoutUser = async (req, res) => {
   res.redirect('/');
 };
 
-export { logoutUser, authUser };
+module.exports = { logoutUser, authUser };
