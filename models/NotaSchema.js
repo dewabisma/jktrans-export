@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const barangSchema = require('./BarangSchema');
 
 const notaSchema = mongoose.Schema(
   {
@@ -19,7 +20,7 @@ const notaSchema = mongoose.Schema(
       type: String,
       required: [true, 'alamat penerima tidak boleh kosong'],
     },
-    detailBarang: [BarangSchema],
+    detailBarang: [barangSchema],
     totalColli: {
       type: Number,
       required: [true, 'kolom colli tidak boleh kosong'],

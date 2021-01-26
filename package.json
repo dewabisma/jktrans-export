@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "data:import": "node data/seedTestData",
+    "data:destroy": "node data/seedTestData -d"
   },
   "author": "Dewa Bisma & Eka Laksamana",
   "license": "ISC",
