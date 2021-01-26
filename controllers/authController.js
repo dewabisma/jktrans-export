@@ -20,7 +20,30 @@ const authUser = async (req, res) => {
 
     res.json({ user: user._id });
   } else {
-    res.status(400).json({ message: 'Incorrect username or password' });
+    res.status(400).json({ message: 'Username atau password salah' });
+  }
+};
+
+// @desc    register new user
+// @route   POST /register
+// @access  Super User Only
+const registerUser = async (req, res) => {
+  const { username, password, alamat, noHP, NIK } = req.body;
+
+  const newUser = {
+    username,
+    password,
+    alamat,
+    noHP,
+    NIK,
+  };
+
+  const createdUser = await User.create(newUser);
+
+  if (createdUser) {
+    res.status(201).json({ message: 'Sukses membuat user baru', createdUser });
+  } else {
+    res.json({ message: 'Gagal membuat user' });
   }
 };
 
@@ -32,4 +55,4 @@ const logoutUser = async (req, res) => {
   res.redirect('/');
 };
 
-module.exports = { logoutUser, authUser };
+module.exports = { logoutUser, authUser, registerUser };

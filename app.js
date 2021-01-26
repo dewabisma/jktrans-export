@@ -1,7 +1,7 @@
 const express = require('express');
 const ejs = require('ejs');
 const cookieParser = require('cookie-parser');
-const { connectDB } = require('./config/db.js');
+const connectDB = require('./config/db.js');
 const { requireAuth, checkUser } = require('./middleware/authMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const pageRoutes = require('./routes/pageRoutes');

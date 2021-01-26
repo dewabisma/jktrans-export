@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = mongoose.Schema({
-  name: {
+  username: {
     type: String,
     required: true,
     unique: true,
@@ -12,17 +12,23 @@ const userSchema = mongoose.Schema({
     required: [true, 'Please enter a password'],
     minlength: [6, 'Minimum password length is 6 characters'],
   },
-  address: {
+  alamat: {
     type: String,
     required: true,
   },
-  telephone: {
+  noHP: {
     type: String,
     required: true,
   },
   NIK: {
     type: String,
     required: true,
+    unique: true,
+  },
+  isSuperUser: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
 });
 
