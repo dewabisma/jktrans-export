@@ -7,6 +7,7 @@ const users = [
     alamat: 'bangli',
     noHP: '123456789',
     NIK: '0981234753',
+    cabang: 'Super User',
     isSuperUser: true,
   },
   {
@@ -15,6 +16,7 @@ const users = [
     alamat: 'bangli',
     noHP: '123456789',
     NIK: '0981234752',
+    cabang: 'BALI',
   },
   {
     username: 'nengah',
@@ -22,6 +24,7 @@ const users = [
     alamat: 'bangli',
     noHP: '1234567891',
     NIK: '0981234751',
+    cabang: 'SBY',
   },
 ];
 

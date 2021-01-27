@@ -5,6 +5,7 @@ const connectDB = require('./config/db.js');
 const { requireAuth, checkUser } = require('./middleware/authMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const pageRoutes = require('./routes/pageRoutes');
+const notaRoutes = require('./routes/notaRoutes');
 
 require('dotenv').config();
 
@@ -24,6 +25,7 @@ app.use(express.static('public'));
 
 // Routes
 app.use('*', checkUser);
+app.use(notaRoutes);
 app.use(pageRoutes);
 app.use(authRoutes);
 

@@ -6,7 +6,12 @@ const notaSchema = mongoose.Schema(
     pegawai: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'User',
+      ref: 'user',
+    },
+    cabang: {
+      type: String,
+      required: [true, 'cabang tidak boleh kosong'],
+      enum: ['SBY', 'BALI', 'Super User'],
     },
     namaPengirim: {
       type: String,

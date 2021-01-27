@@ -1,5 +1,6 @@
 const nota = [
   {
+    cabang: 'SBY',
     namaPengirim: 'Testing',
     namaPenerima: 'ngTEST',
     alamatPenerima: 'ngetes doang ini kok',
@@ -36,6 +37,7 @@ const nota = [
     totalHarga: 99999999999,
   },
   {
+    cabang: 'BALI',
     namaPengirim: 'Testing2',
     namaPenerima: 'ngTEST2',
     alamatPenerima: 'ngetes doang ini kok',
@@ -72,6 +74,7 @@ const nota = [
     totalHarga: 9999999999,
   },
   {
+    cabang: 'SBY',
     namaPengirim: 'Testing3',
     namaPenerima: 'ngTEST3',
     alamatPenerima: 'ngetes doang ini kok3',

@@ -5,9 +5,9 @@ const generateToken = require('../utils/generateToken');
 // @route   POST /login
 // @access  Public
 const authUser = async (req, res) => {
-  const { name, password } = req.body;
+  const { username, password } = req.body;
 
-  const user = User.findOne({ name: name });
+  const user = await User.findOne({ username });
 
   if (user && (await user.matchPassword(password))) {
     const token = generateToken(user._id);
@@ -18,7 +18,7 @@ const authUser = async (req, res) => {
       sameSite: 'strict',
     });
 
-    res.json({ user: user._id });
+    res.json({ authToken: token });
   } else {
     res.status(400).json({ message: 'Username atau password salah' });
   }

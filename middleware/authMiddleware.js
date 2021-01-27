@@ -40,4 +40,44 @@ const checkUser = (req, res, next) => {
   }
 };
 
-module.exports = { requireAuth, checkUser };
+const protect = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    try {
+      token = req.headers.authorization.split(' ')[1];
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      req.user = await User.findById(decoded.id).select('-password');
+      next();
+    } catch (error) {
+      res.status(401);
+      res.json({ message: 'Not authorized, token failed', error });
+    }
+  }
+
+  if (!token) {
+    res.status(401);
+    res.json({ message: 'Not authorized, no token' });
+  }
+};
+
+const superUser = (req, res, next) => {
+  if (req.user && req.user.isSuperUser) {
+    next();
+  } else {
+    res.status(401);
+    res.json({ message: 'Not authorized as a Super User' });
+  }
+};
+
+module.exports = {
+  requireAuth,
+  checkUser,
+  protect,
+  superUser,
+};

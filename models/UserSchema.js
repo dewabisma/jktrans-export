@@ -25,6 +25,11 @@ const userSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  cabang: {
+    type: String,
+    required: [true, 'cabang tidak boleh kosong'],
+    enum: ['SBY', 'BALI', 'Super User'],
+  },
   isSuperUser: {
     type: Boolean,
     required: true,
