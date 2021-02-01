@@ -5,14 +5,22 @@ const users = require('./user.js');
 const nota = require('./nota.js');
 const User = require('../models/userSchema.js');
 const Nota = require('../models/notaSchema.js');
+const RekapanNota = require('../models/RekapanSchema.js');
+const Sequence = require('../models/SequenceSchema.js');
 const connectDB = require('../config/db.js');
 
 connectDB();
 
 const importData = async () => {
   try {
+    // Clear collection first
     await Nota.deleteMany();
     await User.deleteMany();
+    await RekapanNota.deleteMany();
+    await Sequence.deleteMany();
+
+    // Create counter for id
+    await Sequence.create({ _id: 'counter', sequenceNota: 3 });
 
     const createdUsers = await User.insertMany(users);
 
@@ -22,7 +30,25 @@ const importData = async () => {
       return { ...contohNota, pegawai: adminUser };
     });
 
-    await Nota.insertMany(sampleNota);
+    const allSampleNota = await Nota.insertMany(sampleNota);
+
+    let sampleDetailRekapanNota = allSampleNota.map((notanya) => {
+      return {
+        nota: notanya._id,
+        colli: notanya.totalColli,
+        berat: notanya.totalBerat,
+        confrankert: notanya.totalHarga,
+        penerimaBarang: notanya.namaPenerima,
+      };
+    });
+
+    const sampleRekapan = {
+      sopirPengirim: 'wayan',
+      noPolis: 'AB-2123',
+      detailRekapanNota: sampleDetailRekapanNota,
+    };
+
+    await RekapanNota.create(sampleRekapan);
 
     console.log('Data Imported!'.green.inverse);
     process.exit();

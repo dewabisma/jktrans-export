@@ -6,6 +6,7 @@ const { requireAuth, checkUser } = require('./middleware/authMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const pageRoutes = require('./routes/pageRoutes');
 const notaRoutes = require('./routes/notaRoutes');
+const rekapanRoutes = require('./routes/rekapanRoutes');
 
 require('dotenv').config();
 
@@ -28,6 +29,7 @@ app.use('*', checkUser);
 app.use(notaRoutes);
 app.use(pageRoutes);
 app.use(authRoutes);
+app.use(rekapanRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, console.log(`Server is running at port ${PORT}`));

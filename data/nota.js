@@ -1,5 +1,6 @@
 const nota = [
   {
+    noNota: 1,
     cabang: 'SBY',
     namaPengirim: 'Testing',
     namaPenerima: 'ngTEST',
@@ -34,9 +35,11 @@ const nota = [
       },
     ],
     totalColli: 123,
+    totalBerat: 9999,
     totalHarga: 99999999999,
   },
   {
+    noNota: 2,
     cabang: 'BALI',
     namaPengirim: 'Testing2',
     namaPenerima: 'ngTEST2',
@@ -71,9 +74,11 @@ const nota = [
       },
     ],
     totalColli: 1234,
+    totalBerat: 12345,
     totalHarga: 9999999999,
   },
   {
+    noNota: 3,
     cabang: 'SBY',
     namaPengirim: 'Testing3',
     namaPenerima: 'ngTEST3',
@@ -108,6 +113,7 @@ const nota = [
       },
     ],
     totalColli: 1234,
+    totalBerat: 8763,
     totalHarga: 8888888888,
   },
 ];

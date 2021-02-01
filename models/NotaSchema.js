@@ -1,8 +1,12 @@
 const mongoose = require('mongoose');
 const barangSchema = require('./BarangSchema');
+const Sequence = require('./SequenceSchema');
 
 const notaSchema = mongoose.Schema(
   {
+    noNota: {
+      type: Number,
+    },
     pegawai: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
@@ -28,17 +32,42 @@ const notaSchema = mongoose.Schema(
     detailBarang: [barangSchema],
     totalColli: {
       type: Number,
-      required: [true, 'kolom colli tidak boleh kosong'],
+      required: [true, 'total colli tidak boleh kosong'],
+    },
+    totalBerat: {
+      type: Number,
+      required: [true, 'total berat tidak boleh kosong'],
     },
     totalHarga: {
       type: Number,
-      required: [true, 'kolom biaya tidak boleh kosong'],
+      required: [true, 'total harga tidak boleh kosong'],
     },
   },
   {
     timestamps: true,
   }
 );
+
+notaSchema.pre('save', async function (next) {
+  if (!this.isNew) {
+    console.log(this.isNew);
+    next();
+  } else {
+    try {
+      let doc = this;
+
+      const sequence = await Sequence.findById({ _id: 'counter' });
+      sequence.sequenceNota += 1;
+      await sequence.save();
+
+      doc.noNota = sequence.sequenceNota;
+
+      next();
+    } catch (error) {
+      return next(error);
+    }
+  }
+});
 
 const Nota = mongoose.model('nota', notaSchema);
 

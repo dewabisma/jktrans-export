@@ -64,6 +64,7 @@ const createNewNota = async (req, res) => {
       alamatPenerima,
       detailBarang,
       totalColli,
+      totalBerat,
       totalHarga,
     },
   } = req;
@@ -76,6 +77,7 @@ const createNewNota = async (req, res) => {
     detailBarang,
     totalColli,
     totalHarga,
+    totalBerat,
     cabang: user.cabang,
   };
 
