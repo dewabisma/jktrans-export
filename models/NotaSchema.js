@@ -50,7 +50,6 @@ const notaSchema = mongoose.Schema(
 
 notaSchema.pre('save', async function (next) {
   if (!this.isNew) {
-    console.log(this.isNew);
     next();
   } else {
     try {

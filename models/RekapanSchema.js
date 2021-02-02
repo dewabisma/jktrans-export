@@ -21,7 +21,6 @@ const rekapanSchema = mongoose.Schema(
 
 rekapanSchema.pre('save', async function (next) {
   if (!this.isNew) {
-    console.log(this.isNew);
     next();
   } else {
     try {
