@@ -118,4 +118,4 @@ const nota = [
   },
 ];
 
-module.exports = nota;
+export default nota;

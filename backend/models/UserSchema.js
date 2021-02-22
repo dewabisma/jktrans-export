@@ -30,6 +30,11 @@ const userSchema = mongoose.Schema({
     required: [true, 'cabang tidak boleh kosong'],
     enum: ['SBY', 'BALI', 'Super User'],
   },
+  isBanned: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   isSuperUser: {
     type: Boolean,
     required: true,
