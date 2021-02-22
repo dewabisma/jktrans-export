@@ -1,14 +1,14 @@
-const mongoose = require('mongoose');
-require('dotenv').config();
-const colors = require('colors');
-const users = require('./user.js');
-const nota = require('./nota.js');
-const User = require('../models/userSchema.js');
-const Nota = require('../models/notaSchema.js');
-const RekapanNota = require('../models/RekapanSchema.js');
-const Sequence = require('../models/SequenceSchema.js');
-const connectDB = require('../config/db.js');
+import dotenv from 'dotenv';
+import colors from 'colors';
+import users from './user.js';
+import nota from './nota.js';
+import User from '../models/UserSchema.js';
+import Nota from '../models/NotaSchema.js';
+import RekapanNota from '../models/RekapanSchema.js';
+import Sequence from '../models/SequenceSchema.js';
+import connectDB from '../config/db.js';
 
+dotenv.config();
 connectDB();
 
 const importData = async () => {

@@ -1,18 +1,20 @@
-import { Router } from 'express';
+import express from 'express';
 import {
   getAllNota,
   getNotaById,
   deleteNotaById,
   createNewNota,
-} from '../controllers/notaController';
-import { protect, superUser } from '../middleware/authMiddleware';
+  editNotaById,
+} from '../controllers/notaController.js';
+import { protect, superUser } from '../middleware/authMiddleware.js';
 
-const router = Router();
+const router = express.Router();
 
 router.route('/').get(protect, getAllNota).post(protect, createNewNota);
 router
-  .route('/:id')
+  .route('/:notaId')
   .get(protect, getNotaById)
+  .put(protect, superUser, editNotaById)
   .delete(protect, superUser, deleteNotaById);
 
 export default router;

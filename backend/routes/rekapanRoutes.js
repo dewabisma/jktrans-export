@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { protect, superUser } from '../middleware/authMiddleware';
+import express from 'express';
+import { protect, superUser } from '../middleware/authMiddleware.js';
 import {
   getAllRekapan,
   createNewRekapan,
@@ -7,9 +7,9 @@ import {
   updateRekapan,
   changeRekapanStatusToDelivered,
   changeRekapanStatusToPaid,
-} from '../controllers/rekapanController';
+} from '../controllers/rekapanController.js';
 
-const router = Router();
+const router = express.Router();
 
 router.route('/').get(protect, getAllRekapan).post(protect, createNewRekapan);
 router

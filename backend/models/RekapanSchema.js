@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import rekapNotaSchema from './RekapNotaSchema';
-import Sequence from './SequenceSchema';
+import rekapNotaSchema from './RekapNotaSchema.js';
+import Sequence from './SequenceSchema.js';
 
 const rekapanSchema = mongoose.Schema(
   {

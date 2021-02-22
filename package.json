@@ -2,7 +2,7 @@
   "name": "jktrans-export",
   "version": "0.1.0",
   "description": "Aplikasi pembukuan transaksi jktrans",
-  "main": "app.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node backend/server",

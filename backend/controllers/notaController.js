@@ -1,4 +1,4 @@
-import Nota from '../models/NotaSchema';
+import Nota from '../models/NotaSchema.js';
 import asyncHandler from 'express-async-handler';
 
 // @desc    get all nota
@@ -19,10 +19,10 @@ const getAllNota = asyncHandler(async (req, res) => {
 });
 
 // @desc    get nota by Id
-// @route   GET /nota/:id
+// @route   GET /nota/:notaId
 // @access  Private
 const getNotaById = asyncHandler(async (req, res) => {
-  const nota = await Nota.findById(req.params.id).populate(
+  const nota = await Nota.findById(req.params.notaId).populate(
     'pegawai',
     '-password'
   );
@@ -35,10 +35,10 @@ const getNotaById = asyncHandler(async (req, res) => {
 });
 
 // @desc    delete nota by Id
-// @route   DELETE /nota/:id
+// @route   DELETE /nota/:notaId
 // @access  Private
 const deleteNotaById = asyncHandler(async (req, res) => {
-  const nota = await Nota.findById(req.params.id);
+  const nota = await Nota.findById(req.params.notaId);
 
   if (nota) {
     const deletedNota = await nota.remove();
@@ -90,4 +90,41 @@ const createNewNota = asyncHandler(async (req, res) => {
   }
 });
 
-export { getAllNota, getNotaById, deleteNotaById, createNewNota };
+// @desc    edit nota by ID
+// @route   /api/nota/:notaId/edit
+// @access  Private (super user only)
+const editNotaById = asyncHandler(async (req, res) => {
+  const {
+    user,
+    body: {
+      namaPengirim,
+      namaPenerima,
+      alamatPenerima,
+      detailBarang,
+      totalColli,
+      totalBerat,
+      totalHarga,
+    },
+  } = req;
+
+  const nota = await Nota.findById(req.params.notaId);
+  if (nota) {
+    nota.namaPengirim = namaPengirim || nota.namaPengirim;
+    nota.namaPenerima = namaPenerima || nota.namaPenerima;
+    nota.alamatPengirim = alamatPenerima || nota.alamatPenerima;
+    nota.detailBarang = detailBarang || nota.detailBarang;
+    nota.totalColli = totalColli || nota.totalColli;
+    nota.totalBerat = totalBerat || nota.totalBerat;
+    nota.totalHarga = totalHarga || nota.totalHarga;
+
+    const updatedNota = await nota.save();
+    res.json({
+      message: `Nota dengan nomor nota ${updatedNota.noNota} telah berhasil diubah`,
+    });
+  } else {
+    res.status(404);
+    throw new Error(`Nota dengan id ${req.params.notaId} tidak ditemukan`);
+  }
+});
+
+export { getAllNota, getNotaById, deleteNotaById, createNewNota, editNotaById };

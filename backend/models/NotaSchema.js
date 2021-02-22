@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import barangSchema from './BarangSchema';
-import Sequence from './SequenceSchema';
+import barangSchema from './BarangSchema.js';
+import Sequence from './SequenceSchema.js';
 
 const notaSchema = mongoose.Schema(
   {
@@ -68,6 +68,6 @@ notaSchema.pre('save', async function (next) {
   }
 });
 
-const Nota = mongoose.model('nota', notaSchema);
+const Nota = mongoose.model('Nota', notaSchema);
 
 export default Nota;

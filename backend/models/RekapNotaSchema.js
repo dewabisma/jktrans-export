@@ -45,4 +45,4 @@ const rekapNotaSchema = mongoose.Schema({
   },
 });
 
-module.exports = rekapNotaSchema;
+export default rekapNotaSchema;

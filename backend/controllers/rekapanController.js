@@ -1,9 +1,9 @@
-import RekapanNota from '../models/RekapanSchema';
-import Nota from '../models/NotaSchema';
+import RekapanNota from '../models/RekapanSchema.js';
+import Nota from '../models/NotaSchema.js';
 import asyncHandler from 'express-async-handler';
 
 // @desc    get all rekapan
-// @route   GET /rekapan
+// @route   GET /api/rekapan
 // @access  Private
 const getAllRekapan = asyncHandler(async (req, res) => {
   try {
@@ -20,7 +20,7 @@ const getAllRekapan = asyncHandler(async (req, res) => {
 });
 
 // @desc    create new rekapan
-// @route   POST /rekapan
+// @route   POST /api/rekapan
 // @access  Private
 const createNewRekapan = asyncHandler(async (req, res) => {
   try {
@@ -58,7 +58,7 @@ const createNewRekapan = asyncHandler(async (req, res) => {
 });
 
 // @desc    delete a rekapan by ID
-// @route   DELETE /rekapan/:rekapanId
+// @route   DELETE /api/rekapan/:rekapanId
 // @access  Private/Super User
 const deleteRekapan = asyncHandler(async (req, res) => {
   try {
@@ -79,7 +79,7 @@ const deleteRekapan = asyncHandler(async (req, res) => {
 });
 
 // @desc    update a rekapan by ID
-// @route   PUT /rekapan/:rekapanId
+// @route   PUT /api/rekapan/:rekapanId
 // @access  Private
 const updateRekapan = asyncHandler(async (req, res) => {
   try {
@@ -121,7 +121,7 @@ const updateRekapan = asyncHandler(async (req, res) => {
 });
 
 // @desc    change a nota status in rekapan to paid by ID
-// @route   PUT /rekapan/:rekapanId/nota/:notaId/paid
+// @route   PUT /api/rekapan/:rekapanId/nota/:notaId/paid
 // @access  Private/Super User
 const changeRekapanStatusToPaid = asyncHandler(async (req, res) => {
   try {
@@ -153,7 +153,7 @@ const changeRekapanStatusToPaid = asyncHandler(async (req, res) => {
 });
 
 // @desc    change a rekapan status to delivered by ID
-// @route   PUT /rekapan/:rekapanId/nota/:notaId/delivered
+// @route   PUT /api/rekapan/:rekapanId/nota/:notaId/delivered
 // @access  Private/Super User
 const changeRekapanStatusToDelivered = asyncHandler(async (req, res) => {
   try {

@@ -8,10 +8,10 @@ import colors from 'colors';
 
 // Local Module
 import connectDB from './config/db.js';
-import { notFound, errorHandler } from './middleware/errorMiddleware';
-import userRoutes from './routes/userRoutes';
-import notaRoutes from './routes/notaRoutes';
-import rekapanRoutes from './routes/rekapanRoutes';
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
+import userRoutes from './routes/userRoutes.js';
+import notaRoutes from './routes/notaRoutes.js';
+import rekapanRoutes from './routes/rekapanRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -25,8 +25,6 @@ const __dirname = path.resolve();
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(notFound);
-app.use(errorHandler);
 if (process.env.NODE_ENV === 'Development') app.use(morgan('dev'));
 
 // Routes
@@ -47,9 +45,15 @@ if (process.env.NODE_ENV === 'Production') {
   });
 }
 
+// Error Handler
+app.use(notFound);
+app.use(errorHandler);
+
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(
   PORT,
-  console.log(`Server is running at port ${PORT}`.inverse.green)
+  console.log(
+    `Server is running in ${process.env.NODE_ENV} at port ${PORT}`.inverse.green
+  )
 );
