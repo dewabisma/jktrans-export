@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import barangSchema from './BarangSchema.js';
+import permohonanSchema from './PermohonanSchema.js';
 import Sequence from './SequenceSchema.js';
 
 const notaSchema = mongoose.Schema(
@@ -41,6 +42,12 @@ const notaSchema = mongoose.Schema(
     totalHarga: {
       type: Number,
       required: [true, 'total harga tidak boleh kosong'],
+    },
+    permohonanPerubahan: {
+      type: permohonanSchema,
+    },
+    permohonanPenghapusan: {
+      type: permohonanSchema,
     },
   },
   {

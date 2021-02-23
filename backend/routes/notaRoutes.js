@@ -5,6 +5,8 @@ import {
   deleteNotaById,
   createNewNota,
   editNotaById,
+  requestEditNotaById,
+  requestDeleteNotaById,
 } from '../controllers/notaController.js';
 import { protect, superUser } from '../middleware/authMiddleware.js';
 
@@ -16,5 +18,7 @@ router
   .get(protect, getNotaById)
   .put(protect, superUser, editNotaById)
   .delete(protect, superUser, deleteNotaById);
+router.put('/:notaId/change-request', protect, requestEditNotaById);
+router.put('/:notaId/delete-request', protect, requestDeleteNotaById);
 
 export default router;

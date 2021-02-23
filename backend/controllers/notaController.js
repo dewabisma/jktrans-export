@@ -127,4 +127,84 @@ const editNotaById = asyncHandler(async (req, res) => {
   }
 });
 
-export { getAllNota, getNotaById, deleteNotaById, createNewNota, editNotaById };
+// @desc    request edit nota by Id
+// @route   PUT /api/nota/:notaId/change-request
+// @access  Private
+const requestEditNotaById = asyncHandler(async (req, res) => {
+  const {
+    user,
+    body: { alasanPerubahanNota },
+  } = req;
+
+  const nota = await Nota.findById(req.params.notaId);
+
+  if (nota) {
+    if (alasanPerubahanNota.trim()) {
+      const permohonan = {
+        pemohon: user._id,
+        alasanPermohonan: alasanPerubahanNota,
+      };
+
+      nota.permohonanPerubahan = permohonan;
+    } else {
+      nota.permohonanPerubahan = null;
+    }
+
+    const updatedNota = await nota.save();
+
+    res.status(201);
+    res.json({
+      message: `Permohonan perubahan telah berhasil dibuat`,
+      updatedNota,
+    });
+  } else {
+    res.status(404);
+    throw new Error(`Nota dengan id ${req.params.notaId} tidak ditemukan`);
+  }
+});
+
+// @desc    request delete nota by Id
+// @route   PUT /api/nota/:notaId/delete-request
+// @access  Private
+const requestDeleteNotaById = asyncHandler(async (req, res) => {
+  const {
+    user,
+    body: { alasanPenghapusanNota },
+  } = req;
+
+  const nota = await Nota.findById(req.params.notaId);
+
+  if (nota) {
+    if (alasanPenghapusanNota.trim()) {
+      const permohonan = {
+        pemohon: user._id,
+        alasanPermohonan: alasanPenghapusanNota,
+      };
+
+      nota.permohonanPenghapusan = permohonan;
+    } else {
+      nota.permohonanPenghapusan = null;
+    }
+
+    const updatedNota = await nota.save();
+
+    res.status(201);
+    res.json({
+      message: `Permohonan penghapusan telah berhasil dibuat`,
+      updatedNota,
+    });
+  } else {
+    res.status(404);
+    throw new Error(`Nota dengan id ${req.params.notaId} tidak ditemukan`);
+  }
+});
+
+export {
+  getAllNota,
+  getNotaById,
+  deleteNotaById,
+  createNewNota,
+  editNotaById,
+  requestEditNotaById,
+  requestDeleteNotaById,
+};
