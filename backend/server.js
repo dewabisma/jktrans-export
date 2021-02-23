@@ -12,6 +12,7 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import userRoutes from './routes/userRoutes.js';
 import notaRoutes from './routes/notaRoutes.js';
 import rekapanRoutes from './routes/rekapanRoutes.js';
+import bookingRoutes from './routes/bookingRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -31,6 +32,7 @@ if (process.env.NODE_ENV === 'Development') app.use(morgan('dev'));
 app.use('/api/nota', notaRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/rekapan', rekapanRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 // Send file for production
 if (process.env.NODE_ENV === 'Production') {
