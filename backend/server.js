@@ -13,6 +13,7 @@ import userRoutes from './routes/userRoutes.js';
 import notaRoutes from './routes/notaRoutes.js';
 import rekapanRoutes from './routes/rekapanRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
+import priceListRoutes from './routes/priceListRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -33,6 +34,7 @@ app.use('/api/nota', notaRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/rekapan', rekapanRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/prices', priceListRoutes);
 
 // Send file for production
 if (process.env.NODE_ENV === 'Production') {

@@ -20,7 +20,10 @@ const authUser = asyncHandler(async (req, res) => {
         sameSite: 'strict',
       });
 
-      res.json({ authToken: token });
+      res.json({
+        Message: 'Selamat Datang dan Selamat Bekerja!',
+        authToken: token,
+      });
     } else {
       res.status(403);
       throw new Error('Maaf akses anda dilarang!');
