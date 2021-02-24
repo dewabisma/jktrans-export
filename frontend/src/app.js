@@ -1,7 +1,16 @@
 import React from 'react';
+import { Container } from 'react-bootstrap';
 
-const app = () => {
-  return <div>Hello!</div>;
+import CetakNota from './screens/CetakNota/CetakNota';
+import CetakRekapan from './screens/CetakRekapan/CetakRekapan';
+
+const App = () => {
+  return (
+    <Container>
+      <CetakNota />
+      {/* <CetakRekapan /> */}
+    </Container>
+  );
 };
 
-export default app;
+export default App;
