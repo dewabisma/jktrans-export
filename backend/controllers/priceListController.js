@@ -86,7 +86,7 @@ const deletePriceListById = asyncHandler(async (req, res) => {
 export {
   getAllPriceList,
   updatePriceListById,
-  addNewPriceToPriceList
+  addNewPriceToPriceList,
   getPriceListById,
   deletePriceListById,
 };
