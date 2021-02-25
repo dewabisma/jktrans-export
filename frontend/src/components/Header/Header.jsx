@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Navbar,
-  NavDropdown,
-  Nav,
-  Row,
-  Col,
-  Container,
-  Image,
-} from 'react-bootstrap';
+import { Navbar, NavDropdown, Nav, Row, Col, Image } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
 import styles from './Header.module.scss';

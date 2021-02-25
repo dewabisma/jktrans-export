@@ -7,11 +7,5 @@ body,
   height: 100%;
 }
 
-#root {
-  #container {
-    height: inherit;
-  }
-}
-
 /* import bootstrap to set changes */
 @import '../node_modules/bootstrap/scss/bootstrap';
