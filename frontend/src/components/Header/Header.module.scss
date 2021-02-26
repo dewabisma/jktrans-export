@@ -1,1 +1,16 @@
+.customNavbar {
+  padding: 0.5rem 0;
+}
 
+.brandShadow {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.363);
+}
+
+@media only screen and (max-width: 576px) {
+  .mobileScreen {
+    flex-direction: column;
+    justify-content: flex-start !important;
+    align-items: stretch !important;
+    padding: 0 1rem !important;
+  }
+}
