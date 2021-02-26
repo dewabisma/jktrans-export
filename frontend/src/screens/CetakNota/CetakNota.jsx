@@ -1,9 +1,9 @@
 import React from 'react';
-import { Row, Col, Table } from 'react-bootstrap';
+import { Row, Col, Table, Container } from 'react-bootstrap';
 
 const CetakNota = () => {
   return (
-    <>
+    <Container fluid>
       <Row className='align-items-end'>
         <Col className='text-left'>
           <h1>JKTRANS</h1>
@@ -93,7 +93,7 @@ const CetakNota = () => {
           <div className='dropdown-divider'></div>
         </Col>
       </Row>
-    </>
+    </Container>
   );
 };
 

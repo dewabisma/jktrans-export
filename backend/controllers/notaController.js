@@ -3,10 +3,63 @@ import asyncHandler from 'express-async-handler';
 
 // @desc    get all nota
 // @route   GET /nota
+// @query   ?pageSize=''&pageNumber=''
 // @access  Private
 const getAllNota = asyncHandler(async (req, res) => {
   try {
-    const allNota = await Nota.find({}).populate('pegawai', '-password');
+    const pageSize = req.query.pageSize ? Number(req.query.pageSize) : 0;
+    const pageNumber = req.query.pageNumber ? Number(req.query.pageNumber) : 1;
+
+    let keyword = {};
+
+    req.query.pengirim &&
+      (keyword = {
+        ...keyword,
+        namaPengirim: {
+          $regex: req.query.pengirim,
+          $options: 'i',
+        },
+      });
+
+    req.query.cabang &&
+      (keyword = { ...keyword, cabang: req.query.cabang.toUpperCase() });
+
+    const normalizeDate = (date) => {
+      const arrayOfDate = date.split('-');
+      const normalizedDate = arrayOfDate.map((dateInstance) =>
+        dateInstance.charAt(0) === '0' ? dateInstance.slice(1) : dateInstance
+      );
+
+      return normalizedDate;
+    };
+
+    console.log(new Date(2021, 0, 3));
+
+    // Still broken
+    if (req.query.dateStart) {
+      req.query.dateEnd
+        ? (keyword = {
+            ...keyword,
+            createdAt: {
+              $gt: new Date(...normalizeDate(req.query.dateStart)),
+              $lt: new Date(...normalizeDate(req.query.dateEnd)),
+            },
+          })
+        : (keyword = {
+            ...keyword,
+            createdAt: { $gt: new Date(...normalizeDate(req.query.dateStart)) },
+          });
+    } else if (req.query.dateEnd) {
+      keyword = {
+        ...keyword,
+        createdAt: { $lt: new Date(...normalizeDate(req.query.dateEnd)) },
+      };
+    }
+
+    const allNota = await Nota.find({ ...keyword })
+      .limit(pageSize)
+      .skip(pageSize * (pageNumber - 1))
+      .populate('pegawai', '-password');
 
     if (allNota) {
       res.json(allNota);

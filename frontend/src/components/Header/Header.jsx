@@ -1,5 +1,13 @@
 import React from 'react';
-import { Navbar, NavDropdown, Nav, Row, Col, Image } from 'react-bootstrap';
+import {
+  Navbar,
+  NavDropdown,
+  Nav,
+  Row,
+  Col,
+  Image,
+  Button,
+} from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
@@ -24,7 +32,9 @@ const Header = () => {
             xs={12}
             sm={9}
           >
-            <FontAwesomeIcon size='2x' icon={faBell} />
+            <Button variant='link'>
+              <FontAwesomeIcon size='2x' icon={faBell} />
+            </Button>
 
             <Nav className='align-items-stretch align-items-sm-center'>
               {/* <Image

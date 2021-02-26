@@ -1,11 +1,11 @@
 import React from 'react';
-import { Row, Col, Table } from 'react-bootstrap';
+import { Row, Col, Table, Container } from 'react-bootstrap';
 
 import styles from './CetakRekapan.module.scss';
 
 const CetakNota = () => {
   return (
-    <>
+    <Container>
       <Row>
         <Col className='text-left'>
           <h1>JKTRANS</h1>
@@ -96,7 +96,7 @@ const CetakNota = () => {
           <div className={styles.tandaTangan}>...................</div>
         </Col>
       </Row>
-    </>
+    </Container>
   );
 };
 
