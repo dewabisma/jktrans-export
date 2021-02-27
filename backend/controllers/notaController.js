@@ -24,35 +24,23 @@ const getAllNota = asyncHandler(async (req, res) => {
     req.query.cabang &&
       (keyword = { ...keyword, cabang: req.query.cabang.toUpperCase() });
 
-    const normalizeDate = (date) => {
-      const arrayOfDate = date.split('-');
-      const normalizedDate = arrayOfDate.map((dateInstance) =>
-        dateInstance.charAt(0) === '0' ? dateInstance.slice(1) : dateInstance
-      );
-
-      return normalizedDate;
-    };
-
-    console.log(new Date(2021, 0, 3));
-
-    // Still broken
     if (req.query.dateStart) {
       req.query.dateEnd
         ? (keyword = {
             ...keyword,
             createdAt: {
-              $gt: new Date(...normalizeDate(req.query.dateStart)),
-              $lt: new Date(...normalizeDate(req.query.dateEnd)),
+              $gt: new Date(req.query.dateStart),
+              $lt: new Date(req.query.dateEnd),
             },
           })
         : (keyword = {
             ...keyword,
-            createdAt: { $gt: new Date(...normalizeDate(req.query.dateStart)) },
+            createdAt: { $gt: new Date(req.query.dateStart) },
           });
     } else if (req.query.dateEnd) {
       keyword = {
         ...keyword,
-        createdAt: { $lt: new Date(...normalizeDate(req.query.dateEnd)) },
+        createdAt: { $lt: new Date(req.query.dateEnd) },
       };
     }
 
