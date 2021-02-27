@@ -3,11 +3,11 @@ import asyncHandler from 'express-async-handler';
 
 // @desc    get all nota
 // @route   GET /nota
-// @query   ?pageSize=''&pageNumber=''
+// @query   ?pageSize=''&pageNumber=''&dateStart=''&dateEnd=''
 // @access  Private
 const getAllNota = asyncHandler(async (req, res) => {
   try {
-    const pageSize = req.query.pageSize ? Number(req.query.pageSize) : 0;
+    const pageSize = req.query.pageSize ? Number(req.query.pageSize) : 10;
     const pageNumber = req.query.pageNumber ? Number(req.query.pageNumber) : 1;
 
     let keyword = {};
@@ -44,13 +44,20 @@ const getAllNota = asyncHandler(async (req, res) => {
       };
     }
 
+    const notaCount = await Nota.countDocuments({ ...keyword });
+
     const allNota = await Nota.find({ ...keyword })
       .limit(pageSize)
       .skip(pageSize * (pageNumber - 1))
       .populate('pegawai', '-password');
 
     if (allNota) {
-      res.json(allNota);
+      res.json({
+        allNota,
+        currentPage: pageNumber,
+        totalPage: Math.ceil(notaCount / pageSize),
+        totalNota: notaCount,
+      });
     } else {
       res.status(404).json({ message: 'Belum ada nota tersimpan' });
     }

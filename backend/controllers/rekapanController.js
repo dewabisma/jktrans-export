@@ -7,10 +7,52 @@ import asyncHandler from 'express-async-handler';
 // @access  Private
 const getAllRekapan = asyncHandler(async (req, res) => {
   try {
-    const allRekapan = await RekapanNota.find({});
+    const pageSize = Number(req.query.pageSize) || 10;
+    const pageNumber = Number(req.query.pageNumber) || 1;
+
+    let keyword = {};
+
+    req.query.sopirPengirim &&
+      (keyword = {
+        ...keyword,
+        sopirPengirim: req.query.sopirPengirim,
+      });
+
+    req.query.noPolis && (keyword = { ...keyword, noPolis: req.query.noPolis });
+
+    if (req.query.dateStart) {
+      req.query.dateEnd
+        ? (keyword = {
+            ...keyword,
+            createdAt: {
+              $gt: new Date(req.query.dateStart),
+              $lt: new Date(req.query.dateEnd),
+            },
+          })
+        : (keyword = {
+            ...keyword,
+            createdAt: { $gt: new Date(req.query.dateStart) },
+          });
+    } else if (req.query.dateEnd) {
+      keyword = {
+        ...keyword,
+        createdAt: { $lt: new Date(req.query.dateEnd) },
+      };
+    }
+
+    const rekapanCount = await RekapanNota.countDocuments({ ...keyword });
+
+    const allRekapan = await RekapanNota.find({ ...keyword })
+      .limit(pageSize)
+      .skip(pageSize * (pageNumber - 1));
 
     if (allRekapan) {
-      res.json(allRekapan);
+      res.json({
+        allRekapan,
+        currentPage: pageNumber,
+        totalRekapan: rekapanCount,
+        totalPage: Math.ceil(rekapanCount / pageSize),
+      });
     } else {
       res.status(404).json({ message: 'Belum ada nota tersimpan' });
     }
@@ -27,9 +69,6 @@ const createNewRekapan = asyncHandler(async (req, res) => {
     const { sopirPengirim, noPolis, kumpulanIdNota } = req.body;
 
     const kumpulanNota = await Nota.find({ _id: { $in: kumpulanIdNota } });
-    mongoose.find({ title: { $in: ['some title', 'some other title'] } });
-
-    console.log(kumpulanNota);
 
     const detailRekapanNota = kumpulanNota.map((nota) => {
       return {
