@@ -1,11 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Col, Table, ListGroup, Card, Button } from 'react-bootstrap';
+import axios from 'axios';
 
 import Header from '../../components/Header/Header';
 
 import styles from './DashboardScreen.module.scss';
 
 const DashboardScreen = () => {
+  const [listNota, setListNota] = useState([]);
+  const [listRekapan, setListRekapan] = useState([]);
+
+  const checkNotaHandler = (notaId) => {};
+
+  const checkRekapanHandler = (rekapanId) => {};
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const config = {
+          headers: {
+            authorization: 'Bearer ',
+          },
+        };
+        const { data } = await axios.get('/api/nota', config);
+
+        console.log(data);
+
+        setListNota(data.allNota);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+
+    (async () => {
+      try {
+        const { data } = await axios.get('/api/rekapan');
+
+        setListRekapan(data.allRekapan);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  });
+
   return (
     <>
       <Header />
@@ -89,38 +126,20 @@ const DashboardScreen = () => {
                 </thead>
 
                 <tbody className={styles.table}>
-                  <tr>
-                    <td>no-sp-nota</td>
-                    <td>wayan</td>
-                    <td>dps</td>
-                    <td>gg shop</td>
-                    <td>yang nginput</td>
-                    <td>
-                      <Button size='sm'>Check</Button>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>no-sp-nota</td>
-                    <td>wayan</td>
-                    <td>dps</td>
-                    <td>gg shop</td>
-                    <td>yang nginput</td>
-                    <td>
-                      <Button size='sm'>Check</Button>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>no-sp-nota</td>
-                    <td>wayan</td>
-                    <td>dps</td>
-                    <td>gg shop</td>
-                    <td>yang nginput</td>
-                    <td>
-                      <Button size='sm'>Check</Button>
-                    </td>
-                  </tr>
+                  {listNota.map((nota) => (
+                    <tr key={nota.noNota}>
+                      <td>{nota.noNota}</td>
+                      <td>{nota.namaPengirim}</td>
+                      <td>{nota.alamatPenerima}</td>
+                      <td>{nota.namaPenerima}</td>
+                      <td>{nota.pegawai.username}</td>
+                      <td>
+                        <Button onClick={checkNotaHandler(nota._id)} size='sm'>
+                          Check
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </Table>
             </Col>

@@ -23,27 +23,36 @@ const LoginScreen = () => {
   ) : (
     <Row
       className={`justify-content-center align-items-center ${styles.inheritHeight}`}
+      noGutters
     >
-      <Col xs={12} sm={4}>
-        <h1 className='text-center'>Jktrans</h1>
+      <Col xs={12} sm={6} md={4}>
+        <h1 className='text-center mb-3'>Jktrans</h1>
 
-        <Form>
-          <Form.Group as={Row} controlId='formBasicEmail'>
-            <Form.Label column sm={4}>
+        <Form className='mx-3 mx-sm-0'>
+          <Form.Group
+            as={Row}
+            controlId='formBasicEmail'
+            className='m-0 mb-3 flex-column flex-sm-row'
+          >
+            <Form.Label column sm={4} className='px-0'>
               Email address
             </Form.Label>
 
-            <Col sm={8}>
+            <Col sm={8} className='p-0'>
               <Form.Control type='email' placeholder='Enter email' />
             </Col>
           </Form.Group>
 
-          <Form.Group as={Row} controlId='formBasicPassword'>
-            <Form.Label column sm={4}>
+          <Form.Group
+            as={Row}
+            controlId='formBasicPassword'
+            className='m-0 mb-3 flex-column flex-sm-row'
+          >
+            <Form.Label column sm={4} className='px-0'>
               Password
             </Form.Label>
 
-            <Col sm={8}>
+            <Col sm={8} className='p-0'>
               <Form.Control type='password' placeholder='Password' />
             </Col>
           </Form.Group>

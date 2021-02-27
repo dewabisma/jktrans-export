@@ -56,7 +56,6 @@ const getAllNota = asyncHandler(async (req, res) => {
         allNota,
         currentPage: pageNumber,
         totalPage: Math.ceil(notaCount / pageSize),
-        totalNota: notaCount,
       });
     } else {
       res.status(404).json({ message: 'Belum ada nota tersimpan' });
