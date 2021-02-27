@@ -3,7 +3,7 @@ import asyncHandler from 'express-async-handler';
 
 // @desc    get all nota
 // @route   GET /nota
-// @query   ?pageSize=''&pageNumber=''&dateStart=''&dateEnd=''
+// @query   ?pageSize=''&pageNumber=''&namaPengirim=''&cabang=''&dateStart=''&dateEnd=''
 // @access  Private
 const getAllNota = asyncHandler(async (req, res) => {
   try {
@@ -12,11 +12,11 @@ const getAllNota = asyncHandler(async (req, res) => {
 
     let keyword = {};
 
-    req.query.pengirim &&
+    req.query.namaPengirim &&
       (keyword = {
         ...keyword,
         namaPengirim: {
-          $regex: req.query.pengirim,
+          $regex: req.query.namaPengirim,
           $options: 'i',
         },
       });

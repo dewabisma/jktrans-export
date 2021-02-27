@@ -4,6 +4,7 @@ import asyncHandler from 'express-async-handler';
 
 // @desc    get all rekapan
 // @route   GET /api/rekapan
+// @query   ?pageSize=''&pageNumber=''&noPolis=''&sopirPengirim=''&dateStart=''&dateEnd=''
 // @access  Private
 const getAllRekapan = asyncHandler(async (req, res) => {
   try {
