@@ -19,9 +19,11 @@ const DashboardScreen = () => {
       try {
         const config = {
           headers: {
-            authorization: 'Bearer ',
+            authorization:
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMTgyZThjNGE2MzZlMTNlODA5ZDRmMyIsImlhdCI6MTYxNDQ0NDEyNywiZXhwIjoxNjE0NTMwNTI3fQ.9o1TUOArOlZgcKY9AYe5IsF8SComByq9JSKp0fd7TTc',
           },
         };
+
         const { data } = await axios.get('/api/nota', config);
 
         console.log(data);
@@ -34,7 +36,14 @@ const DashboardScreen = () => {
 
     (async () => {
       try {
-        const { data } = await axios.get('/api/rekapan');
+        const config = {
+          headers: {
+            authorization:
+              'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwMTgyZThjNGE2MzZlMTNlODA5ZDRmMyIsImlhdCI6MTYxNDQ0NDEyNywiZXhwIjoxNjE0NTMwNTI3fQ.9o1TUOArOlZgcKY9AYe5IsF8SComByq9JSKp0fd7TTc',
+          },
+        };
+
+        const { data } = await axios.get('/api/rekapan', config);
 
         setListRekapan(data.allRekapan);
       } catch (error) {
@@ -116,7 +125,7 @@ const DashboardScreen = () => {
               <Table responsive>
                 <thead>
                   <tr>
-                    <th>Sp</th>
+                    <th>Sp Nota</th>
                     <th>Nama Pengirim</th>
                     <th>Alamat Tujuan</th>
                     <th>Toko Tujuan</th>
@@ -152,46 +161,27 @@ const DashboardScreen = () => {
                   <tr>
                     <th>No Rekapan</th>
                     <th>No Polis</th>
-                    <th>Sopi</th>
-                    <th>Tujuan</th>
-                    <th>Penginput</th>
+                    <th>Sopir</th>
                     <th>Action</th>
                   </tr>
                 </thead>
 
                 <tbody className={styles.table}>
-                  <tr>
-                    <td>no-sp-nota</td>
-                    <td>wayan</td>
-                    <td>dps</td>
-                    <td>gg shop</td>
-                    <td>yang nginput</td>
-                    <td>
-                      <Button size='sm'>Check</Button>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>no-sp-nota</td>
-                    <td>wayan</td>
-                    <td>dps</td>
-                    <td>gg shop</td>
-                    <td>yang nginput</td>
-                    <td>
-                      <Button size='sm'>Check</Button>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td>no-sp-nota</td>
-                    <td>wayan</td>
-                    <td>dps</td>
-                    <td>gg shop</td>
-                    <td>yang nginput</td>
-                    <td>
-                      <Button size='sm'>Check</Button>
-                    </td>
-                  </tr>
+                  {listRekapan.map((rekapan) => (
+                    <tr key={rekapan.noRekapan}>
+                      <td>{rekapan.noRekapan}</td>
+                      <td>{rekapan.noPolis}</td>
+                      <td>{rekapan.sopirPengirim}</td>
+                      <td>
+                        <Button
+                          onClick={checkRekapanHandler(rekapan._id)}
+                          size='sm'
+                        >
+                          Check
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </Table>
             </Col>
