@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import CetakNota from './screens/CetakNota/CetakNota';
 import CetakRekapan from './screens/CetakRekapan/CetakRekapan';
@@ -9,10 +9,16 @@ import LoginScreen from './screens/LoginScreen/LoginScreen';
 const App = () => {
   return (
     <Router>
-      <Route path='/' component={LoginScreen} exact />
-      <Route path='/dashboard' component={DashboardScreen} exact />
-      <Route path='/nota/:notaId/cetak' component={CetakNota} exact />
-      <Route path='/rekapan/:rekapanId/cetak' component={CetakRekapan} exact />
+      <Switch>
+        <Route path='/' component={LoginScreen} exact />
+        <Route path='/dashboard' component={DashboardScreen} exact />
+        <Route path='/nota/:notaId/cetak' component={CetakNota} exact />
+        <Route
+          path='/rekapan/:rekapanId/cetak'
+          component={CetakRekapan}
+          exact
+        />
+      </Switch>
     </Router>
   );
 };

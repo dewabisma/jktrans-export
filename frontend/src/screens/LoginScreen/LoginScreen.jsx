@@ -41,7 +41,6 @@ const LoginScreen = ({ history }) => {
           : error.message;
 
       setLoginError(message);
-      console.error(message);
     }
   };
 
