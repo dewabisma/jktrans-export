@@ -1,7 +1,6 @@
 import express from 'express';
 import {
   authUser,
-  logoutUser,
   registerUser,
   getAllUser,
   banUserById,
@@ -16,6 +15,5 @@ router
   .post(protect, superUser, registerUser);
 router.put('/:userId/ban', protect, superUser, banUserById);
 router.post('/login', authUser);
-router.get('/logout', logoutUser);
 
 export default router;

@@ -3,7 +3,7 @@ import generateToken from '../utils/generateToken.js';
 import asyncHandler from 'express-async-handler';
 
 // @desc    auth user
-// @route   POST /api/user/login
+// @route   POST /api/users/login
 // @access  Public
 const authUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
@@ -13,12 +13,6 @@ const authUser = asyncHandler(async (req, res) => {
   if (user && (await user.matchPassword(password))) {
     if (!user.isBanned) {
       const token = generateToken(user._id);
-
-      res.cookie('jwt', token, {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24,
-        sameSite: 'strict',
-      });
 
       res.json({
         Message: 'Selamat Datang dan Selamat Bekerja!',
@@ -85,11 +79,4 @@ const banUserById = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    logout user
-// @route   GET /api/user/logout
-// @access  Public
-const logoutUser = asyncHandler(async (req, res) => {
-  res.cookie('jwt', '', { maxAge: 1 });
-});
-
-export { logoutUser, authUser, registerUser, getAllUser, banUserById };
+export { authUser, registerUser, getAllUser, banUserById };
