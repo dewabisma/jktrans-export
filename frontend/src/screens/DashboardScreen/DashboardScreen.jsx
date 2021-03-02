@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Table, ListGroup, Card, Button } from 'react-bootstrap';
-import axios from 'axios';
+import useFetch from '../../hooks/useFetch.js';
 
 import Header from '../../components/Header/Header';
 import Loader from '../../components/Loader/Loader';
@@ -11,13 +11,16 @@ import styles from './DashboardScreen.module.scss';
 const DashboardScreen = ({ history }) => {
   const [auth, setAuth] = useState(JSON.parse(localStorage.getItem('auth')));
 
-  const [dataNota, setDataNota] = useState(null);
-  const [errorNota, setErrorNota] = useState(null);
-  const [loadingNota, setLoadingNota] = useState(true);
+  const { data: dataNota, error: errorNota, isLoading: loadingNota } = useFetch(
+    '/api/nota',
+    auth
+  );
 
-  const [dataRekapan, setDataRekapan] = useState(null);
-  const [errorRekapan, setErrorRekapan] = useState(null);
-  const [loadingRekapan, setLoadingRekapan] = useState(true);
+  const {
+    data: dataRekapan,
+    error: errorRekapan,
+    isLoading: loadingRekapan,
+  } = useFetch('/api/rekapan', auth);
 
   const checkNotaHandler = (notaId) => {};
 
@@ -25,70 +28,13 @@ const DashboardScreen = ({ history }) => {
 
   const logoutHandler = () => {
     localStorage.removeItem('auth');
+
     setAuth('');
   };
 
   useEffect(() => {
     if (!auth) {
       history.replace('/');
-    } else {
-      (async () => {
-        try {
-          let config = {};
-
-          if (auth) {
-            config = {
-              headers: {
-                authorization: `Bearer ${auth}`,
-              },
-            };
-          }
-
-          const { data } = await axios.get('/api/nota', config);
-
-          setDataNota(data);
-          setLoadingNota(false);
-        } catch (error) {
-          const message =
-            error.response && error.response.data.message
-              ? error.response.data.message
-              : error.message;
-
-          setErrorNota(message);
-          setLoadingNota(false);
-
-          console.error(message);
-        }
-      })();
-
-      (async () => {
-        try {
-          let config = {};
-
-          if (auth) {
-            config = {
-              headers: {
-                authorization: `Bearer ${auth}`,
-              },
-            };
-          }
-
-          const { data } = await axios.get('/api/rekapan', config);
-
-          setDataRekapan(data);
-          setLoadingRekapan(false);
-        } catch (error) {
-          const message =
-            error.response && error.response.data.message
-              ? error.response.data.message
-              : error.message;
-
-          setErrorRekapan(message);
-          setLoadingRekapan(false);
-
-          console.error(message);
-        }
-      })();
     }
   }, [auth, history]);
 

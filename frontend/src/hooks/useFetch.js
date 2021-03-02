@@ -7,6 +7,9 @@ const useFetch = (url, token = '') => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
+
     (async () => {
       try {
         let config = {};
@@ -19,22 +22,31 @@ const useFetch = (url, token = '') => {
           };
         }
 
-        const { data } = await axios.get(url, config);
+        const { data } = await axios.get(url, {
+          ...config,
+          cancelToken: source.token,
+        });
 
         setData(data);
         setIsLoading(false);
       } catch (error) {
-        const message =
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message;
+        if (axios.isCancel(error)) {
+        } else {
+          const message =
+            error.response && error.response.data.message
+              ? error.response.data.message
+              : error.message;
 
-        setError(message);
-        setIsLoading(false);
+          setError(message);
+          setIsLoading(false);
 
-        console.error(message);
+          console.error(message);
+        }
       }
     })();
+
+    return () =>
+      source.cancel('Navigating to other page before fetching finished');
   }, [url, token]);
 
   return { data, error, isLoading };
