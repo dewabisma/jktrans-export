@@ -15,17 +15,24 @@ const DashboardScreen = ({ history }) => {
     '/api/nota',
     auth
   );
-
   const {
     data: dataRekapan,
     error: errorRekapan,
     isLoading: loadingRekapan,
   } = useFetch('/api/rekapan', auth);
+  const {
+    data: dataBookings,
+    error: errorBookings,
+    isLoading: loadingBookings,
+  } = useFetch('/api/bookings', auth);
+
+  const getTotalTransaction = () =>
+    dataRekapan.allRekapan.length +
+    dataNota.allNota.length +
+    dataBookings.allBookings.length;
 
   const checkNotaHandler = (notaId) => {};
-
   const checkRekapanHandler = (rekapanId) => {};
-
   const logoutHandler = () => {
     localStorage.removeItem('auth');
 
@@ -75,7 +82,11 @@ const DashboardScreen = ({ history }) => {
               <Card className='bg-light border-0 shadow mr-sm-2 mb-sm-2 mr-md-0'>
                 <Card.Body>
                   <Card.Title>Nota Terinput</Card.Title>
-                  <Card.Text>240</Card.Text>
+                  {errorNota && <Message variant='danger'>{errorNota}</Message>}
+
+                  {loadingNota && <Loader />}
+
+                  {dataNota && <Card.Text>{dataNota.allNota.length}</Card.Text>}
                 </Card.Body>
               </Card>
             </Col>
@@ -84,7 +95,15 @@ const DashboardScreen = ({ history }) => {
               <Card className='bg-light border-0 shadow mt-2 mt-sm-0 ml-sm-2 mb-sm-2 m-md-0 ml-md-2'>
                 <Card.Body>
                   <Card.Title>Rekapan Terinput</Card.Title>
-                  <Card.Text>240</Card.Text>
+                  {errorRekapan && (
+                    <Message variant='danger'>{errorRekapan}</Message>
+                  )}
+
+                  {loadingRekapan && <Loader />}
+
+                  {dataRekapan && (
+                    <Card.Text>{dataRekapan.allRekapan.length}</Card.Text>
+                  )}
                 </Card.Body>
               </Card>
             </Col>
@@ -93,7 +112,15 @@ const DashboardScreen = ({ history }) => {
               <Card className='bg-light border-0 shadow mt-2 mt-sm-2 mr-sm-2 m-md-0 ml-md-2'>
                 <Card.Body>
                   <Card.Title>Bookingan Masuk</Card.Title>
-                  <Card.Text>240</Card.Text>
+                  {errorBookings && (
+                    <Message variant='danger'>{errorBookings}</Message>
+                  )}
+
+                  {loadingBookings && <Loader />}
+
+                  {dataBookings && (
+                    <Card.Text>{dataBookings.allBookings.length}</Card.Text>
+                  )}
                 </Card.Body>
               </Card>
             </Col>
@@ -102,7 +129,9 @@ const DashboardScreen = ({ history }) => {
               <Card className='bg-light border-0 shadow mt-2 ml-sm-2 mt-sm-2 m-md-0 ml-md-2'>
                 <Card.Body>
                   <Card.Title>Total Transaksi</Card.Title>
-                  <Card.Text>240</Card.Text>
+                  {dataNota && dataRekapan && dataBookings && (
+                    <Card.Text>{getTotalTransaction()}</Card.Text>
+                  )}
                 </Card.Body>
               </Card>
             </Col>

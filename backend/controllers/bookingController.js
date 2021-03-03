@@ -5,9 +5,10 @@ import asyncHandler from 'express-async-handler';
 // @route   GET /api/bookings
 // @access  Private
 const getAllBooking = asyncHandler(async (req, res) => {
-  const bookings = await Booking.find({});
+  const allBookings = await Booking.find({});
+  console.log(allBookings);
 
-  res.json(bookings);
+  res.json({ allBookings });
 });
 
 // @desc    fetch a booking by Id
