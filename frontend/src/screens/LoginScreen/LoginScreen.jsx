@@ -1,50 +1,38 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Form, Button } from 'react-bootstrap';
+import { userLogin } from '../../redux/user/userLoginSlice';
 
 import styles from './LoginScreen.module.scss';
 
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 import Message from '../../components/Message/Message';
-import axios from 'axios';
 
 const LoginScreen = ({ history }) => {
   const [loading, setLoading] = useState(true);
-  const [loginError, setLoginError] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const dispatch = useDispatch();
+
+  const { status, error: loginError } = useSelector(
+    (state) => state.currentUser
+  );
 
   const submitFormHandler = async (e) => {
     e.preventDefault();
 
-    try {
-      const body = {
-        username,
-        password,
-      };
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
+    const userData = {
+      username,
+      password,
+    };
 
-      const { data } = await axios.post('/api/users/login', body, config);
-
-      if (data) {
-        localStorage.setItem('auth', JSON.stringify(data.authToken));
-
-        history.push('/dashboard');
-      }
-    } catch (error) {
-      const message =
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message;
-
-      setLoginError(message);
-    }
+    dispatch(userLogin(userData));
   };
 
   useEffect(() => {
+    if (status === 'success') history.push('/dashboard');
+
     const setLoadingFalse = () => {
       setTimeout(() => {
         setLoading(false);
@@ -52,7 +40,7 @@ const LoginScreen = ({ history }) => {
     };
 
     setLoadingFalse();
-  }, []);
+  }, [history, status]);
 
   return loading ? (
     <LoadingScreen />

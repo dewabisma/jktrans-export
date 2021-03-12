@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Table, ListGroup, Card, Button } from 'react-bootstrap';
 import useFetch from '../../hooks/useFetch.js';
 
@@ -9,6 +10,8 @@ import Message from '../../components/Message/Message';
 import styles from './DashboardScreen.module.scss';
 
 const DashboardScreen = ({ history }) => {
+  const dispatch = useDispatch();
+
   const [auth, setAuth] = useState(JSON.parse(localStorage.getItem('auth')));
 
   const { data: dataNota, error: errorNota, isLoading: loadingNota } = useFetch(
