@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Table, ListGroup, Card, Button } from 'react-bootstrap';
 import useFetch from '../../hooks/useFetch.js';
@@ -8,26 +8,37 @@ import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
 
 import styles from './DashboardScreen.module.scss';
+import { logout, selectAuthToken } from '../../redux/user/userLoginSlice.js';
+import {
+  fetchAllRekapan,
+  selectRekapan,
+} from '../../redux/rekapan/rekapanListSlice.js';
+import { fetchAllNota, selectNota } from '../../redux/nota/notaListSlice.js';
 
 const DashboardScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  const [auth, setAuth] = useState(JSON.parse(localStorage.getItem('auth')));
+  const authToken = useSelector(selectAuthToken);
 
-  const { data: dataNota, error: errorNota, isLoading: loadingNota } = useFetch(
-    '/api/nota',
-    auth
-  );
   const {
-    data: dataRekapan,
     error: errorRekapan,
-    isLoading: loadingRekapan,
-  } = useFetch('/api/rekapan', auth);
+    status: rekapanStatus,
+    entities: dataRekapan,
+    totalRekapan,
+  } = useSelector(selectRekapan);
+
+  const {
+    error: errorNota,
+    status: notaStatus,
+    entities: dataNota,
+    totalNota,
+  } = useSelector(selectNota);
+
   const {
     data: dataBookings,
     error: errorBookings,
     isLoading: loadingBookings,
-  } = useFetch('/api/bookings', auth);
+  } = useFetch('/api/bookings', authToken);
 
   const getTotalTransaction = () =>
     dataRekapan.allRekapan.length +
@@ -37,16 +48,17 @@ const DashboardScreen = ({ history }) => {
   const checkNotaHandler = (notaId) => {};
   const checkRekapanHandler = (rekapanId) => {};
   const logoutHandler = () => {
-    localStorage.removeItem('auth');
-
-    setAuth('');
+    dispatch(logout());
   };
 
   useEffect(() => {
-    if (!auth) {
+    if (!authToken) {
       history.replace('/');
     }
-  }, [auth, history]);
+
+    if (rekapanStatus === 'idle') dispatch(fetchAllRekapan);
+    if (notaStatus === 'idle') dispatch(fetchAllNota);
+  }, [authToken, history, rekapanStatus, dispatch, notaStatus]);
 
   return (
     <>
@@ -87,9 +99,9 @@ const DashboardScreen = ({ history }) => {
                   <Card.Title>Nota Terinput</Card.Title>
                   {errorNota && <Message variant='danger'>{errorNota}</Message>}
 
-                  {loadingNota && <Loader />}
+                  {notaStatus === 'loading' && <Loader />}
 
-                  {dataNota && <Card.Text>{dataNota.allNota.length}</Card.Text>}
+                  {totalNota && <Card.Text>{totalNota}</Card.Text>}
                 </Card.Body>
               </Card>
             </Col>
@@ -102,11 +114,9 @@ const DashboardScreen = ({ history }) => {
                     <Message variant='danger'>{errorRekapan}</Message>
                   )}
 
-                  {loadingRekapan && <Loader />}
+                  {rekapanStatus === 'loading' && <Loader />}
 
-                  {dataRekapan && (
-                    <Card.Text>{dataRekapan.allRekapan.length}</Card.Text>
-                  )}
+                  {totalRekapan && <Card.Text>{totalRekapan}</Card.Text>}
                 </Card.Body>
               </Card>
             </Col>
@@ -143,7 +153,7 @@ const DashboardScreen = ({ history }) => {
           <Row className='pt-4' noGutters>
             <Col className='p-2 bg-light shadow '>
               {errorNota && <Message variant='danger'>{errorNota}</Message>}
-              {loadingNota && <Loader />}
+              {notaStatus === 'loading' && <Loader />}
               {dataNota && (
                 <Table responsive>
                   <thead>
@@ -186,7 +196,7 @@ const DashboardScreen = ({ history }) => {
               {errorRekapan && (
                 <Message variant='danger'>{errorRekapan}</Message>
               )}
-              {loadingRekapan && <Loader />}
+              {rekapanStatus === 'loading' && <Loader />}
               {dataRekapan && (
                 <Table responsive>
                   <thead>

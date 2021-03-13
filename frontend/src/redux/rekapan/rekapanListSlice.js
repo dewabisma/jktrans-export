@@ -2,17 +2,17 @@ import {
   createSlice,
   createAsyncThunk,
   createEntityAdapter,
-  isRejectedWithValue,
 } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const postAdapter = createEntityAdapter({
+const rekapanListAdapter = createEntityAdapter({
   sortComparer: (a, b) => a.createdAt.localeCompare(b.createdAt),
 });
 
-const initialState = postAdapter.getInitialState({
+const initialState = rekapanListAdapter.getInitialState({
   status: 'idle',
   error: null,
+  totalRekapan: null,
   currentPage: null,
   totalPageCount: null,
 });
@@ -44,10 +44,18 @@ const rekapanListSlice = createSlice({
       state.status = 'loading';
     },
     [fetchAllRekapan.fulfilled]: (state, action) => {
+      const {
+        allRekapan,
+        totalPageCount,
+        totalRekapan,
+        currentPage,
+      } = action.payload;
+
       state.status = 'success';
-      postAdapter.upsertMany(state, action.payload.allRekapan);
-      state.currentPage = action.payload.currentPage;
-      state.totalPageCount = action.payload.totalPageCount;
+      state.totalRekapan = totalRekapan;
+      state.currentPage = currentPage;
+      state.totalPageCount = totalPageCount;
+      rekapanListAdapter.upsertMany(state, allRekapan);
     },
     [fetchAllRekapan.rejected]: (state, action) => {
       state.status = 'failed';
@@ -62,6 +70,12 @@ export const {
   selectIds: selectRekapanIds,
   selectAll: selectAllRekapan,
   selectById: selectRekapanById,
-} = postAdapter.getSelectors((state) => state.rekapan);
+} = rekapanListAdapter.getSelectors((state) => state.rekapan);
 
-export const selectRekapan = (state) => state.rekapan;
+export const selectRekapan = (state) => {
+  const allRekapan = selectAllRekapan(state.rekapan);
+  return {
+    ...state.rekapan,
+    entities: allRekapan,
+  };
+};
