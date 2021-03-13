@@ -37,6 +37,7 @@ const userSlice = createSlice({
   reducers: {
     logout: (state, action) => {
       state.entity = {};
+      state.status = 'idle';
     },
   },
   extraReducers: {

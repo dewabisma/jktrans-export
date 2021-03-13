@@ -19,9 +19,21 @@ const initialState = rekapanListAdapter.getInitialState({
 
 export const fetchAllRekapan = createAsyncThunk(
   'rekapan/fetchAll',
-  async (undefined, { rejectWithValue }) => {
+  async (undefined, { rejectWithValue, getState }) => {
+    const {
+      currentUser: {
+        entity: { authToken },
+      },
+    } = getState();
+
+    const config = {
+      headers: {
+        authorization: `Bearer ${authToken}`,
+      },
+    };
+
     try {
-      const { data } = await axios.get('/api/rekapan');
+      const { data } = await axios.get('/api/rekapan', config);
 
       return data;
     } catch (error) {
@@ -38,7 +50,11 @@ export const fetchAllRekapan = createAsyncThunk(
 const rekapanListSlice = createSlice({
   name: 'rekapan',
   initialState,
-  reducers: {},
+  reducers: {
+    resetRekapan: (state, action) => {
+      state = initialState;
+    },
+  },
   extraReducers: {
     [fetchAllRekapan.pending]: (state, action) => {
       state.status = 'loading';
@@ -64,6 +80,8 @@ const rekapanListSlice = createSlice({
   },
 });
 
+export const { resetRekapan } = rekapanListSlice.actions;
+
 export default rekapanListSlice.reducer;
 
 export const {
@@ -72,10 +90,4 @@ export const {
   selectById: selectRekapanById,
 } = rekapanListAdapter.getSelectors((state) => state.rekapan);
 
-export const selectRekapan = (state) => {
-  const allRekapan = selectAllRekapan(state.rekapan);
-  return {
-    ...state.rekapan,
-    entities: allRekapan,
-  };
-};
+export const selectRekapan = (state) => state.rekapan;

@@ -12,8 +12,15 @@ import { logout, selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import {
   fetchAllRekapan,
   selectRekapan,
+  resetRekapan,
+  selectAllRekapan,
 } from '../../redux/rekapan/rekapanListSlice.js';
-import { fetchAllNota, selectNota } from '../../redux/nota/notaListSlice.js';
+import {
+  fetchAllNota,
+  selectNota,
+  resetNota,
+  selectAllNota,
+} from '../../redux/nota/notaListSlice.js';
 
 const DashboardScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -23,16 +30,15 @@ const DashboardScreen = ({ history }) => {
   const {
     error: errorRekapan,
     status: rekapanStatus,
-    entities: dataRekapan,
     totalRekapan,
   } = useSelector(selectRekapan);
 
-  const {
-    error: errorNota,
-    status: notaStatus,
-    entities: dataNota,
-    totalNota,
-  } = useSelector(selectNota);
+  const dataRekapan = useSelector(selectAllRekapan);
+
+  const { error: errorNota, status: notaStatus, totalNota } = useSelector(
+    selectNota
+  );
+  const dataNota = useSelector(selectAllNota);
 
   const {
     data: dataBookings,
@@ -41,9 +47,7 @@ const DashboardScreen = ({ history }) => {
   } = useFetch('/api/bookings', authToken);
 
   const getTotalTransaction = () =>
-    dataRekapan.allRekapan.length +
-    dataNota.allNota.length +
-    dataBookings.allBookings.length;
+    totalRekapan + totalNota + dataBookings.allBookings.length;
 
   const checkNotaHandler = (notaId) => {};
   const checkRekapanHandler = (rekapanId) => {};
@@ -56,8 +60,8 @@ const DashboardScreen = ({ history }) => {
       history.replace('/');
     }
 
-    if (rekapanStatus === 'idle') dispatch(fetchAllRekapan);
-    if (notaStatus === 'idle') dispatch(fetchAllNota);
+    if (authToken && rekapanStatus === 'idle') dispatch(fetchAllRekapan());
+    if (authToken && notaStatus === 'idle') dispatch(fetchAllNota());
   }, [authToken, history, rekapanStatus, dispatch, notaStatus]);
 
   return (
@@ -150,11 +154,11 @@ const DashboardScreen = ({ history }) => {
             </Col>
           </Row>
 
-          <Row className='pt-4' noGutters>
+          {/* <Row className='pt-4' noGutters>
             <Col className='p-2 bg-light shadow '>
               {errorNota && <Message variant='danger'>{errorNota}</Message>}
               {notaStatus === 'loading' && <Loader />}
-              {dataNota && (
+              {notaStatus === 'success' && (
                 <Table responsive>
                   <thead>
                     <tr>
@@ -197,7 +201,7 @@ const DashboardScreen = ({ history }) => {
                 <Message variant='danger'>{errorRekapan}</Message>
               )}
               {rekapanStatus === 'loading' && <Loader />}
-              {dataRekapan && (
+              {rekapanStatus === 'success' && (
                 <Table responsive>
                   <thead>
                     <tr>
@@ -228,7 +232,7 @@ const DashboardScreen = ({ history }) => {
                 </Table>
               )}
             </Col>
-          </Row>
+          </Row> */}
         </Col>
       </Row>
     </>

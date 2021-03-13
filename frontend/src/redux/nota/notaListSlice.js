@@ -19,9 +19,21 @@ const initialState = notaListAdapter.getInitialState({
 
 export const fetchAllNota = createAsyncThunk(
   'nota/fetchAll',
-  async (undefined, { rejectWithValue }) => {
+  async (undefined, { rejectWithValue, getState }) => {
+    const {
+      currentUser: {
+        entity: { authToken },
+      },
+    } = getState();
+
+    const config = {
+      headers: {
+        authorization: `Bearer ${authToken}`,
+      },
+    };
+
     try {
-      const { data } = await axios.get('/api/nota');
+      const { data } = await axios.get('/api/nota', config);
 
       return data;
     } catch (error) {
@@ -38,7 +50,11 @@ export const fetchAllNota = createAsyncThunk(
 const notaListSlice = createSlice({
   name: 'nota',
   initialState,
-  reducer: {},
+  reducer: {
+    resetNota: (state, action) => {
+      state = initialState;
+    },
+  },
   extraReducers: {
     [fetchAllNota.pending]: (state, action) => {
       state.status = 'loading';
@@ -57,22 +73,21 @@ const notaListSlice = createSlice({
       state.totalPageCount = totalPageCount;
       notaListAdapter.upsertMany(state, allNota);
     },
+    [fetchAllNota.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.error = action.payload;
+    },
   },
 });
+
+export const { resetNota } = notaListSlice.actions;
 
 export default notaListSlice.reducer;
 
 export const {
-  selectIds,
-  selectById,
-  selectAll,
+  selectIds: selectNotaIds,
+  selectById: selectNotaById,
+  selectAll: selectAllNota,
 } = notaListAdapter.getSelectors((state) => state.nota);
 
-export const selectNota = (state) => {
-  const allNota = selectAll(state.nota);
-
-  return {
-    ...state.nota,
-    entities: allNota,
-  };
-};
+export const selectNota = (state) => state.nota;
