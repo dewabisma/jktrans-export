@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import userLoginReducer from './user/userLoginSlice';
-import notaReducer from './nota/notaSlice';
-import rekapanReducer from './rekapan/rekapanSlice';
+import notaListReducer from './nota/notaListSlice';
+import rekapanListReducer from './rekapan/rekapanListSlice';
 
 export default configureStore({
   reducer: {
     currentUser: userLoginReducer,
-    nota: notaReducer,
-    rekapan: rekapanReducer,
+    nota: notaListReducer,
+    rekapan: rekapanListReducer,
   },
 });

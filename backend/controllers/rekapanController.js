@@ -52,7 +52,7 @@ const getAllRekapan = asyncHandler(async (req, res) => {
         allRekapan,
         currentPage: pageNumber,
         totalRekapan: rekapanCount,
-        totalPage: Math.ceil(rekapanCount / pageSize),
+        totalPageCount: Math.ceil(rekapanCount / pageSize),
       });
     } else {
       res.status(404).json({ message: 'Belum ada nota tersimpan' });

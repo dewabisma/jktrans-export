@@ -1,4 +1,8 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createAsyncThunk,
+  isRejectedWithValue,
+} from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const initialState = {
@@ -7,27 +11,29 @@ const initialState = {
   error: null,
 };
 
-export const userLogin = createAsyncThunk('user/login', async (userData) => {
-  try {
-    const body = userData;
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+export const userLogin = createAsyncThunk(
+  'user/login',
+  async (userData, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-    const { data } = await axios.post('/api/users/login', body, config);
+      const { data } = await axios.post('/api/users/login', userData, config);
 
-    return data;
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
+      return data;
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
 
-    return message;
+      return rejectWithValue(message);
+    }
   }
-});
+);
 
 const userSlice = createSlice({
   name: 'user',

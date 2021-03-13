@@ -28,6 +28,9 @@ const LoginScreen = ({ history }) => {
     };
 
     dispatch(userLogin(userData));
+
+    setUsername('');
+    setPassword('');
   };
 
   useEffect(() => {
@@ -97,11 +100,20 @@ const LoginScreen = ({ history }) => {
           </Form.Group>
 
           <div className='d-flex justify-content-center '>
-            <Button variant='primary' type='submit'>
+            <Button
+              variant='primary'
+              type='submit'
+              disabled={status === 'loading'}
+            >
               Login
             </Button>
 
-            <Button className='ml-2' variant='primary' type='submit'>
+            <Button
+              className='ml-2'
+              variant='primary'
+              type='submit'
+              disabled={status === 'loading'}
+            >
               Ginlo
             </Button>
           </div>
