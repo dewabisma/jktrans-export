@@ -6,6 +6,7 @@ import {
 import axios from 'axios';
 
 const rekapanListAdapter = createEntityAdapter({
+  selectId: (entity) => entity._id,
   sortComparer: (a, b) => a.createdAt.localeCompare(b.createdAt),
 });
 
@@ -50,11 +51,7 @@ export const fetchAllRekapan = createAsyncThunk(
 const rekapanListSlice = createSlice({
   name: 'rekapan',
   initialState,
-  reducers: {
-    resetRekapan: (state, action) => {
-      state = initialState;
-    },
-  },
+  reducers: {},
   extraReducers: {
     [fetchAllRekapan.pending]: (state, action) => {
       state.status = 'loading';
@@ -71,7 +68,7 @@ const rekapanListSlice = createSlice({
       state.totalRekapan = totalRekapan;
       state.currentPage = currentPage;
       state.totalPageCount = totalPageCount;
-      rekapanListAdapter.upsertMany(state, allRekapan);
+      rekapanListAdapter.addMany(state, allRekapan);
     },
     [fetchAllRekapan.rejected]: (state, action) => {
       state.status = 'failed';
@@ -79,8 +76,6 @@ const rekapanListSlice = createSlice({
     },
   },
 });
-
-export const { resetRekapan } = rekapanListSlice.actions;
 
 export default rekapanListSlice.reducer;
 

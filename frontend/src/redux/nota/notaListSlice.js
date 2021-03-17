@@ -6,6 +6,7 @@ import {
 import axios from 'axios';
 
 const notaListAdapter = createEntityAdapter({
+  selectId: (entity) => entity._id,
   sortComparer: (a, b) => a.createdAt.localeCompare(b.createdAt),
 });
 
@@ -51,9 +52,15 @@ const notaListSlice = createSlice({
   name: 'nota',
   initialState,
   reducer: {
-    resetNota: (state, action) => {
-      state = initialState;
-    },
+    // resetNota: (state, action) => {
+    //   state.ids = [];
+    //   state.entities = {};
+    //   state.status = 'idle';
+    //   state.error = null;
+    //   state.currentPage = null;
+    //   state.totalPageCount = null;
+    //   state.totalNota = null;
+    // },
   },
   extraReducers: {
     [fetchAllNota.pending]: (state, action) => {
@@ -71,7 +78,7 @@ const notaListSlice = createSlice({
       state.currentPage = currentPage;
       state.totalNota = totalNota;
       state.totalPageCount = totalPageCount;
-      notaListAdapter.upsertMany(state, allNota);
+      notaListAdapter.addMany(state, allNota);
     },
     [fetchAllNota.rejected]: (state, action) => {
       state.status = 'failed';
@@ -79,8 +86,6 @@ const notaListSlice = createSlice({
     },
   },
 });
-
-export const { resetNota } = notaListSlice.actions;
 
 export default notaListSlice.reducer;
 

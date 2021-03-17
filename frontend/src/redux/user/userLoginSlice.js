@@ -47,6 +47,7 @@ const userSlice = createSlice({
     [userLogin.fulfilled]: (state, action) => {
       state.status = 'success';
       state.entity = action.payload;
+      state.error = null;
     },
     [userLogin.rejected]: (state, action) => {
       state.status = 'failed';

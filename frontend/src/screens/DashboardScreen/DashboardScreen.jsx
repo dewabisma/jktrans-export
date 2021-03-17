@@ -6,19 +6,18 @@ import useFetch from '../../hooks/useFetch.js';
 import Header from '../../components/Header/Header';
 import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
+import SideMenu from '../../components/SideMenu/SideMenu';
 
 import styles from './DashboardScreen.module.scss';
 import { logout, selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import {
   fetchAllRekapan,
   selectRekapan,
-  resetRekapan,
   selectAllRekapan,
 } from '../../redux/rekapan/rekapanListSlice.js';
 import {
   fetchAllNota,
   selectNota,
-  resetNota,
   selectAllNota,
 } from '../../redux/nota/notaListSlice.js';
 
@@ -62,7 +61,7 @@ const DashboardScreen = ({ history }) => {
 
     if (authToken && rekapanStatus === 'idle') dispatch(fetchAllRekapan());
     if (authToken && notaStatus === 'idle') dispatch(fetchAllNota());
-  }, [authToken, history, rekapanStatus, dispatch, notaStatus]);
+  }, [authToken, history, dispatch, notaStatus, rekapanStatus]);
 
   return (
     <>
@@ -70,29 +69,7 @@ const DashboardScreen = ({ history }) => {
 
       <Row noGutters>
         <Col className='d-flex flex-column bg-light pt-3 pb-3' md={3}>
-          <ListGroup variant='flush'>
-            <ListGroup.Item variant='primary' action>
-              Dashboard
-            </ListGroup.Item>
-            <ListGroup.Item variant='primary' action>
-              Buat Nota
-            </ListGroup.Item>
-            <ListGroup.Item variant='primary' action>
-              Buat Rekapan
-            </ListGroup.Item>
-            <ListGroup.Item variant='primary' action>
-              Lihat Data Nota
-            </ListGroup.Item>
-            <ListGroup.Item variant='primary' action>
-              Lihat Data Rekapan
-            </ListGroup.Item>
-          </ListGroup>
-
-          <div className='d-flex justify-content-center mt-3'>
-            <Button className='w-50' onClick={logoutHandler}>
-              Logout
-            </Button>
-          </div>
+          <SideMenu history={history} page='dashboard' />
         </Col>
 
         <Col className='p-4' md={9}>
@@ -105,7 +82,11 @@ const DashboardScreen = ({ history }) => {
 
                   {notaStatus === 'loading' && <Loader />}
 
-                  {totalNota && <Card.Text>{totalNota}</Card.Text>}
+                  {totalNota ? (
+                    <Card.Text>{totalNota}</Card.Text>
+                  ) : (
+                    <Card.Text>-</Card.Text>
+                  )}
                 </Card.Body>
               </Card>
             </Col>
@@ -120,7 +101,11 @@ const DashboardScreen = ({ history }) => {
 
                   {rekapanStatus === 'loading' && <Loader />}
 
-                  {totalRekapan && <Card.Text>{totalRekapan}</Card.Text>}
+                  {totalRekapan ? (
+                    <Card.Text>{totalRekapan}</Card.Text>
+                  ) : (
+                    <Card.Text>-</Card.Text>
+                  )}
                 </Card.Body>
               </Card>
             </Col>
@@ -146,15 +131,17 @@ const DashboardScreen = ({ history }) => {
               <Card className='bg-light border-0 shadow mt-2 ml-sm-2 mt-sm-2 m-md-0 ml-md-2'>
                 <Card.Body>
                   <Card.Title>Total Transaksi</Card.Title>
-                  {dataNota && dataRekapan && dataBookings && (
+                  {dataNota && dataRekapan && dataBookings ? (
                     <Card.Text>{getTotalTransaction()}</Card.Text>
+                  ) : (
+                    <Card.Text>-</Card.Text>
                   )}
                 </Card.Body>
               </Card>
             </Col>
           </Row>
 
-          {/* <Row className='pt-4' noGutters>
+          <Row className='pt-4' noGutters>
             <Col className='p-2 bg-light shadow '>
               {errorNota && <Message variant='danger'>{errorNota}</Message>}
               {notaStatus === 'loading' && <Loader />}
@@ -172,7 +159,7 @@ const DashboardScreen = ({ history }) => {
                   </thead>
 
                   <tbody className={styles.table}>
-                    {dataNota.allNota.map((nota) => (
+                    {dataNota.map((nota) => (
                       <tr key={nota.noNota}>
                         <td>{nota.noNota}</td>
                         <td>{nota.namaPengirim}</td>
@@ -213,7 +200,7 @@ const DashboardScreen = ({ history }) => {
                   </thead>
 
                   <tbody className={styles.table}>
-                    {dataRekapan.allRekapan.map((rekapan) => (
+                    {dataRekapan.map((rekapan) => (
                       <tr key={rekapan.noRekapan}>
                         <td>{rekapan.noRekapan}</td>
                         <td>{rekapan.noPolis}</td>
@@ -232,7 +219,7 @@ const DashboardScreen = ({ history }) => {
                 </Table>
               )}
             </Col>
-          </Row> */}
+          </Row>
         </Col>
       </Row>
     </>

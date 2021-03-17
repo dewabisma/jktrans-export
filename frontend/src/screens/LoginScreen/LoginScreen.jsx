@@ -34,16 +34,18 @@ const LoginScreen = ({ history }) => {
   };
 
   useEffect(() => {
-    if (status === 'success') history.push('/dashboard');
+    if (status === 'success') {
+      history.push('/dashboard');
+    } else if (loading) {
+      const setLoadingFalse = () => {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
+      };
 
-    const setLoadingFalse = () => {
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-    };
-
-    setLoadingFalse();
-  }, [history, status]);
+      setLoadingFalse();
+    }
+  }, [history, status, dispatch, loginError, loading]);
 
   return loading ? (
     <LoadingScreen />
