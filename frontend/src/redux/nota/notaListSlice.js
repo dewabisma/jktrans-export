@@ -95,4 +95,8 @@ export const {
   selectAll: selectAllNota,
 } = notaListAdapter.getSelectors((state) => state.nota);
 
-export const selectNota = (state) => state.nota;
+export const selectNota = (state) => {
+  const dataNota = selectAllNota(state);
+
+  return { ...state.nota, entities: dataNota };
+};

@@ -85,4 +85,11 @@ export const {
   selectById: selectRekapanById,
 } = rekapanListAdapter.getSelectors((state) => state.rekapan);
 
-export const selectRekapan = (state) => state.rekapan;
+export const selectRekapan = (state) => {
+  const dataRekapan = selectAllRekapan(state);
+
+  return {
+    ...state.rekapan,
+    entities: dataRekapan,
+  };
+};

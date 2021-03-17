@@ -9,7 +9,7 @@ import SideMenu from '../../components/SideMenu/SideMenu';
 
 // import styles from './BuatNota.module.scss';
 
-const BuatNota = ({ history }) => {
+const LihatNota = ({ history }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const BuatNota = ({ history }) => {
 
       <Row className='h-100' noGutters>
         <Col className='d-flex flex-column bg-light pt-3 pb-3' md={3}>
-          <SideMenu history={history} page='buatNota' />
+          <SideMenu history={history} page='lihatNota' />
         </Col>
 
         <Col className='p-4' md={9}></Col>
@@ -33,4 +33,4 @@ const BuatNota = ({ history }) => {
   );
 };
 
-export default BuatNota;
+export default LihatNota;

@@ -7,9 +7,9 @@ import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 
-// import styles from './BuatNota.module.scss';
+// import styles from './BuatRekapan.module.scss';
 
-const BuatNota = ({ history }) => {
+const BuatRekapan = ({ history }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const BuatNota = ({ history }) => {
 
       <Row className='h-100' noGutters>
         <Col className='d-flex flex-column bg-light pt-3 pb-3' md={3}>
-          <SideMenu history={history} page='buatNota' />
+          <SideMenu history={history} page='buatRekapan' />
         </Col>
 
         <Col className='p-4' md={9}></Col>
@@ -33,4 +33,4 @@ const BuatNota = ({ history }) => {
   );
 };
 
-export default BuatNota;
+export default BuatRekapan;

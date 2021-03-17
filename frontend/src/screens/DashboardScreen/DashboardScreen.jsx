@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, Table, ListGroup, Card, Button } from 'react-bootstrap';
-import useFetch from '../../hooks/useFetch.js';
+import { Row, Col, Table, Card, Button } from 'react-bootstrap';
 
 import Header from '../../components/Header/Header';
 import Loader from '../../components/Loader/Loader';
@@ -9,17 +8,17 @@ import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 
 import styles from './DashboardScreen.module.scss';
+
 import { logout, selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import {
   fetchAllRekapan,
   selectRekapan,
-  selectAllRekapan,
 } from '../../redux/rekapan/rekapanListSlice.js';
+import { fetchAllNota, selectNota } from '../../redux/nota/notaListSlice.js';
 import {
-  fetchAllNota,
-  selectNota,
-  selectAllNota,
-} from '../../redux/nota/notaListSlice.js';
+  fetchAllBookingan,
+  selectBookingan,
+} from '../../redux/bookingan/bookinganListSlice.js';
 
 const DashboardScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -30,23 +29,25 @@ const DashboardScreen = ({ history }) => {
     error: errorRekapan,
     status: rekapanStatus,
     totalRekapan,
+    entities: dataRekapan,
   } = useSelector(selectRekapan);
 
-  const dataRekapan = useSelector(selectAllRekapan);
-
-  const { error: errorNota, status: notaStatus, totalNota } = useSelector(
-    selectNota
-  );
-  const dataNota = useSelector(selectAllNota);
+  const {
+    error: errorNota,
+    status: notaStatus,
+    totalNota,
+    entities: dataNota,
+  } = useSelector(selectNota);
 
   const {
-    data: dataBookings,
-    error: errorBookings,
-    isLoading: loadingBookings,
-  } = useFetch('/api/bookings', authToken);
+    error: errorBookingan,
+    status: bookinganStatus,
+    totalBookingan,
+    entities: dataBookingan,
+  } = useSelector(selectBookingan);
 
   const getTotalTransaction = () =>
-    totalRekapan + totalNota + dataBookings.allBookings.length;
+    totalRekapan + totalNota + dataBookingan.length;
 
   const checkNotaHandler = (notaId) => {};
   const checkRekapanHandler = (rekapanId) => {};
@@ -61,13 +62,21 @@ const DashboardScreen = ({ history }) => {
 
     if (authToken && rekapanStatus === 'idle') dispatch(fetchAllRekapan());
     if (authToken && notaStatus === 'idle') dispatch(fetchAllNota());
-  }, [authToken, history, dispatch, notaStatus, rekapanStatus]);
+    if (authToken && bookinganStatus === 'idle') dispatch(fetchAllBookingan());
+  }, [
+    authToken,
+    history,
+    dispatch,
+    notaStatus,
+    rekapanStatus,
+    bookinganStatus,
+  ]);
 
   return (
     <>
       <Header />
 
-      <Row noGutters>
+      <Row className='h-100' noGutters>
         <Col className='d-flex flex-column bg-light pt-3 pb-3' md={3}>
           <SideMenu history={history} page='dashboard' />
         </Col>
@@ -114,14 +123,14 @@ const DashboardScreen = ({ history }) => {
               <Card className='bg-light border-0 shadow mt-2 mt-sm-2 mr-sm-2 m-md-0 ml-md-2'>
                 <Card.Body>
                   <Card.Title>Bookingan Masuk</Card.Title>
-                  {errorBookings && (
-                    <Message variant='danger'>{errorBookings}</Message>
+                  {errorBookingan && (
+                    <Message variant='danger'>{errorBookingan}</Message>
                   )}
 
-                  {loadingBookings && <Loader />}
+                  {bookinganStatus === 'loading' && <Loader />}
 
-                  {dataBookings && (
-                    <Card.Text>{dataBookings.allBookings.length}</Card.Text>
+                  {bookinganStatus === 'success' && (
+                    <Card.Text>{dataBookingan.length}</Card.Text>
                   )}
                 </Card.Body>
               </Card>
@@ -131,7 +140,7 @@ const DashboardScreen = ({ history }) => {
               <Card className='bg-light border-0 shadow mt-2 ml-sm-2 mt-sm-2 m-md-0 ml-md-2'>
                 <Card.Body>
                   <Card.Title>Total Transaksi</Card.Title>
-                  {dataNota && dataRekapan && dataBookings ? (
+                  {dataNota && dataRekapan && dataBookingan ? (
                     <Card.Text>{getTotalTransaction()}</Card.Text>
                   ) : (
                     <Card.Text>-</Card.Text>
