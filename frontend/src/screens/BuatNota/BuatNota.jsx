@@ -24,9 +24,9 @@ const BuatNota = ({ history }) => {
   const [namaPenerima, setNamaPenerima] = useState('');
   const [alamatPenerima, setAlamatPenerima] = useState('');
   const [dataBarang, setDataBarang] = useState([]);
-  const [totalColli, setTotalColli] = useState(0);
-  const [totalBerat, setTotalBerat] = useState(0);
-  const [totalHarga, setTotalHarga] = useState(0);
+  const [totalColli, setTotalColli] = useState('0 Colli');
+  const [totalBerat, setTotalBerat] = useState('0 Kg');
+  const [totalBiaya, setTotalBiaya] = useState('Rp. 0');
 
   // Form 2 - Data Barang Dikirim
   const [banyakColli, setBanyakColli] = useState(0);
@@ -54,12 +54,12 @@ const BuatNota = ({ history }) => {
 
         <Col className='p-4' md={9}>
           <h1 className=''>Input Nota</h1>
-
-          <Row noGutters>
-            <Col>
-              <Form>
+          <Form>
+            <Row noGutters>
+              <Col className='px-2'>
                 <Form.Group controlId='namaPengirim'>
                   <Form.Label>Nama Pengirim</Form.Label>
+
                   <Form.Control
                     type='text'
                     placeholder='Masukkan nama pengirim'
@@ -71,32 +71,78 @@ const BuatNota = ({ history }) => {
 
                 <Form.Group controlId='namaPenerima'>
                   <Form.Label>Nama Penerima</Form.Label>
+
                   <Form.Control
                     type='text'
                     placeholder='Masukkan nama penerima'
+                    value={namaPenerima}
+                    onChange={(e) => setNamaPenerima(e.target.value)}
                     required
                   />
                 </Form.Group>
 
                 <Form.Group controlId='alamatPenerima'>
                   <Form.Label>Alamat Penerima</Form.Label>
+
                   <Form.Control
                     type='text'
                     placeholder='Masukkan alamat penerima'
+                    value={alamatPenerima}
+                    onChange={(e) => setAlamatPenerima(e.target.value)}
                     required
                   />
                 </Form.Group>
+              </Col>
 
-                <Button variant='primary' type='submit'>
-                  Buat Nota
-                </Button>
-              </Form>
-            </Col>
-          </Row>
+              <Col className='px-2'>
+                <Form.Group controlId='totalColli'>
+                  <Form.Label>Total Colli</Form.Label>
+                  <Form.Control
+                    className='pl-3'
+                    type='text'
+                    value={totalColli}
+                    readOnly
+                    plaintext
+                  />
+                </Form.Group>
+
+                <Form.Group controlId='totalBerat'>
+                  <Form.Label>Total Berat</Form.Label>
+                  <Form.Control
+                    className='pl-3'
+                    type='text'
+                    value={totalBerat}
+                    readOnly
+                    plaintext
+                  />
+                </Form.Group>
+
+                <Form.Group controlId='totalBiaya'>
+                  <Form.Label>Total Biaya</Form.Label>
+                  <Form.Control
+                    className='pl-3'
+                    type='text'
+                    value={totalBiaya}
+                    readOnly
+                    plaintext
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+          </Form>
 
           <Row className='mt-3' noGutters>
             <Col>
-              <h2>Data Barang</h2>
+              <div className='d-flex justify-content-between'>
+                <h2 className='mb-2'>Data Barang</h2>
+                <Button
+                  className='mb-2'
+                  variant='outline-primary'
+                  type='button'
+                >
+                  Tambah Barang
+                </Button>
+              </div>
 
               <Table striped bordered hover>
                 <thead>
