@@ -6,6 +6,7 @@ import Header from '../../components/Header/Header';
 import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
+import ModalForm from '../../components/ModalForm/ModalForm';
 
 // import styles from './BuatRekapan.module.scss';
 
@@ -27,7 +28,9 @@ const BuatRekapan = ({ history }) => {
           <SideMenu history={history} page='buatRekapan' />
         </Col>
 
-        <Col className='p-4' md={9}></Col>
+        <Col className='p-4' md={9}>
+          <ModalForm />
+        </Col>
       </Row>
     </>
   );
