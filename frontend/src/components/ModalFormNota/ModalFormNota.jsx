@@ -39,6 +39,15 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
     }
   };
 
+  const resetState = () => {
+    setBanyakColli(0);
+    setMacamColli('');
+    setMerekColli('');
+    setNamaBarang('');
+    setBeratKotor(0);
+    setKeterangan('');
+  };
+
   const formHandler = () => {
     const newBarang = {
       noBarang: dataBarang.length + 1,
@@ -52,6 +61,7 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
     };
 
     setDataBarang([...dataBarang, newBarang]);
+    resetState();
 
     handleClose();
   };

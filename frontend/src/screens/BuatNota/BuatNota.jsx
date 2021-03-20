@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Button, Form, Table } from 'react-bootstrap';
+import numeral from 'numeral';
+import axios from 'axios';
 
 import Header from '../../components/Header/Header';
 import Loader from '../../components/Loader/Loader';
@@ -8,10 +10,14 @@ import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
 
+import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
+
 // import styles from './BuatNota.module.scss';
 
 const BuatNota = ({ history }) => {
   const dispatch = useDispatch();
+
+  const authToken = useSelector(selectAuthToken);
 
   // Form 1 - Rincian Pengiriman
   const [namaPengirim, setNamaPengirim] = useState('');
@@ -19,16 +25,79 @@ const BuatNota = ({ history }) => {
   const [alamatPenerima, setAlamatPenerima] = useState('');
   const [dataBarang, setDataBarang] = useState([]);
 
-  // Dont need to put in state(can be derived from existing value)
-  const [totalColli, setTotalColli] = useState('0 Colli');
-  const [totalBerat, setTotalBerat] = useState('0 Kg');
-  const [totalBiaya, setTotalBiaya] = useState('Rp. 0');
+  const calculateTotalColli = () => {
+    if (dataBarang.length > 0) {
+      const totalColli = dataBarang.reduce(
+        (acc, barang) => Number(acc) + Number(barang.banyakColli),
+        0
+      );
+
+      return totalColli;
+    } else {
+      return 0;
+    }
+  };
+  const calculateTotalBerat = () => {
+    if (dataBarang.length > 0) {
+      const totalBerat = dataBarang.reduce(
+        (acc, barang) => Number(acc) + Number(barang.beratKotor),
+        0
+      );
+
+      return totalBerat;
+    } else {
+      return 0;
+    }
+  };
+  const calculateTotalBiaya = () => {
+    if (dataBarang.length > 0) {
+      const totalBiaya = dataBarang.reduce(
+        (acc, barang) => Number(acc) + Number(barang.biayaAngkut),
+        0
+      );
+
+      return totalBiaya;
+    } else {
+      return;
+    }
+  };
+  const formSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    const newNota = {
+      namaPengirim,
+      namaPenerima,
+      alamatPenerima,
+      detailBarang: dataBarang,
+      totalColli: calculateTotalColli(),
+      totalBerat: calculateTotalBerat(),
+      totalHarga: calculateTotalBiaya(),
+    };
+
+    const config = {
+      headers: {
+        authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    try {
+      const { data } = await axios.post('/api/nota', newNota, config);
+
+      if (data) {
+      }
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+    }
+  };
 
   useEffect(() => {
-    if (false) {
+    if (!authToken) {
       history.push('/');
     }
-  }, [history]);
+  }, [history, authToken]);
 
   return (
     <>
@@ -87,7 +156,7 @@ const BuatNota = ({ history }) => {
                   <Form.Control
                     className='pl-3'
                     type='text'
-                    value={totalColli}
+                    value={`${calculateTotalColli()} Colli`}
                     readOnly
                     plaintext
                   />
@@ -98,7 +167,7 @@ const BuatNota = ({ history }) => {
                   <Form.Control
                     className='pl-3'
                     type='text'
-                    value={totalBerat}
+                    value={`${calculateTotalBerat()} Kg`}
                     readOnly
                     plaintext
                   />
@@ -109,13 +178,19 @@ const BuatNota = ({ history }) => {
                   <Form.Control
                     className='pl-3'
                     type='text'
-                    value={totalBiaya}
+                    value={`Rp. ${numeral(calculateTotalBiaya()).format(
+                      '0,0.00'
+                    )}`}
                     readOnly
                     plaintext
                   />
                 </Form.Group>
               </Col>
             </Row>
+
+            <Button type='button' variant='primary' onClick={formSubmitHandler}>
+              Buat Nota
+            </Button>
           </Form>
 
           <Row className='mt-3' noGutters>

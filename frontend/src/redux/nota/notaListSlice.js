@@ -51,17 +51,7 @@ export const fetchAllNota = createAsyncThunk(
 const notaListSlice = createSlice({
   name: 'nota',
   initialState,
-  reducer: {
-    // resetNota: (state, action) => {
-    //   state.ids = [];
-    //   state.entities = {};
-    //   state.status = 'idle';
-    //   state.error = null;
-    //   state.currentPage = null;
-    //   state.totalPageCount = null;
-    //   state.totalNota = null;
-    // },
-  },
+  reducer: {},
   extraReducers: {
     [fetchAllNota.pending]: (state, action) => {
       state.status = 'loading';
