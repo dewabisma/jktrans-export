@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Row, Col, Button, Form, Table } from 'react-bootstrap';
-import useFetch from '../../hooks/useFetch.js';
 
 import Header from '../../components/Header/Header';
 import Loader from '../../components/Loader/Loader';
@@ -13,12 +12,6 @@ import SideMenu from '../../components/SideMenu/SideMenu';
 const BuatNota = ({ history }) => {
   const dispatch = useDispatch();
 
-  const {
-    data: listBiaya,
-    error: errorListBiaya,
-    isLoading: loadingListBiaya,
-  } = useFetch('/api/prices');
-
   // Form 1 - Rincian Pengiriman
   const [namaPengirim, setNamaPengirim] = useState('');
   const [namaPenerima, setNamaPenerima] = useState('');
@@ -27,15 +20,6 @@ const BuatNota = ({ history }) => {
   const [totalColli, setTotalColli] = useState('0 Colli');
   const [totalBerat, setTotalBerat] = useState('0 Kg');
   const [totalBiaya, setTotalBiaya] = useState('Rp. 0');
-
-  // Form 2 - Data Barang Dikirim
-  const [banyakColli, setBanyakColli] = useState(0);
-  const [macamColli, setMacamColli] = useState('');
-  const [merekColli, setMerekColli] = useState('');
-  const [namaBarang, setNamaBarang] = useState('');
-  const [beratKotor, setBeratKotor] = useState(0);
-  const [biayaAngkut, setBiayaAngkut] = useState(0);
-  const [keterangan, setKeterangan] = useState('');
 
   useEffect(() => {
     if (false) {
@@ -63,8 +47,8 @@ const BuatNota = ({ history }) => {
                   <Form.Control
                     type='text'
                     placeholder='Masukkan nama pengirim'
-                    value={namaPenerima}
-                    onChange={(e) => setNamaPenerima(e.target.value)}
+                    value={namaPengirim}
+                    onChange={(e) => setNamaPengirim(e.target.value)}
                     required
                   />
                 </Form.Group>
