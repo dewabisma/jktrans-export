@@ -143,7 +143,7 @@ const BuatNota = ({ history }) => {
                 </thead>
                 <tbody>
                   {dataBarang.map((barang) => (
-                    <tr>
+                    <tr key={barang.noBarang}>
                       <td>{barang.noBarang}</td>
                       <td>{barang.banyakColli}</td>
                       <td>{barang.macamColli}</td>
