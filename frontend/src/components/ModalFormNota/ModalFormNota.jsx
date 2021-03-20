@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import useFetch from '../../hooks/useFetch.js';
 
-import Message from '../../components/Message/Message';
+import Message from '../Message/Message';
 
-const ModalForm = ({ setDataBarang }) => {
+const ModalFormNota = ({ dataBarang, setDataBarang }) => {
   const [show, setShow] = useState(false);
 
   const { data: listBiaya, error: errorListBiaya } = useFetch('/api/prices');
@@ -15,9 +15,12 @@ const ModalForm = ({ setDataBarang }) => {
   const [merekColli, setMerekColli] = useState('');
   const [namaBarang, setNamaBarang] = useState('');
   const [beratKotor, setBeratKotor] = useState(0);
-  const [biayaAngkut, setBiayaAngkut] = useState(0);
   const [keterangan, setKeterangan] = useState('');
 
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  // Derive value if possible rather than store in state (will not sync if not derived)
   const hitungBiayaAngkut = () => {
     if (banyakColli !== 0 && macamColli) {
       const barang = listBiaya.find(
@@ -27,31 +30,41 @@ const ModalForm = ({ setDataBarang }) => {
       if (barang) {
         const biayaPerColli = barang.biayaAngkut;
 
-        setBiayaAngkut(banyakColli * biayaPerColli);
+        return banyakColli * biayaPerColli;
+      } else {
+        return 0;
       }
+    } else {
+      return 0;
     }
   };
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const formHandler = () => {
     const newBarang = {
+      noBarang: dataBarang.length + 1,
       banyakColli,
       macamColli,
       merekColli,
       namaBarang,
       beratKotor,
-      biayaAngkut,
+      biayaAngkut: hitungBiayaAngkut(),
       keterangan,
     };
+
+    setDataBarang([...dataBarang, newBarang]);
 
     handleClose();
   };
 
   return (
     <>
-      <Button variant='primary' onClick={handleShow}>
-        Launch static backdrop modal
+      <Button
+        className='mb-2'
+        variant='outline-primary'
+        type='button'
+        onClick={handleShow}
+      >
+        Tambah Barang
       </Button>
 
       <Modal
@@ -140,8 +153,8 @@ const ModalForm = ({ setDataBarang }) => {
                 className='pl-3'
                 plaintext
                 readOnly
-                type='number'
-                value={biayaAngkut}
+                type='text'
+                value={`Rp. ${hitungBiayaAngkut()}`}
                 required
               ></Form.Control>
             </Form.Group>
@@ -168,4 +181,4 @@ const ModalForm = ({ setDataBarang }) => {
   );
 };
 
-export default ModalForm;
+export default ModalFormNota;

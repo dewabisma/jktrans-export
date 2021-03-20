@@ -6,6 +6,7 @@ import Header from '../../components/Header/Header';
 import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
+import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
 
 // import styles from './BuatNota.module.scss';
 
@@ -17,6 +18,8 @@ const BuatNota = ({ history }) => {
   const [namaPenerima, setNamaPenerima] = useState('');
   const [alamatPenerima, setAlamatPenerima] = useState('');
   const [dataBarang, setDataBarang] = useState([]);
+
+  // Dont need to put in state(can be derived from existing value)
   const [totalColli, setTotalColli] = useState('0 Colli');
   const [totalBerat, setTotalBerat] = useState('0 Kg');
   const [totalBiaya, setTotalBiaya] = useState('Rp. 0');
@@ -119,13 +122,10 @@ const BuatNota = ({ history }) => {
             <Col>
               <div className='d-flex justify-content-between'>
                 <h2 className='mb-2'>Data Barang</h2>
-                <Button
-                  className='mb-2'
-                  variant='outline-primary'
-                  type='button'
-                >
-                  Tambah Barang
-                </Button>
+                <ModalFormNota
+                  dataBarang={dataBarang}
+                  setDataBarang={setDataBarang}
+                />
               </div>
 
               <Table striped bordered hover>
@@ -142,16 +142,6 @@ const BuatNota = ({ history }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>1234</td>
-                    <td>1234</td>
-                    <td>1234</td>
-                    <td>1234</td>
-                    <td>1234</td>
-                    <td>1234</td>
-                    <td>1234</td>
-                  </tr>
                   {dataBarang.map((barang) => (
                     <tr>
                       <td>{barang.noBarang}</td>
