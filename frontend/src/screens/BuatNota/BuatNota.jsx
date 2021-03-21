@@ -11,6 +11,7 @@ import SideMenu from '../../components/SideMenu/SideMenu';
 import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
 
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
+import { addNew } from '../../redux/nota/notaListSlice.js';
 
 // import styles from './BuatNota.module.scss';
 
@@ -84,6 +85,7 @@ const BuatNota = ({ history }) => {
       const { data } = await axios.post('/api/nota', newNota, config);
 
       if (data) {
+        dispatch(addNew(data));
       }
     } catch (error) {
       const message =
@@ -91,6 +93,11 @@ const BuatNota = ({ history }) => {
           ? error.response.data.message
           : error.message;
     }
+
+    setNamaPengirim('');
+    setNamaPenerima('');
+    setAlamatPenerima('');
+    setDataBarang([]);
   };
 
   useEffect(() => {
@@ -110,6 +117,7 @@ const BuatNota = ({ history }) => {
 
         <Col className='p-4' md={9}>
           <h1 className=''>Input Nota</h1>
+
           <Form>
             <Row noGutters>
               <Col className='px-2'>

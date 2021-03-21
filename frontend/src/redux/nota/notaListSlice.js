@@ -20,7 +20,13 @@ const initialState = notaListAdapter.getInitialState({
 
 export const fetchAllNota = createAsyncThunk(
   'nota/fetchAll',
-  async (undefined, { rejectWithValue, getState }) => {
+  async (
+    query = {
+      pageSize: '',
+      pageNumber: '',
+    },
+    { rejectWithValue, getState }
+  ) => {
     const {
       currentUser: {
         entity: { authToken },
@@ -34,7 +40,10 @@ export const fetchAllNota = createAsyncThunk(
     };
 
     try {
-      const { data } = await axios.get('/api/nota', config);
+      const { data } = await axios.get(
+        `/api/nota?pageSize=${query.pageSize}&pageNumber=${query.pageNumber}`,
+        config
+      );
 
       return data;
     } catch (error) {
@@ -51,7 +60,12 @@ export const fetchAllNota = createAsyncThunk(
 const notaListSlice = createSlice({
   name: 'nota',
   initialState,
-  reducer: {},
+  reducers: {
+    addNew: (state, action) => {
+      notaListAdapter.addOne(state, action.payload);
+      state.totalNota += 1;
+    },
+  },
   extraReducers: {
     [fetchAllNota.pending]: (state, action) => {
       state.status = 'loading';
@@ -76,6 +90,8 @@ const notaListSlice = createSlice({
     },
   },
 });
+
+export const { addNew } = notaListSlice.actions;
 
 export default notaListSlice.reducer;
 

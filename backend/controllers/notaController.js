@@ -131,8 +131,12 @@ const createNewNota = asyncHandler(async (req, res) => {
 
   const createdNota = await Nota.create(newNota);
 
+  const populatedCreatedNota = await createdNota
+    .populate('pegawai', '-password')
+    .execPopulate();
+
   if (createdNota) {
-    res.status(201).json(createdNota);
+    res.status(201).json(populatedCreatedNota);
   } else {
     res.json({ message: 'Gagal membuat nota' });
   }

@@ -51,9 +51,6 @@ const DashboardScreen = ({ history }) => {
 
   const checkNotaHandler = (notaId) => {};
   const checkRekapanHandler = (rekapanId) => {};
-  const logoutHandler = () => {
-    dispatch(logout());
-  };
 
   useEffect(() => {
     if (!authToken) {
@@ -61,7 +58,12 @@ const DashboardScreen = ({ history }) => {
     }
 
     if (authToken && rekapanStatus === 'idle') dispatch(fetchAllRekapan());
-    if (authToken && notaStatus === 'idle') dispatch(fetchAllNota());
+    if (authToken && notaStatus === 'idle')
+      dispatch(
+        fetchAllNota({
+          pageSize: 20,
+        })
+      );
     if (authToken && bookinganStatus === 'idle') dispatch(fetchAllBookingan());
   }, [
     authToken,

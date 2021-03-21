@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
+import numeral from 'numeral';
 import useFetch from '../../hooks/useFetch.js';
 
 import Message from '../Message/Message';
@@ -164,7 +165,7 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
                 plaintext
                 readOnly
                 type='text'
-                value={`Rp. ${hitungBiayaAngkut()}`}
+                value={`Rp. ${numeral(hitungBiayaAngkut()).format('0,0.00')}`}
                 required
               ></Form.Control>
             </Form.Group>
