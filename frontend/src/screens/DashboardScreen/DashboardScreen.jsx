@@ -9,7 +9,7 @@ import SideMenu from '../../components/SideMenu/SideMenu';
 
 import styles from './DashboardScreen.module.scss';
 
-import { logout, selectAuthToken } from '../../redux/user/userLoginSlice.js';
+import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import {
   fetchAllRekapan,
   selectRekapan,

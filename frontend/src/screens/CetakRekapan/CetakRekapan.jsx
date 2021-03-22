@@ -34,13 +34,13 @@ const CetakNota = () => {
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th>No</th>
-                <th>Banyak Colli</th>
-                <th>Macam Colli</th>
-                <th>Merek Colli</th>
-                <th>Nama Barang</th>
-                <th>Berat Kotor</th>
-                <th>Biaya Angkut</th>
+                <th>No.</th>
+                <th>S. P.</th>
+                <th>Colli</th>
+                <th>Berat</th>
+                <th>Franco</th>
+                <th>Confrankert</th>
+                <th>Penerima Barang</th>
                 <th>Keterangan</th>
               </tr>
             </thead>
@@ -48,12 +48,13 @@ const CetakNota = () => {
               <tr>
                 <td>1234</td>
                 <td>1234</td>
+
                 <td>1234</td>
                 <td>1234</td>
                 <td>1234</td>
                 <td>1234</td>
                 <td>1234</td>
-                <td>1234</td>
+                <td></td>
               </tr>
 
               <tr>
@@ -64,7 +65,7 @@ const CetakNota = () => {
                 <td>1234</td>
                 <td>1234</td>
                 <td>1234</td>
-                <td>1234</td>
+                <td></td>
               </tr>
 
               <tr>
@@ -75,7 +76,7 @@ const CetakNota = () => {
                 <td>1234</td>
                 <td>1234</td>
                 <td>1234</td>
-                <td>1234</td>
+                <td></td>
               </tr>
             </tbody>
           </Table>
