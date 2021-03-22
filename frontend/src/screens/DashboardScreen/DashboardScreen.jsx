@@ -58,12 +58,7 @@ const DashboardScreen = ({ history }) => {
     }
 
     if (authToken && rekapanStatus === 'idle') dispatch(fetchAllRekapan());
-    if (authToken && notaStatus === 'idle')
-      dispatch(
-        fetchAllNota({
-          pageSize: 20,
-        })
-      );
+    if (authToken && notaStatus === 'idle') dispatch(fetchAllNota());
     if (authToken && bookinganStatus === 'idle') dispatch(fetchAllBookingan());
   }, [
     authToken,

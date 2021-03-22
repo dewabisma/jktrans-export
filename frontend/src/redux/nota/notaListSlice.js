@@ -65,6 +65,15 @@ const notaListSlice = createSlice({
       notaListAdapter.addOne(state, action.payload);
       state.totalNota += 1;
     },
+    resetNotaState: (state, action) => {
+      state.ids = [];
+      state.entities = {};
+      state.status = 'idle';
+      state.error = null;
+      state.currentPage = null;
+      state.totalPageCount = null;
+      state.totalNota = null;
+    },
   },
   extraReducers: {
     [fetchAllNota.pending]: (state, action) => {
@@ -91,7 +100,7 @@ const notaListSlice = createSlice({
   },
 });
 
-export const { addNew } = notaListSlice.actions;
+export const { addNew, resetNotaState } = notaListSlice.actions;
 
 export default notaListSlice.reducer;
 

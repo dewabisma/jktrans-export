@@ -51,7 +51,21 @@ export const fetchAllBookingan = createAsyncThunk(
 const bookinganListSlice = createSlice({
   name: 'bookingan',
   initialState,
-  reducers: {},
+  reducers: {
+    addNew: (state, action) => {
+      bookinganListAdapter.addOne(state, action.payload);
+      state.totalNota += 1;
+    },
+    resetBookinganState: (state, action) => {
+      state.ids = [];
+      state.entities = {};
+      state.status = 'idle';
+      state.error = null;
+      state.currentPage = null;
+      state.totalPageCount = null;
+      state.totalBookingan = null;
+    },
+  },
   extraReducers: {
     [fetchAllBookingan.pending]: (state, action) => {
       state.status = 'loading';
@@ -66,6 +80,8 @@ const bookinganListSlice = createSlice({
     },
   },
 });
+
+export const { addNew, resetBookinganState } = bookinganListSlice.actions;
 
 export default bookinganListSlice.reducer;
 

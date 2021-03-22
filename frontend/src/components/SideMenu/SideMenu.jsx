@@ -3,10 +3,16 @@ import { useDispatch } from 'react-redux';
 import { ListGroup, Button } from 'react-bootstrap';
 
 import { logout } from '../../redux/user/userLoginSlice';
+import { resetNotaState } from '../../redux/nota/notaListSlice';
+import { resetRekapanState } from '../../redux/rekapan/rekapanListSlice';
+import { resetBookinganState } from '../../redux/bookingan/bookinganListSlice';
 
 const SideMenu = ({ history, page }) => {
   const dispatch = useDispatch();
   const logoutHandler = () => {
+    dispatch(resetNotaState());
+    dispatch(resetRekapanState());
+    dispatch(resetBookinganState());
     dispatch(logout());
   };
 

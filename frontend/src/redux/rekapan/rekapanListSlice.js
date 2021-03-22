@@ -51,7 +51,21 @@ export const fetchAllRekapan = createAsyncThunk(
 const rekapanListSlice = createSlice({
   name: 'rekapan',
   initialState,
-  reducers: {},
+  reducers: {
+    addNew: (state, action) => {
+      rekapanListAdapter.addOne(state, action.payload);
+      state.totalRekapan += 1;
+    },
+    resetRekapanState: (state, action) => {
+      state.ids = [];
+      state.entities = {};
+      state.status = 'idle';
+      state.error = null;
+      state.currentPage = null;
+      state.totalPageCount = null;
+      state.totalRekapan = null;
+    },
+  },
   extraReducers: {
     [fetchAllRekapan.pending]: (state, action) => {
       state.status = 'loading';
@@ -76,6 +90,8 @@ const rekapanListSlice = createSlice({
     },
   },
 });
+
+export const { addNew, resetRekapanState } = rekapanListSlice.actions;
 
 export default rekapanListSlice.reducer;
 

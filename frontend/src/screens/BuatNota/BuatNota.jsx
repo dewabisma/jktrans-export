@@ -196,7 +196,12 @@ const BuatNota = ({ history }) => {
               </Col>
             </Row>
 
-            <Button type='button' variant='primary' onClick={formSubmitHandler}>
+            <Button
+              type='button'
+              variant='primary'
+              onClick={formSubmitHandler}
+              disabled={!dataBarang.length > 0}
+            >
               Buat Nota
             </Button>
           </Form>
