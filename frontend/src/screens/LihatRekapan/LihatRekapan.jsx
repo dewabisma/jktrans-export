@@ -93,7 +93,7 @@ const LihatRekapan = ({ history }) => {
                 <td>3</td>
                 <td>Wayan</td>
                 <td>1bddwai1</td>
-                <td classname='w-25'>
+                <td className='w-25'>
                   <div className='d-flex justify-content-around'>
                     <Button type='button' variant='secondary'>
                       Detail
