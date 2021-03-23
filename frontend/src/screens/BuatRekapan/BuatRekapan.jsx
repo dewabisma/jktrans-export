@@ -119,7 +119,7 @@ const BuatRekapan = ({ history }) => {
                 <h2 className='mb-2'>List Nota</h2>
               </div>
 
-              <Table striped bordered hover>
+              <Table striped bordered hover responsive='md'>
                 <thead>
                   <tr>
                     <th>No.</th>
@@ -142,6 +142,15 @@ const BuatRekapan = ({ history }) => {
                       )}`}</td>
                       <td>{nota.namaPengirim}</td>
                       <td>{nota.namaPenerima}</td>
+                      <td>
+                        <Form.Check
+                          type='checkbox'
+                          label='add'
+                          value={nota._id}
+                          id={`nota-${nota.noNota}`}
+                          onChange={(e) => console.log(e.target.value)}
+                        />
+                      </td>
                     </tr>
                   ))}
                 </tbody>

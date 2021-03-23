@@ -216,7 +216,7 @@ const BuatNota = ({ history }) => {
                 />
               </div>
 
-              <Table striped bordered hover>
+              <Table striped bordered hover responsive='md'>
                 <thead>
                   <tr>
                     <th>No</th>
