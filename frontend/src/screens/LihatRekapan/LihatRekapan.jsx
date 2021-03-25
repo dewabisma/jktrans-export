@@ -24,7 +24,7 @@ const LihatRekapan = ({ history }) => {
     <>
       <Header />
 
-      <Row className='h-100' noGutters>
+      <Row className='fullHeight' noGutters>
         <Col className='d-flex flex-column bg-light pt-3 pb-3' md={3}>
           <SideMenu history={history} page='lihatRekapan' />
         </Col>
@@ -55,12 +55,12 @@ const LihatRekapan = ({ history }) => {
                     <FontAwesomeIcon
                       icon={faEdit}
                       size='2x'
-                      className='text-secondary'
+                      className='text-secondary ml-2'
                     />
                     <FontAwesomeIcon
                       icon={faTrashAlt}
                       size='2x'
-                      className='text-danger'
+                      className='text-danger ml-2'
                     />
                   </div>
                 </td>

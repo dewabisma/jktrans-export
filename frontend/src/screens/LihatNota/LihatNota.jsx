@@ -9,7 +9,7 @@ import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 
-// import styles from './BuatNota.module.scss';
+import styles from './LihatNota.module.scss';
 
 const LihatNota = ({ history }) => {
   const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const LihatNota = ({ history }) => {
     <>
       <Header />
 
-      <Row className='h-100' noGutters>
+      <Row className='fullHeight' noGutters>
         <Col className='d-flex flex-column bg-light pt-3 pb-3' md={3}>
           <SideMenu history={history} page='lihatNota' />
         </Col>

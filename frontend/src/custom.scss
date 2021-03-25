@@ -12,5 +12,15 @@ th {
   text-align: center;
 }
 
+.fullHeight {
+  height: 100%;
+}
+
+@media only screen and (max-width: 576px) {
+  .fullHeight {
+    height: 0%;
+  }
+}
+
 /* import bootstrap to set changes */
 @import '../node_modules/bootstrap/scss/bootstrap';

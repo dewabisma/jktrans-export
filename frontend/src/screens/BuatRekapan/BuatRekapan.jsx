@@ -13,7 +13,7 @@ import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import { selectAllNota } from '../../redux/nota/notaListSlice.js';
 import { addNew } from '../../redux/rekapan/rekapanListSlice.js';
 
-// import styles from './BuatRekapan.module.scss';
+import styles from './BuatRekapan.module.scss';
 
 const BuatRekapan = ({ history }) => {
   const dispatch = useDispatch();
@@ -69,7 +69,7 @@ const BuatRekapan = ({ history }) => {
     <>
       <Header />
 
-      <Row className='h-100' noGutters>
+      <Row className='fullHeight' noGutters>
         <Col className='d-flex flex-column bg-light pt-3 pb-3' md={3}>
           <SideMenu history={history} page='buatRekapan' />
         </Col>

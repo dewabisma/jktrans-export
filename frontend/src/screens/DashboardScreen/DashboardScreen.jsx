@@ -73,7 +73,7 @@ const DashboardScreen = ({ history }) => {
     <>
       <Header />
 
-      <Row className='h-100' noGutters>
+      <Row className='fullHeight' noGutters>
         <Col className='d-flex flex-column bg-light pt-3 pb-3' md={3}>
           <SideMenu history={history} page='dashboard' />
         </Col>

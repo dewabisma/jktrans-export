@@ -13,7 +13,7 @@ import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import { addNew } from '../../redux/nota/notaListSlice.js';
 
-// import styles from './BuatNota.module.scss';
+import styles from './BuatNota.module.scss';
 
 const BuatNota = ({ history }) => {
   const dispatch = useDispatch();
@@ -110,7 +110,7 @@ const BuatNota = ({ history }) => {
     <>
       <Header />
 
-      <Row className='h-100' noGutters>
+      <Row className='fullHeight' noGutters>
         <Col className='d-flex flex-column bg-light pt-3 pb-3' md={3}>
           <SideMenu history={history} page='buatNota' />
         </Col>
