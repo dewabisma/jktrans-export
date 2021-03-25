@@ -26,6 +26,32 @@ const BuatRekapan = ({ history }) => {
   const [noPolis, setNoPolis] = useState('');
   const [kumpulanIdNota, setKumpulanIdNota] = useState([]);
 
+  const checkIfNotaIdExist = (notaId) => {
+    const isExist = kumpulanIdNota.find((id) => String(id) === String(notaId));
+
+    if (isExist) {
+      return true;
+    } else return false;
+  };
+
+  const removeNotaIdFromState = (notaId) => {
+    const newState = kumpulanIdNota.filter(
+      (id) => String(id) !== String(notaId)
+    );
+
+    setKumpulanIdNota([...newState]);
+  };
+
+  const tambahNotaHandler = (e) => {
+    const isExist = checkIfNotaIdExist(e.target.value);
+
+    if (isExist) {
+      removeNotaIdFromState(e.target.value);
+    } else {
+      setKumpulanIdNota([...kumpulanIdNota, e.target.value]);
+    }
+  };
+
   const formSubmitHandler = async (e) => {
     e.preventDefault();
 
@@ -52,6 +78,8 @@ const BuatRekapan = ({ history }) => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message;
+
+      console.log(message);
     }
 
     setSopirPengirim('');
@@ -119,7 +147,7 @@ const BuatRekapan = ({ history }) => {
                 <h2 className='mb-2'>List Nota</h2>
               </div>
 
-              <Table striped bordered hover responsive='md'>
+              <Table striped bordered hover responsive>
                 <thead>
                   <tr>
                     <th>No.</th>
@@ -145,10 +173,10 @@ const BuatRekapan = ({ history }) => {
                       <td>
                         <Form.Check
                           type='checkbox'
-                          label='add'
+                          label='tambahkan'
                           value={nota._id}
                           id={`nota-${nota.noNota}`}
-                          onChange={(e) => console.log(e.target.value)}
+                          onChange={tambahNotaHandler}
                         />
                       </td>
                     </tr>
