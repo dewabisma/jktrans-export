@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Button, Form, Table } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import numeral from 'numeral';
 import axios from 'axios';
 
@@ -227,6 +229,7 @@ const BuatNota = ({ history }) => {
                     <th>Berat Kotor</th>
                     <th>Biaya Angkut</th>
                     <th>Keterangan</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -240,6 +243,35 @@ const BuatNota = ({ history }) => {
                       <td>{barang.beratKotor}</td>
                       <td>{barang.biayaAngkut}</td>
                       <td>{barang.keterangan}</td>
+                      <td>
+                        <div className='d-flex justify-content-around'>
+                          <Button
+                            type='button'
+                            variant='secondary'
+                            className='px-2 py-1'
+                          >
+                            Detail
+                          </Button>
+
+                          <Button variant='link' className='px-2 py-1'>
+                            <FontAwesomeIcon
+                              icon={faEdit}
+                              size='2x'
+                              aria-roledescription='clicking this element to edit selected nota'
+                              className='text-secondary'
+                            />
+                          </Button>
+
+                          <Button variant='link' className='px-2 py-1'>
+                            <FontAwesomeIcon
+                              icon={faTrashAlt}
+                              size='2x'
+                              aria-roledescription='clicking this element will delete selected nota'
+                              className='text-danger'
+                            />
+                          </Button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

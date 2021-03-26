@@ -44,24 +44,36 @@ const LihatRekapan = ({ history }) => {
             </thead>
             <tbody>
               <tr>
-                <td className=''>1</td>
+                <td>2</td>
                 <td>Wayan</td>
                 <td>1bddwai1</td>
                 <td className='w-25'>
                   <div className='d-flex justify-content-around'>
-                    <Button type='button' variant='secondary'>
+                    <Button
+                      type='button'
+                      variant='secondary'
+                      className='px-2 py-1'
+                    >
                       Detail
                     </Button>
-                    <FontAwesomeIcon
-                      icon={faEdit}
-                      size='2x'
-                      className='text-secondary ml-2'
-                    />
-                    <FontAwesomeIcon
-                      icon={faTrashAlt}
-                      size='2x'
-                      className='text-danger ml-2'
-                    />
+
+                    <Button variant='link' className='px-2 py-1'>
+                      <FontAwesomeIcon
+                        icon={faEdit}
+                        size='2x'
+                        aria-roledescription='clicking this element to edit selected nota'
+                        className='text-secondary'
+                      />
+                    </Button>
+
+                    <Button variant='link' className='px-2 py-1'>
+                      <FontAwesomeIcon
+                        icon={faTrashAlt}
+                        size='2x'
+                        aria-roledescription='clicking this element will delete selected nota'
+                        className='text-danger'
+                      />
+                    </Button>
                   </div>
                 </td>
               </tr>
@@ -72,42 +84,66 @@ const LihatRekapan = ({ history }) => {
                 <td>1bddwai1</td>
                 <td className='w-25'>
                   <div className='d-flex justify-content-around'>
-                    <Button type='button' variant='secondary'>
+                    <Button
+                      type='button'
+                      variant='secondary'
+                      className='px-2 py-1'
+                    >
                       Detail
                     </Button>
-                    <FontAwesomeIcon
-                      icon={faEdit}
-                      size='2x'
-                      className='text-secondary'
-                    />
-                    <FontAwesomeIcon
-                      icon={faTrashAlt}
-                      size='2x'
-                      className='text-danger'
-                    />
+
+                    <Button variant='link' className='px-2 py-1'>
+                      <FontAwesomeIcon
+                        icon={faEdit}
+                        size='2x'
+                        aria-roledescription='clicking this element to edit selected nota'
+                        className='text-secondary'
+                      />
+                    </Button>
+
+                    <Button variant='link' className='px-2 py-1'>
+                      <FontAwesomeIcon
+                        icon={faTrashAlt}
+                        size='2x'
+                        aria-roledescription='clicking this element will delete selected nota'
+                        className='text-danger'
+                      />
+                    </Button>
                   </div>
                 </td>
               </tr>
 
               <tr>
-                <td>3</td>
+                <td>2</td>
                 <td>Wayan</td>
                 <td>1bddwai1</td>
                 <td className='w-25'>
                   <div className='d-flex justify-content-around'>
-                    <Button type='button' variant='secondary'>
+                    <Button
+                      type='button'
+                      variant='secondary'
+                      className='px-2 py-1'
+                    >
                       Detail
                     </Button>
-                    <FontAwesomeIcon
-                      icon={faEdit}
-                      size='2x'
-                      className='text-secondary'
-                    />
-                    <FontAwesomeIcon
-                      icon={faTrashAlt}
-                      size='2x'
-                      className='text-danger'
-                    />
+
+                    <Button variant='outline-secondary' className='px-2 py-1'>
+                      <FontAwesomeIcon
+                        icon={faEdit}
+                        size='2x'
+                        aria-roledescription='clicking this element to edit selected nota'
+                        className=''
+                      />
+                    </Button>
+
+                    <Button variant='outline-danger' className='px-2 py-1'>
+                      <FontAwesomeIcon
+                        icon={faTrashAlt}
+                        size='2x'
+                        aria-roledescription='clicking this element will delete selected nota'
+                        className=''
+                      />
+                    </Button>
                   </div>
                 </td>
               </tr>
