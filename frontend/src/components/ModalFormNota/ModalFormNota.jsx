@@ -83,6 +83,7 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
         onHide={handleClose}
         backdrop='static'
         keyboard={false}
+        className='pl-0'
       >
         <Modal.Header closeButton>
           <Modal.Title>Input Barang</Modal.Title>

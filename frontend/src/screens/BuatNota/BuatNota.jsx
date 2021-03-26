@@ -116,11 +116,11 @@ const BuatNota = ({ history }) => {
         </Col>
 
         <Col className='p-4' md={9}>
-          <h1 className=''>Input Nota</h1>
+          <h1 className={styles.heading1}>Input Nota</h1>
 
           <Form>
             <Row noGutters>
-              <Col className='px-2'>
+              <Col xs={12} sm className='px-2'>
                 <Form.Group controlId='namaPengirim'>
                   <Form.Label>Nama Pengirim</Form.Label>
 
@@ -158,7 +158,7 @@ const BuatNota = ({ history }) => {
                 </Form.Group>
               </Col>
 
-              <Col className='px-2'>
+              <Col xs={12} sm className='px-2'>
                 <Form.Group controlId='totalColli'>
                   <Form.Label>Total Colli</Form.Label>
                   <Form.Control
@@ -209,7 +209,7 @@ const BuatNota = ({ history }) => {
           <Row className='mt-3' noGutters>
             <Col>
               <div className='d-flex justify-content-between'>
-                <h2 className='mb-2'>Data Barang</h2>
+                <h2 className={`${styles.heading2} mb-2`}>Data Barang</h2>
                 <ModalFormNota
                   dataBarang={dataBarang}
                   setDataBarang={setDataBarang}
