@@ -107,7 +107,7 @@ const BuatRekapan = ({ history }) => {
 
           <Form>
             <Row noGutters>
-              <Col className='px-2'>
+              <Col xs={12} sm className='px-2'>
                 <Form.Group controlId='sopirPengirim'>
                   <Form.Label>Nama Sopir Pengirim</Form.Label>
 
@@ -133,7 +133,7 @@ const BuatRekapan = ({ history }) => {
                 </Form.Group>
               </Col>
 
-              <Col className='px-2'></Col>
+              <Col className='d-none d-md-block px-2'></Col>
             </Row>
 
             <Button type='button' variant='primary' onClick={formSubmitHandler}>
