@@ -162,7 +162,7 @@ const DetailNota = () => {
                 <td>1234</td>
                 <td>1234</td>
                 <td>1234</td>
-                <td>sudah dibayar</td>
+                <td>siap dikirim</td>
               </tr>
 
               <tr>
@@ -173,7 +173,7 @@ const DetailNota = () => {
                 <td>1234</td>
                 <td>1234</td>
                 <td>1234</td>
-                <td>sudah dibayar</td>
+                <td>siap dikirim</td>
               </tr>
 
               <tr>
@@ -184,7 +184,7 @@ const DetailNota = () => {
                 <td>1234</td>
                 <td>1234</td>
                 <td>1234</td>
-                <td>sudah dibayar</td>
+                <td>siap dikirim</td>
               </tr>
             </tbody>
           </Table>

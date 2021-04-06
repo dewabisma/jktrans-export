@@ -10,7 +10,7 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
 
   const { data: listBiaya, error: errorListBiaya } = useFetch('/api/prices');
 
-  // Form 2 - Data Barang Dikirim
+  // Form - Data Barang Dikirim
   const [banyakColli, setBanyakColli] = useState(0);
   const [macamColli, setMacamColli] = useState('');
   const [merekColli, setMerekColli] = useState('');
