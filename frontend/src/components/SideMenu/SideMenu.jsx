@@ -24,14 +24,14 @@ const SideMenu = ({ history, page }) => {
         className='btn btn-secondary d-inline-block d-sm-none'
         type='button'
         data-toggle='collapse'
-        data-target='#collapseExample'
+        data-target='#sideMenu'
         aria-expanded='false'
-        aria-controls='collapseExample'
+        aria-controls='sideMenu'
       >
         <FontAwesomeIcon icon={faBars} size='2x' />
       </button>
 
-      <div className='collapse' id='collapseExample'>
+      <div className='collapse' id='sideMenu'>
         <div className='card card-body border border-secondary'>
           <ListGroup variant='flush'>
             <ListGroup.Item

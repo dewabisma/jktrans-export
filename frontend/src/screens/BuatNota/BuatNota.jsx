@@ -245,14 +245,6 @@ const BuatNota = ({ history }) => {
                       <td>{barang.keterangan}</td>
                       <td>
                         <div className='d-flex justify-content-around'>
-                          <Button
-                            type='button'
-                            variant='secondary'
-                            className='px-2 py-1'
-                          >
-                            Detail
-                          </Button>
-
                           <Button variant='link' className='px-2 py-1'>
                             <FontAwesomeIcon
                               icon={faEdit}

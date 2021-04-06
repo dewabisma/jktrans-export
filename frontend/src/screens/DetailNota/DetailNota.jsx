@@ -7,10 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 const DetailNota = () => {
-  // Form 1 - Rincian Pengiriman
-  const [namaPengirim, setNamaPengirim] = useState('');
-  const [namaPenerima, setNamaPenerima] = useState('');
-  const [alamatPenerima, setAlamatPenerima] = useState('');
   const [dataBarang, setDataBarang] = useState([]);
 
   const calculateTotalColli = () => {
@@ -56,7 +52,8 @@ const DetailNota = () => {
       <Row noGutters>
         <Col className='p-4'>
           <div className='d-flex justify-content-between'>
-            <h1>Nota - S.P. 12343</h1>
+            <h1 className='fs-xs-2'>Nota - S.P. 12343</h1>
+
             <Button type='button' variant='secondary'>
               <FontAwesomeIcon icon={faEdit} size='2x' />
             </Button>
@@ -71,8 +68,8 @@ const DetailNota = () => {
                   <Form.Control
                     type='text'
                     placeholder='Masukkan nama pengirim'
-                    value={namaPengirim}
-                    onChange={(e) => setNamaPengirim(e.target.value)}
+                    value='Gede nengah'
+                    readOnly
                     required
                   />
                 </Form.Group>
@@ -83,8 +80,8 @@ const DetailNota = () => {
                   <Form.Control
                     type='text'
                     placeholder='Masukkan nama penerima'
-                    value={namaPenerima}
-                    onChange={(e) => setNamaPenerima(e.target.value)}
+                    value='Wayan gede'
+                    readOnly
                     required
                   />
                 </Form.Group>
@@ -95,8 +92,8 @@ const DetailNota = () => {
                   <Form.Control
                     type='text'
                     placeholder='Masukkan alamat penerima'
-                    value={alamatPenerima}
-                    onChange={(e) => setAlamatPenerima(e.target.value)}
+                    value='jalan brigjen ngurah rai'
+                    readOnly
                     required
                   />
                 </Form.Group>
