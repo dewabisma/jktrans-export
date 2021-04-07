@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, Row, Col, Form, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faCheck } from '@fortawesome/free-solid-svg-icons';
 
 import Header from '../../components/Header/Header';
 
@@ -21,7 +21,7 @@ const DetailRekapan = () => {
 
           <Form>
             <Row noGutters>
-              <Col xs={12} sm className='px-2'>
+              <Col xs={12} sm={4} className='px-2'>
                 <Form.Group controlId='namaPengirim'>
                   <Form.Label>Nama Sopir</Form.Label>
 
@@ -55,56 +55,62 @@ const DetailRekapan = () => {
             <thead>
               <tr>
                 <th>No</th>
-                <th>Banyak Colli</th>
-                <th>Macam Colli</th>
-                <th>Merek Colli</th>
-                <th>Nama Barang</th>
-                <th>Berat Kotor</th>
-                <th>Biaya Angkut</th>
+                <th>S.P.</th>
+                <th>Colli</th>
+                <th>Berat</th>
+                <th>Franco</th>
+                <th>Confrankert</th>
+                <th>Penerima</th>
                 {/* bagian keterangan dibagi jadi apakah sudah dibayar dan apakah sudah sampai( diterima )*/}
-                <th>Keterangan</th>
+                <th>Keterangan Pembayaran</th>
+                <th>Keterangan Pengiriman</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>siap dikirim</td>
+                <td>12-AB5J</td>
+                <td>1234 Colli</td>
+                <td>1234 Kg</td>
+                <td>
+                  <FontAwesomeIcon icon={faCheck} />
+                </td>
+                <td>Rp. 123,123,123.00</td>
+                <td>Wayan</td>
+                <td>Belum dibayar</td>
+                <td>Sudah diterima</td>
               </tr>
 
               <tr>
                 <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>siap dikirim</td>
+                <td>12-AB5J</td>
+                <td>1234 Colli</td>
+                <td>1234 Kg</td>
+                <td>
+                  <FontAwesomeIcon icon={faCheck} />
+                </td>
+                <td>Rp. 123,123,123.00</td>
+                <td>Wayan</td>
+                <td>Belum dibayar</td>
+                <td>Sudah diterima</td>
               </tr>
 
               <tr>
                 <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>siap dikirim</td>
+                <td>12-AB5J</td>
+                <td>1234 Colli</td>
+                <td>1234 Kg</td>
+                <td>
+                  <FontAwesomeIcon icon={faCheck} />
+                </td>
+                <td>Rp. 123,123,123.00</td>
+                <td>Wayan</td>
+                <td>Belum dibayar</td>
+                <td>Sudah diterima</td>
               </tr>
             </tbody>
           </Table>
         </Col>
-      </Row>
-
-      <Row noGutters>
-        <Col></Col>
       </Row>
     </>
   );
