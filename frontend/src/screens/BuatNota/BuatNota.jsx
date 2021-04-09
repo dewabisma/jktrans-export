@@ -218,56 +218,62 @@ const BuatNota = ({ history }) => {
                 />
               </div>
 
-              <Table striped bordered hover responsive='md'>
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Banyak Colli</th>
-                    <th>Macam Colli</th>
-                    <th>Merek Colli</th>
-                    <th>Nama Barang</th>
-                    <th>Berat Kotor</th>
-                    <th>Biaya Angkut</th>
-                    <th>Keterangan</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dataBarang.map((barang) => (
-                    <tr key={barang.noBarang}>
-                      <td>{barang.noBarang}</td>
-                      <td>{barang.banyakColli}</td>
-                      <td>{barang.macamColli}</td>
-                      <td>{barang.merekColli}</td>
-                      <td>{barang.namaBarang}</td>
-                      <td>{barang.beratKotor}</td>
-                      <td>{barang.biayaAngkut}</td>
-                      <td>{barang.keterangan}</td>
-                      <td>
-                        <div className='d-flex justify-content-around'>
-                          <Button variant='link' className='px-2 py-1'>
-                            <FontAwesomeIcon
-                              icon={faEdit}
-                              size='2x'
-                              aria-roledescription='clicking this element to edit selected nota'
-                              className='text-secondary'
-                            />
-                          </Button>
-
-                          <Button variant='link' className='px-2 py-1'>
-                            <FontAwesomeIcon
-                              icon={faTrashAlt}
-                              size='2x'
-                              aria-roledescription='clicking this element will delete selected nota'
-                              className='text-danger'
-                            />
-                          </Button>
-                        </div>
-                      </td>
+              {dataBarang.length > 0 ? (
+                <Table striped bordered hover responsive='md'>
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Banyak Colli</th>
+                      <th>Macam Colli</th>
+                      <th>Merek Colli</th>
+                      <th>Nama Barang</th>
+                      <th>Berat Kotor</th>
+                      <th>Biaya Angkut</th>
+                      <th>Keterangan</th>
+                      <th></th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
+                  </thead>
+                  <tbody>
+                    {dataBarang.map((barang) => (
+                      <tr key={barang.noBarang}>
+                        <td>{barang.noBarang}</td>
+                        <td>{barang.banyakColli}</td>
+                        <td>{barang.macamColli}</td>
+                        <td>{barang.merekColli}</td>
+                        <td>{barang.namaBarang}</td>
+                        <td>{barang.beratKotor}</td>
+                        <td>{barang.biayaAngkut}</td>
+                        <td>{barang.keterangan}</td>
+                        <td>
+                          <div className='d-flex justify-content-around'>
+                            <Button variant='link' className='px-2 py-1'>
+                              <FontAwesomeIcon
+                                icon={faEdit}
+                                size='2x'
+                                aria-roledescription='clicking this element to edit selected nota'
+                                className='text-secondary'
+                              />
+                            </Button>
+
+                            <Button variant='link' className='px-2 py-1'>
+                              <FontAwesomeIcon
+                                icon={faTrashAlt}
+                                size='2x'
+                                aria-roledescription='clicking this element will delete selected nota'
+                                className='text-danger'
+                              />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              ) : (
+                <Message>
+                  Belum ada barang yang ditambahkan kedalam list
+                </Message>
+              )}
             </Col>
           </Row>
         </Col>

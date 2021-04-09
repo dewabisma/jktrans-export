@@ -12,7 +12,7 @@ const DetailRekapan = () => {
       <Row noGutters>
         <Col className='p-4'>
           <div className='d-flex justify-content-between'>
-            <h1 className='fs-xs-2'>Rekapan - 12343</h1>
+            <h1 className='fs-xs-1-5'>Rekapan - 12343</h1>
 
             <Button type='button' variant='secondary'>
               <FontAwesomeIcon icon={faEdit} size='2x' />
@@ -49,7 +49,7 @@ const DetailRekapan = () => {
             </Row>
           </Form>
 
-          <h2>Data Barang</h2>
+          <h2 className='fs-xs-1-5'>Data Barang</h2>
 
           <Table striped bordered hover responsive>
             <thead>

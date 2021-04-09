@@ -11,6 +11,7 @@ import LihatNota from './screens/LihatNota/LihatNota';
 import LihatRekapan from './screens/LihatRekapan/LihatRekapan';
 import DetailNota from './screens/DetailNota/DetailNota';
 import DetailRekapan from './screens/DetailRekapan/DetailRekapan';
+import EditNota from './screens/EditNota/EditNota';
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path='/nota' component={LihatNota} exact />
         <Route path='/nota/create' component={BuatNota} exact />
         <Route path='/nota/:notaId' component={DetailNota} exact />
+        <Route path='/nota/:notaId/edit' component={EditNota} exact />
         <Route path='/nota/:notaId/cetak' component={CetakNota} exact />
         <Route path='/rekapan' component={LihatRekapan} exact />
         <Route path='/rekapan/create' component={BuatRekapan} exact />

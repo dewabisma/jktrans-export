@@ -52,7 +52,7 @@ const DetailNota = () => {
       <Row noGutters>
         <Col className='p-4'>
           <div className='d-flex justify-content-between'>
-            <h1 className='fs-xs-2'>Nota - S.P. 12343</h1>
+            <h1 className='fs-xs-1-5'>Nota - S.P. 12343</h1>
 
             <Button type='button' variant='secondary'>
               <FontAwesomeIcon icon={faEdit} size='2x' />
@@ -138,7 +138,7 @@ const DetailNota = () => {
             </Row>
           </Form>
 
-          <h2>Data Barang</h2>
+          <h2 className='fs-xs-1-5'>Data Barang</h2>
 
           <Table striped bordered hover responsive>
             <thead>
@@ -189,10 +189,6 @@ const DetailNota = () => {
             </tbody>
           </Table>
         </Col>
-      </Row>
-
-      <Row noGutters>
-        <Col></Col>
       </Row>
     </>
   );
