@@ -137,7 +137,7 @@ const BuatRekapan = ({ history }) => {
             </Row>
 
             <Button type='button' variant='primary' onClick={formSubmitHandler}>
-              Buat Nota
+              Buat Rekapan
             </Button>
           </Form>
 

@@ -46,15 +46,7 @@ const Header = () => {
               /> */}
 
               <NavDropdown drop='left' title='Admin Bali' id='username'>
-                <NavDropdown.Item>Action</NavDropdown.Item>
-
-                <NavDropdown.Item>Another action</NavDropdown.Item>
-
-                <NavDropdown.Item>Something</NavDropdown.Item>
-
-                <NavDropdown.Divider />
-
-                <NavDropdown.Item>Separated link</NavDropdown.Item>
+                <NavDropdown.Item>Profile</NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </Col>
