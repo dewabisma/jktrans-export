@@ -12,6 +12,7 @@ import LihatRekapan from './screens/LihatRekapan/LihatRekapan';
 import DetailNota from './screens/DetailNota/DetailNota';
 import DetailRekapan from './screens/DetailRekapan/DetailRekapan';
 import EditNota from './screens/EditNota/EditNota';
+import EditRekapan from './screens/EditRekapan/EditRekapan';
 
 const App = () => {
   return (
@@ -27,6 +28,7 @@ const App = () => {
         <Route path='/rekapan' component={LihatRekapan} exact />
         <Route path='/rekapan/create' component={BuatRekapan} exact />
         <Route path='/rekapan/:rekapanId' component={DetailRekapan} exact />
+        <Route path='/rekapan/:rekapanId/edit' component={EditRekapan} exact />
         <Route
           path='/rekapan/:rekapanId/cetak'
           component={CetakRekapan}
