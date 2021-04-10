@@ -49,7 +49,7 @@ const DetailRekapan = () => {
             </Row>
           </Form>
 
-          <h2 className='fs-xs-1-5'>Data Barang</h2>
+          <h2 className='fs-xs-1-5'>Data Nota</h2>
 
           <Table striped bordered hover responsive>
             <thead>

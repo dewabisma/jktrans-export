@@ -5,12 +5,12 @@ import { faEdit, faCheck, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 
 import Header from '../../components/Header/Header';
-import ModalFormRekapan from '../../components/ModalFormRekapan/ModalFormRekapan';
+import ModalTambahRekapanNota from '../../components/ModalFormRekapan/ModalFormRekapan';
 
 import styles from './EditRekapan.module.scss';
 
 const EditRekapan = () => {
-  const [dataBarang, setDataBarang] = useState([]);
+  const [dataNota, setDataNota] = useState([]);
 
   return (
     <>
@@ -60,9 +60,9 @@ const EditRekapan = () => {
           <Row noGutters className='justify-content-between'>
             <h2 className='fs-xs-1-5'>Data Nota</h2>
 
-            <ModalFormRekapan
-              dataBarang={dataBarang}
-              setDataBarang={setDataBarang}
+            <ModalTambahRekapanNota
+              dataNota={dataNota}
+              setDataNota={setDataNota}
             />
           </Row>
 
