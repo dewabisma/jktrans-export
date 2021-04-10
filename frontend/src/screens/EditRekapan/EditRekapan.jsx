@@ -5,7 +5,8 @@ import { faEdit, faCheck, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 
 import Header from '../../components/Header/Header';
-import ModalTambahRekapanNota from '../../components/ModalFormRekapan/ModalFormRekapan';
+import ModalTambahRekapanNota from '../../components/ModalTambahRekapanNota/ModalTambahRekapanNota';
+import ModalStatusNota from '../../components/ModalStatusNota/ModalStatusNota';
 
 import styles from './EditRekapan.module.scss';
 
@@ -96,16 +97,9 @@ const EditRekapan = () => {
                 <td>Sudah diterima</td>
                 <td>
                   <div className='d-flex justify-content-around'>
-                    <Button variant='link' className='px-2 py-1'>
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        size='2x'
-                        aria-roledescription='clicking this element to edit selected nota'
-                        className='text-secondary'
-                      />
-                    </Button>
+                    <ModalStatusNota />
 
-                    <Button variant='link' className='px-2 py-1'>
+                    <Button variant='link'>
                       <FontAwesomeIcon
                         icon={faTrashAlt}
                         size='2x'

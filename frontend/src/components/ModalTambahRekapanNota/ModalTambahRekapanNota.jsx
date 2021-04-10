@@ -37,7 +37,7 @@ const ModalFormRekapan = ({ dataNota, setDataNota }) => {
         dialogClassName={styles.modalDialogLebar}
         backdrop='static'
         keyboard={false}
-        className='pl-0 ml-2'
+        className='px-2 ml-0'
       >
         <Modal.Header closeButton>
           <Modal.Title>Pilih Nota</Modal.Title>
