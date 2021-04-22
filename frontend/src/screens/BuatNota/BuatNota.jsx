@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form as FormikForm } from 'formik';
+import * as Yup from 'yup';
 import { Row, Col, Button, Form, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -11,6 +13,7 @@ import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
+import FormControl from '../../components/Formik/FormControl/FormControl';
 
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import { addNew } from '../../redux/nota/notaListSlice.js';
@@ -22,10 +25,20 @@ const BuatNota = ({ history }) => {
 
   const authToken = useSelector(selectAuthToken);
 
-  // Form 1 - Rincian Pengiriman
-  const [namaPengirim, setNamaPengirim] = useState('');
-  const [namaPenerima, setNamaPenerima] = useState('');
-  const [alamatPenerima, setAlamatPenerima] = useState('');
+  // Form InitialValues
+  const initialValues = {
+    namaPengirim: '',
+    namaPenerima: '',
+    alamatPenerima: '',
+  };
+
+  // Form Validation Schema
+  const validationSchema = Yup.object({
+    namaPengirim: Yup.string().required('Diperlukan'),
+    namaPenerima: Yup.string().required('Diperlukan'),
+    alamatPenerima: Yup.string().required('Diperlukan'),
+  });
+
   const [dataBarang, setDataBarang] = useState([]);
 
   const calculateTotalColli = () => {
@@ -64,8 +77,8 @@ const BuatNota = ({ history }) => {
       return;
     }
   };
-  const formSubmitHandler = async (e) => {
-    e.preventDefault();
+  const formSubmitHandler = async (values) => {
+    const { namaPengirim, namaPenerima, alamatPenerima } = values;
 
     const newNota = {
       namaPengirim,
@@ -96,9 +109,6 @@ const BuatNota = ({ history }) => {
           : error.message;
     }
 
-    setNamaPengirim('');
-    setNamaPenerima('');
-    setAlamatPenerima('');
     setDataBarang([]);
   };
 
@@ -120,93 +130,90 @@ const BuatNota = ({ history }) => {
         <Col className='p-4' md={9}>
           <h1 className={styles.heading1}>Input Nota</h1>
 
-          <Form>
-            <Row noGutters>
-              <Col xs={12} sm className='px-2'>
-                <Form.Group controlId='namaPengirim'>
-                  <Form.Label>Nama Pengirim</Form.Label>
+          <Row noGutters>
+            <Col xs={12} sm className='px-2'>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={formSubmitHandler}
+              >
+                {(formik) => {
+                  return (
+                    <FormikForm>
+                      <FormControl
+                        control='input'
+                        type='text'
+                        name='namaPengirim'
+                        label='Nama Pengirim'
+                        placeholder='Masukkan nama pengirim'
+                      />
 
-                  <Form.Control
-                    type='text'
-                    placeholder='Masukkan nama pengirim'
-                    value={namaPengirim}
-                    onChange={(e) => setNamaPengirim(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+                      <FormControl
+                        control='input'
+                        type='text'
+                        name='namaPenerima'
+                        label='Nama Penerima'
+                        placeholder='Masukkan nama penerima'
+                      />
 
-                <Form.Group controlId='namaPenerima'>
-                  <Form.Label>Nama Penerima</Form.Label>
+                      <FormControl
+                        control='input'
+                        type='text'
+                        name='alamatPenerima'
+                        label='Alamat Penerima'
+                        placeholder='Masukkan alamat penerima'
+                      />
 
-                  <Form.Control
-                    type='text'
-                    placeholder='Masukkan nama penerima'
-                    value={namaPenerima}
-                    onChange={(e) => setNamaPenerima(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+                      <Button
+                        type='submit'
+                        variant='primary'
+                        disabled={!dataBarang.length > 0 || formik.isSubmitting}
+                      >
+                        Buat Nota
+                      </Button>
+                    </FormikForm>
+                  );
+                }}
+              </Formik>
+            </Col>
 
-                <Form.Group controlId='alamatPenerima'>
-                  <Form.Label>Alamat Penerima</Form.Label>
+            <Col xs={12} sm className='px-2'>
+              <Form.Group controlId='totalColli'>
+                <Form.Label>Total Colli</Form.Label>
+                <Form.Control
+                  className='pl-3'
+                  type='text'
+                  value={`${calculateTotalColli()} Colli`}
+                  readOnly
+                  plaintext
+                />
+              </Form.Group>
 
-                  <Form.Control
-                    type='text'
-                    placeholder='Masukkan alamat penerima'
-                    value={alamatPenerima}
-                    onChange={(e) => setAlamatPenerima(e.target.value)}
-                    required
-                  />
-                </Form.Group>
-              </Col>
+              <Form.Group controlId='totalBerat'>
+                <Form.Label>Total Berat</Form.Label>
+                <Form.Control
+                  className='pl-3'
+                  type='text'
+                  value={`${calculateTotalBerat()} Kg`}
+                  readOnly
+                  plaintext
+                />
+              </Form.Group>
 
-              <Col xs={12} sm className='px-2'>
-                <Form.Group controlId='totalColli'>
-                  <Form.Label>Total Colli</Form.Label>
-                  <Form.Control
-                    className='pl-3'
-                    type='text'
-                    value={`${calculateTotalColli()} Colli`}
-                    readOnly
-                    plaintext
-                  />
-                </Form.Group>
-
-                <Form.Group controlId='totalBerat'>
-                  <Form.Label>Total Berat</Form.Label>
-                  <Form.Control
-                    className='pl-3'
-                    type='text'
-                    value={`${calculateTotalBerat()} Kg`}
-                    readOnly
-                    plaintext
-                  />
-                </Form.Group>
-
-                <Form.Group controlId='totalBiaya'>
-                  <Form.Label>Total Biaya</Form.Label>
-                  <Form.Control
-                    className='pl-3'
-                    type='text'
-                    value={`Rp. ${numeral(calculateTotalBiaya()).format(
-                      '0,0.00'
-                    )}`}
-                    readOnly
-                    plaintext
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Button
-              type='button'
-              variant='primary'
-              onClick={formSubmitHandler}
-              disabled={!dataBarang.length > 0}
-            >
-              Buat Nota
-            </Button>
-          </Form>
+              <Form.Group controlId='totalBiaya'>
+                <Form.Label>Total Biaya</Form.Label>
+                <Form.Control
+                  className='pl-3'
+                  type='text'
+                  value={`Rp. ${numeral(calculateTotalBiaya()).format(
+                    '0,0.00'
+                  )}`}
+                  readOnly
+                  plaintext
+                />
+              </Form.Group>
+            </Col>
+          </Row>
 
           <Row className='mt-3' noGutters>
             <Col>

@@ -16,6 +16,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "date-fns": "^2.19.0",
+    "formik": "^2.2.6",
     "js-cookie": "^2.2.1",
     "nanobar": "^0.4.2",
     "node-sass": "^5.0.0",
@@ -28,7 +29,8 @@
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
-    "web-vitals": "^1.1.0"
+    "web-vitals": "^1.1.0",
+    "yup": "^0.32.9"
   },
   "scripts": {
     "start": "react-scripts start",
