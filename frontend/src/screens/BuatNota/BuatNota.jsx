@@ -167,7 +167,11 @@ const BuatNota = ({ history }) => {
                       <Button
                         type='submit'
                         variant='primary'
-                        disabled={!dataBarang.length > 0 || formik.isSubmitting}
+                        disabled={
+                          !dataBarang.length > 0 ||
+                          !formik.isValid ||
+                          formik.isSubmitting
+                        }
                       >
                         Buat Nota
                       </Button>

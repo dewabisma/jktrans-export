@@ -3,7 +3,7 @@ import { Field, ErrorMessage } from 'formik';
 import { Form } from 'react-bootstrap';
 
 const Input = (props) => {
-  const { name, label, type, ...rest } = props;
+  const { name, label, ...rest } = props;
 
   return (
     <Form.Group controlId={name}>
