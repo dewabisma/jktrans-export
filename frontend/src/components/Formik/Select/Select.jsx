@@ -14,15 +14,16 @@ const Select = (props) => {
           return (
             <Form.Control as='select' {...field} {...rest}>
               {options.map((option) => (
-                <option key={option.key} value={option.value}>
-                  {option.key}
+                <option key={option._id} value={option.jenisBarang}>
+                  {option.jenisBarang}
                 </option>
               ))}
             </Form.Control>
           );
         }}
-        <ErrorMessage name={name} />
       </Field>
+
+      <ErrorMessage name={name} />
     </Form.Group>
   );
 };

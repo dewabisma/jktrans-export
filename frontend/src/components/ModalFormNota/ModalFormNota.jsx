@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
+import { Formik, Form as FormikForm } from 'formik';
+import * as Yup from 'yup';
 import numeral from 'numeral';
 import useFetch from '../../hooks/useFetch.js';
 
+import FormControl from '../Formik/FormControl/FormControl';
 import Message from '../Message/Message';
 
 const ModalFormNota = ({ dataBarang, setDataBarang }) => {
@@ -10,20 +13,51 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
 
   const { data: listBiaya, error: errorListBiaya } = useFetch('/api/prices');
 
-  // Form - Data Barang Dikirim
-  const [banyakColli, setBanyakColli] = useState(0);
-  const [macamColli, setMacamColli] = useState('');
-  const [merekColli, setMerekColli] = useState('');
-  const [namaBarang, setNamaBarang] = useState('');
-  const [beratKotor, setBeratKotor] = useState(0);
-  const [keterangan, setKeterangan] = useState('');
+  // Formik Form Initial Values
+  const initialValues = {
+    banyakColli: 0,
+    macamColli: '',
+    merekColli: '',
+    namaBarang: '',
+    beratKotor: 0,
+    keterangan: '',
+  };
+
+  // Yup Validation Schema
+  const validationSchema = Yup.object({
+    banyakColli: Yup.number()
+      .moreThan(0, 'Jumlah tidak valid')
+      .required('Diperlukan'),
+    macamColli: Yup.string().required('Diperlukan'),
+    merekColli: Yup.string().required('Diperlukan'),
+    namaBarang: Yup.string().required('Diperlukan'),
+    beratKotor: Yup.number()
+      .moreThan(0, 'Jumlah tidak valid')
+      .required('Diperlukan'),
+    keterangan: Yup.string().required('Diperlukan'),
+  });
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  // Cache expensive calculation
+  const cachedBiayaAngkut = {
+    banyakColli: 0,
+    macamColli: '',
+    biayaAngkut: 0,
+    createdAt: new Date(),
+  };
+
   // Derive value if possible rather than store in state (will not sync if not derived)
-  const hitungBiayaAngkut = () => {
+  const hitungBiayaAngkut = (banyakColli, macamColli) => {
     if (banyakColli !== 0 && macamColli) {
+      if (
+        banyakColli === cachedBiayaAngkut.banyakColli &&
+        macamColli === cachedBiayaAngkut.macamColli
+      ) {
+        return cachedBiayaAngkut.biayaAngkut;
+      }
+
       const barang = listBiaya.find(
         (barang) => barang.jenisBarang === macamColli
       );
@@ -40,16 +74,17 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
     }
   };
 
-  const resetState = () => {
-    setBanyakColli(0);
-    setMacamColli('');
-    setMerekColli('');
-    setNamaBarang('');
-    setBeratKotor(0);
-    setKeterangan('');
-  };
+  // Form Submit Handler
+  const formHandler = (values) => {
+    const {
+      banyakColli,
+      macamColli,
+      merekColli,
+      namaBarang,
+      beratKotor,
+      keterangan,
+    } = values;
 
-  const formHandler = () => {
     const newBarang = {
       noBarang: dataBarang.length + 1,
       banyakColli,
@@ -57,12 +92,11 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
       merekColli,
       namaBarang,
       beratKotor,
-      biayaAngkut: hitungBiayaAngkut(),
+      biayaAngkut: hitungBiayaAngkut(banyakColli, macamColli),
       keterangan,
     };
 
     setDataBarang([...dataBarang, newBarang]);
-    resetState();
 
     handleClose();
   };
@@ -89,105 +123,97 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
           <Modal.Title>Input Barang</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
-            <Form.Group controlId='banyakColli'>
-              <Form.Label>Banyak Colli</Form.Label>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={formHandler}
+          >
+            {(formik) => {
+              return (
+                <FormikForm>
+                  <FormControl
+                    control='input'
+                    type='number'
+                    name='banyakColli'
+                    label='Banyak Colli'
+                    placeholder='Masukkan banyak colli'
+                  />
 
-              <Form.Control
-                type='number'
-                value={banyakColli}
-                onChange={(e) => setBanyakColli(e.target.value)}
-                placeholder='Masukkan banyak colli'
-                required
-              ></Form.Control>
-            </Form.Group>
+                  <FormControl
+                    control='select'
+                    options={[
+                      { id: 'pilih', jenisBarang: 'Pilih Macam Colli' },
+                      ...listBiaya,
+                    ]}
+                    name='macamColli'
+                    label='Macam Colli'
+                  />
+                  {errorListBiaya && (
+                    <Message variant='danger'>{errorListBiaya}</Message>
+                  )}
 
-            <Form.Group controlId='macamColli'>
-              <Form.Label>Macam Colli</Form.Label>
+                  <FormControl
+                    control='input'
+                    type='text'
+                    name='merekColli'
+                    label='Merek Colli'
+                    placeholder='Masukkan merek colli'
+                  />
 
-              {errorListBiaya && (
-                <Message variant='danger'>{errorListBiaya}</Message>
-              )}
-              <Form.Control
-                as='select'
-                value={macamColli}
-                onChange={(e) => setMacamColli(e.target.value)}
-              >
-                <option value='tes'>tes</option>
-                {listBiaya &&
-                  listBiaya.map((barang) => (
-                    <option key={barang._id} value={barang.jenisBarang}>
-                      {barang.jenisBarang}
-                    </option>
-                  ))}
-              </Form.Control>
-            </Form.Group>
+                  <FormControl
+                    control='input'
+                    type='text'
+                    name='namaBarang'
+                    label='Nama Barang'
+                    placeholder='Masukkan nama barang'
+                  />
 
-            <Form.Group controlId='merekColli'>
-              <Form.Label>Merek Colli</Form.Label>
+                  <FormControl
+                    control='input'
+                    type='number'
+                    name='beratKotor'
+                    label='Berat Kotor'
+                    placeholder='Masukkan berat kotor'
+                  />
 
-              <Form.Control
-                type='text'
-                placeholder='Masukkan merek colli'
-                value={merekColli}
-                onChange={(e) => setMerekColli(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
+                  <Form.Group controlId='biayaAngkut'>
+                    <Form.Label>Biaya Angkut</Form.Label>
 
-            <Form.Group controlId='namaBarang'>
-              <Form.Label>Nama Barang</Form.Label>
+                    <Form.Control
+                      className='pl-3'
+                      plaintext
+                      readOnly
+                      type='text'
+                      value={`Rp. ${numeral(
+                        hitungBiayaAngkut(
+                          formik.values.banyakColli,
+                          formik.values.macamColli
+                        )
+                      ).format('0,0.00')}`}
+                      required
+                    ></Form.Control>
+                  </Form.Group>
 
-              <Form.Control
-                type='text'
-                placeholder='Masukkan nama barang'
-                value={namaBarang}
-                onChange={(e) => setNamaBarang(e.target.value)}
-                required
-              ></Form.Control>
-            </Form.Group>
+                  <FormControl
+                    control='input'
+                    type='text'
+                    name='keterangan'
+                    label='Keterangan'
+                    placeholder='Masukkan keterangan'
+                  />
 
-            <Form.Group controlId='beratKotor'>
-              <Form.Label>Berat Kotor</Form.Label>
-
-              <Form.Control
-                type='number'
-                placeholder='Masukkan berat kotor'
-                value={beratKotor}
-                onChange={(e) => setBeratKotor(e.target.value)}
-                required
-              ></Form.Control>
-            </Form.Group>
-
-            <Form.Group controlId='biayaAngkut'>
-              <Form.Label>Biaya Angkut</Form.Label>
-
-              <Form.Control
-                className='pl-3'
-                plaintext
-                readOnly
-                type='text'
-                value={`Rp. ${numeral(hitungBiayaAngkut()).format('0,0.00')}`}
-                required
-              ></Form.Control>
-            </Form.Group>
-
-            <Form.Group controlId='keterangan'>
-              <Form.Label>Keterangan</Form.Label>
-
-              <Form.Control
-                type='text'
-                placeholder='Masukkan keterangan'
-                value={keterangan}
-                onChange={(e) => setKeterangan(e.target.value)}
-              ></Form.Control>
-            </Form.Group>
-          </Form>
+                  <Button
+                    className='float-right'
+                    variant='primary'
+                    type='submit'
+                  >
+                    Tambah
+                  </Button>
+                </FormikForm>
+              );
+            }}
+          </Formik>
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant='primary' onClick={formHandler}>
-            Tambah
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   );
