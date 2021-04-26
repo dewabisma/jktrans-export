@@ -23,6 +23,8 @@ import styles from './BuatNota.module.scss';
 const BuatNota = ({ history }) => {
   const dispatch = useDispatch();
 
+  const [dataBarang, setDataBarang] = useState([]);
+
   const authToken = useSelector(selectAuthToken);
 
   // Form InitialValues
@@ -38,8 +40,6 @@ const BuatNota = ({ history }) => {
     namaPenerima: Yup.string().required('Diperlukan'),
     alamatPenerima: Yup.string().required('Diperlukan'),
   });
-
-  const [dataBarang, setDataBarang] = useState([]);
 
   const calculateTotalColli = () => {
     if (dataBarang.length > 0) {
@@ -248,12 +248,14 @@ const BuatNota = ({ history }) => {
                     {dataBarang.map((barang) => (
                       <tr key={barang.noBarang}>
                         <td>{barang.noBarang}</td>
-                        <td>{barang.banyakColli}</td>
+                        <td>{`${barang.banyakColli} Colli`}</td>
                         <td>{barang.macamColli}</td>
                         <td>{barang.merekColli}</td>
                         <td>{barang.namaBarang}</td>
-                        <td>{barang.beratKotor}</td>
-                        <td>{barang.biayaAngkut}</td>
+                        <td>{`${barang.beratKotor} Kg`}</td>
+                        <td>{`Rp. ${numeral(barang.biayaAngkut).format(
+                          '0,0.00'
+                        )}`}</td>
                         <td>{barang.keterangan}</td>
                         <td>
                           <div className='d-flex justify-content-around'>

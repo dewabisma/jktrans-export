@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form as FormikForm } from 'formik';
+import * as Yup from 'yup';
 import { Row, Col, Button, Form, Table } from 'react-bootstrap';
 import numeral from 'numeral';
 import axios from 'axios';
@@ -8,6 +10,7 @@ import Header from '../../components/Header/Header';
 import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
+import FormControl from '../../components/Formik/FormControl/FormControl';
 
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import { selectAllNota } from '../../redux/nota/notaListSlice.js';
@@ -25,6 +28,18 @@ const BuatRekapan = ({ history }) => {
   const [sopirPengirim, setSopirPengirim] = useState('');
   const [noPolis, setNoPolis] = useState('');
   const [kumpulanIdNota, setKumpulanIdNota] = useState([]);
+
+  // Form initial values
+  const initialValues = {
+    sopirPengirim: '',
+    noPolis: '',
+  };
+
+  // Form validation schema
+  const validationSchema = Yup.object({
+    sopirPengirim: Yup.string().required('Diperlukan'),
+    noPolis: Yup.string().required('Diperlukan'),
+  });
 
   const checkIfNotaIdExist = (notaId) => {
     const isExist = kumpulanIdNota.find((id) => String(id) === String(notaId));
@@ -52,8 +67,8 @@ const BuatRekapan = ({ history }) => {
     }
   };
 
-  const formSubmitHandler = async (e) => {
-    e.preventDefault();
+  const formSubmitHandler = async (values) => {
+    const { sopirPengirim, noPolis } = values;
 
     const newRekapan = {
       sopirPengirim,
@@ -78,12 +93,8 @@ const BuatRekapan = ({ history }) => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message;
-
-      console.log(message);
     }
 
-    setSopirPengirim('');
-    setNoPolis('');
     setKumpulanIdNota([]);
   };
 
@@ -105,41 +116,51 @@ const BuatRekapan = ({ history }) => {
         <Col className='p-4' md={9}>
           <h1 className=''>Input Rekapan</h1>
 
-          <Form>
-            <Row noGutters>
-              <Col xs={12} sm className='px-2'>
-                <Form.Group controlId='sopirPengirim'>
-                  <Form.Label>Nama Sopir Pengirim</Form.Label>
+          <Row noGutters>
+            <Col xs={12} sm className='px-2'>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={formSubmitHandler}
+              >
+                {(formik) => {
+                  return (
+                    <FormikForm>
+                      <FormControl
+                        control='input'
+                        type='text'
+                        name='sopirPengirim'
+                        label='Nama Sopir Pengirim'
+                        placeholder='Masukkan nama sopir pengirim'
+                      />
 
-                  <Form.Control
-                    type='text'
-                    placeholder='Masukkan nama sopir pengirim'
-                    value={sopirPengirim}
-                    onChange={(e) => setSopirPengirim(e.target.value)}
-                    required
-                  />
-                </Form.Group>
+                      <FormControl
+                        control='input'
+                        type='text'
+                        name='noPolis'
+                        label='No Polis'
+                        placeholder='Masukkan no polis'
+                      />
 
-                <Form.Group controlId='noPolis'>
-                  <Form.Label>No Polis</Form.Label>
+                      <Button
+                        type='submit'
+                        variant='primary'
+                        disabled={
+                          !formik.isValid ||
+                          !kumpulanIdNota.length > 0 ||
+                          formik.isSubmitting
+                        }
+                      >
+                        Buat Rekapan
+                      </Button>
+                    </FormikForm>
+                  );
+                }}
+              </Formik>
+            </Col>
 
-                  <Form.Control
-                    type='text'
-                    placeholder='Masukkan no polis'
-                    value={noPolis}
-                    onChange={(e) => setNoPolis(e.target.value)}
-                    required
-                  />
-                </Form.Group>
-              </Col>
-
-              <Col className='d-none d-md-block px-2'></Col>
-            </Row>
-
-            <Button type='button' variant='primary' onClick={formSubmitHandler}>
-              Buat Rekapan
-            </Button>
-          </Form>
+            <Col className='d-none d-md-block px-2'></Col>
+          </Row>
 
           <Row className='mt-3' noGutters>
             <Col>
@@ -163,8 +184,8 @@ const BuatRekapan = ({ history }) => {
                   {listNota.map((nota) => (
                     <tr key={nota._id}>
                       <td>{nota.noNota}</td>
-                      <td>{nota.totalColli}</td>
-                      <td>{nota.totalBerat}</td>
+                      <td>{`${nota.totalColli} Colli`}</td>
+                      <td>{`${nota.totalBerat} Kg`}</td>
                       <td>{`Rp. ${numeral(nota.totalHarga).format(
                         '0,0.00'
                       )}`}</td>
