@@ -16,7 +16,7 @@ import styles from './EditRekapan.module.scss';
 const EditRekapan = () => {
   const [dataNota, setDataNota] = useState([]);
 
-  const formikRef = useRef();
+  const formikRef = useRef({ isValid: false });
 
   const initialValues = {
     namaSopir: 'wyan gede',

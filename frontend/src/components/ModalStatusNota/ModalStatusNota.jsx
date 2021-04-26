@@ -10,7 +10,7 @@ import FormControl from '../Formik/FormControl/FormControl';
 
 const ModalStatusNota = () => {
   const [show, setShow] = useState(false);
-  const submitFormRef = useRef();
+  const formikRef = useRef();
 
   const optionsPembayaran = [
     {
@@ -20,6 +20,9 @@ const ModalStatusNota = () => {
     {
       key: 'Belum Dibayar',
       value: false,
+      props: {
+        selected: true,
+      },
     },
   ];
 
@@ -31,15 +34,20 @@ const ModalStatusNota = () => {
     {
       key: 'Sudah Dikirim',
       value: false,
+      props: {
+        selected: true,
+      },
     },
   ];
 
   const initialValues = {
     franco: false,
     statusPembayaran: false,
+    statusPengiriman: false,
   };
 
   const validationSchema = Yup.object({
+    franco: Yup.boolean().required('Diperlukan'),
     statusPembayaran: Yup.boolean().required('Diperlukan'),
     statusPengiriman: Yup.boolean().required('Diperlukan'),
   });
@@ -74,7 +82,8 @@ const ModalStatusNota = () => {
             onSubmit={submitHandler}
           >
             {(formik) => {
-              submitFormRef.current = formik.submitForm;
+              formikRef.current = formik;
+
               return (
                 <FormikForm>
                   <FormControl
@@ -90,39 +99,22 @@ const ModalStatusNota = () => {
                     name='statusPengiriman'
                     label='Status Pengiriman'
                   />
+
+                  <FormControl
+                    control='checkbox'
+                    name='franco'
+                    label='Franco'
+                  />
                 </FormikForm>
               );
             }}
-            <Form.Group controlId='statusPembayaran'>
-              <Form.Label>Status Pembayaran</Form.Label>
-
-              <Form.Control as='select'>
-                <option value='Select something' selected hidden disabled>
-                  Pilih status pembayaran
-                </option>
-                <option value='true'>Sudah Dibayar</option>
-                <option value='false'>Belum Dibayar</option>
-              </Form.Control>
-            </Form.Group>
-
-            <Form.Group controlId='statusPengiriman'>
-              <Form.Label>Status Pengiriman</Form.Label>
-
-              <Form.Control as='select'>
-                <option value='Select something' selected hidden disabled>
-                  Pilih status pengiriman
-                </option>
-                <option value='true'>Sudah Diterima</option>
-                <option value='false'>Sudah Dikirim</option>
-              </Form.Control>
-            </Form.Group>
           </Formik>
         </Modal.Body>
         <Modal.Footer>
           <Button
             variant='primary'
             type='submit'
-            onClick={(e) => submitFormRef.current()}
+            onClick={(e) => formikRef.current.submitForm()}
           >
             Simpan
           </Button>

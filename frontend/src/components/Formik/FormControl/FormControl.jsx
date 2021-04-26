@@ -1,7 +1,7 @@
 import React from 'react';
-import Input from '../Input/Input';
-import Select from '../Select/Select';
-import Checkbox from '../CheckBox/Checkbox';
+import Input from './Input/Input';
+import Select from './Select/Select';
+import Checkbox from './Checkbox/Checkbox';
 
 const FormControl = (props) => {
   const { control, ...rest } = props;
