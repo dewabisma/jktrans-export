@@ -1,0 +1,24 @@
+import React from 'react';
+import { Field, ErrorMessage } from 'formik';
+import { Form } from 'react-bootstrap';
+
+const Checkbox = (props) => {
+  const { name, label, ...rest } = props;
+  return (
+    <Form.Group controlId={name}>
+      <Field name={name}>
+        {(fieldProps) => {
+          const { field, meta, form } = fieldProps;
+
+          return (
+            <Form.Check type='checkbox' label={label} {...field} {...rest} />
+          );
+        }}
+      </Field>
+
+      <ErrorMessage name={name} />
+    </Form.Group>
+  );
+};
+
+export default Checkbox;

@@ -13,7 +13,7 @@ import FormControl from '../../components/Formik/FormControl/FormControl';
 
 const EditNota = () => {
   const [dataBarang, setDataBarang] = useState([]);
-  const submitFormRef = useRef();
+  const formikRef = useRef();
 
   const initialValues = {
     namaPengirim: 'gede nengah',
@@ -78,9 +78,14 @@ const EditNota = () => {
 
             <Button
               className='d-flex justify-content-between align-items-center'
-              type='button'
+              type='submit'
               variant='primary'
-              onClick={(e) => submitFormRef.current()}
+              onClick={(e) => formikRef.current.submitForm()}
+              disabled={
+                !formikRef.current.isValid ||
+                !dataBarang.length > 0 ||
+                formikRef.current.isSubmitting
+              }
             >
               <FontAwesomeIcon icon={faSave} size='2x' />
               <span className='font-weight-bold ml-2 d-none d-sm-inline'>
@@ -97,7 +102,7 @@ const EditNota = () => {
                 onSubmit={onSubmit}
               >
                 {(formik) => {
-                  submitFormRef.current = formik.submitForm;
+                  formikRef.current = formik;
 
                   return (
                     <FormikForm>

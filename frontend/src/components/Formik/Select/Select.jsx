@@ -32,4 +32,11 @@ const Select = (props) => {
   );
 };
 
+Select.defaultProps = {
+  optionsKeyValue: {
+    key: 'key',
+    value: 'value',
+  },
+};
+
 export default Select;

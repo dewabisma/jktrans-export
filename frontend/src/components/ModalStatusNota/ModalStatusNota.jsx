@@ -12,6 +12,38 @@ const ModalStatusNota = () => {
   const [show, setShow] = useState(false);
   const submitFormRef = useRef();
 
+  const optionsPembayaran = [
+    {
+      key: 'Sudah Dibayar',
+      value: true,
+    },
+    {
+      key: 'Belum Dibayar',
+      value: false,
+    },
+  ];
+
+  const optionsPengiriman = [
+    {
+      key: 'Sudah Diterima',
+      value: true,
+    },
+    {
+      key: 'Sudah Dikirim',
+      value: false,
+    },
+  ];
+
+  const initialValues = {
+    franco: false,
+    statusPembayaran: false,
+  };
+
+  const validationSchema = Yup.object({
+    statusPembayaran: Yup.boolean().required('Diperlukan'),
+    statusPengiriman: Yup.boolean().required('Diperlukan'),
+  });
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -37,8 +69,8 @@ const ModalStatusNota = () => {
         </Modal.Header>
         <Modal.Body>
           <Formik
-            // initialValues={initialValues}
-            // validationSchema={validationSchema}
+            initialValues={initialValues}
+            validationSchema={validationSchema}
             onSubmit={submitHandler}
           >
             {(formik) => {
@@ -47,14 +79,14 @@ const ModalStatusNota = () => {
                 <FormikForm>
                   <FormControl
                     control='select'
-                    options={[]}
+                    options={optionsPembayaran}
                     name='statusPembayaran'
                     label='Status Pembayaran'
                   />
 
                   <FormControl
                     control='select'
-                    options={[]}
+                    options={optionsPengiriman}
                     name='statusPengiriman'
                     label='Status Pengiriman'
                   />

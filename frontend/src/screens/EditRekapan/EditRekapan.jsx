@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Table, Row, Col, Form, Button } from 'react-bootstrap';
+import { Formik, Form as FormikForm } from 'formik';
+import * as Yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faCheck, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
@@ -7,11 +9,28 @@ import { faSave } from '@fortawesome/free-regular-svg-icons';
 import Header from '../../components/Header/Header';
 import ModalTambahRekapanNota from '../../components/ModalTambahRekapanNota/ModalTambahRekapanNota';
 import ModalStatusNota from '../../components/ModalStatusNota/ModalStatusNota';
+import FormControl from '../../components/Formik/FormControl/FormControl';
 
 import styles from './EditRekapan.module.scss';
 
 const EditRekapan = () => {
   const [dataNota, setDataNota] = useState([]);
+
+  const formikRef = useRef();
+
+  const initialValues = {
+    namaSopir: 'wyan gede',
+    nomorPolisi: '817-KBD',
+  };
+
+  const validationSchema = Yup.object({
+    namaSopir: Yup.string().required('Diperlukan'),
+    nomorPolisi: Yup.string().required('Diperlukan'),
+  });
+
+  const onSubmit = () => {
+    alert('wroking');
+  };
 
   return (
     <>
@@ -21,7 +40,16 @@ const EditRekapan = () => {
           <div className='d-flex justify-content-between'>
             <h1 className='fs-xs-1-5'>Rekapan - 12343</h1>
 
-            <Button type='button' variant='primary'>
+            <Button
+              type='submit'
+              variant='primary'
+              onClick={(e) => formikRef.current.submitForm()}
+              disabled={
+                !formikRef.current.isValid ||
+                !dataNota.length > 0 ||
+                formikRef.current.isSubmitting
+              }
+            >
               <FontAwesomeIcon icon={faSave} size='2x' />
 
               <span className='font-weight-bold ml-2 d-none d-sm-inline'>
@@ -30,33 +58,37 @@ const EditRekapan = () => {
             </Button>
           </div>
 
-          <Form>
-            <Row noGutters>
-              <Col xs={12} sm={4} className='px-2'>
-                <Form.Group controlId='namaPengirim'>
-                  <Form.Label>Nama Sopir</Form.Label>
-
-                  <Form.Control
-                    type='text'
-                    placeholder='Masukkan nama pengirim'
-                    value='Gede nengah'
-                    required
-                  />
-                </Form.Group>
-
-                <Form.Group controlId='nomorPolisi'>
-                  <Form.Label>Nomor Polisi</Form.Label>
-
-                  <Form.Control
-                    type='text'
-                    placeholder='Masukkan nama penerima'
-                    value='12D-h91'
-                    required
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form>
+          <Row noGutters>
+            <Col xs={12} sm={4} className='px-2'>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={onSubmit}
+              >
+                {(formik) => {
+                  formikRef.current = formik;
+                  return (
+                    <FormikForm>
+                      <FormControl
+                        control='input'
+                        type='text'
+                        name='namaSopir'
+                        label='Nama Sopir'
+                        placeholder='Masukkan nama sopir'
+                      />
+                      <FormControl
+                        control='input'
+                        type='text'
+                        name='nomorPolisi'
+                        label='Nomor Polisi'
+                        placeholder='Masukkan nomor polisi'
+                      />
+                    </FormikForm>
+                  );
+                }}
+              </Formik>
+            </Col>
+          </Row>
 
           <Row noGutters className='justify-content-between'>
             <h2 className='fs-xs-1-5'>Data Nota</h2>

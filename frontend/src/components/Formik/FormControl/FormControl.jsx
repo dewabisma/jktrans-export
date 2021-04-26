@@ -1,6 +1,7 @@
 import React from 'react';
 import Input from '../Input/Input';
 import Select from '../Select/Select';
+import Checkbox from '../CheckBox/Checkbox';
 
 const FormControl = (props) => {
   const { control, ...rest } = props;
@@ -8,8 +9,8 @@ const FormControl = (props) => {
   switch (control) {
     case 'input':
       return <Input {...rest} />;
-    // case 'checkbox':
-    //   return <Checkbox {...rest} />;
+    case 'checkbox':
+      return <Checkbox {...rest} />;
     case 'select':
       return <Select {...rest} />;
     default:
