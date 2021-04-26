@@ -142,9 +142,18 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
                   <FormControl
                     control='select'
                     options={[
-                      { id: 'pilih', jenisBarang: 'Pilih Macam Colli' },
+                      {
+                        jenisBarang: 'Pilih macam colli',
+                        props: {
+                          hidden: true,
+                        },
+                      },
                       ...listBiaya,
                     ]}
+                    optionsKeyValue={{
+                      key: 'jenisBarang',
+                      value: 'jenisBarang',
+                    }}
                     name='macamColli'
                     label='Macam Colli'
                   />

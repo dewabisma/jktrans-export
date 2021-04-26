@@ -3,7 +3,7 @@ import { Field, ErrorMessage } from 'formik';
 import { Form } from 'react-bootstrap';
 
 const Select = (props) => {
-  const { name, label, options, ...rest } = props;
+  const { name, label, options, optionsKeyValue, ...rest } = props;
   return (
     <Form.Group controlId={name}>
       <Form.Label>{label}</Form.Label>
@@ -14,8 +14,12 @@ const Select = (props) => {
           return (
             <Form.Control as='select' {...field} {...rest}>
               {options.map((option) => (
-                <option key={option._id} value={option.jenisBarang}>
-                  {option.jenisBarang}
+                <option
+                  key={option[optionsKeyValue.key]}
+                  value={option[optionsKeyValue.value]}
+                  {...option.props}
+                >
+                  {option[optionsKeyValue.key]}
                 </option>
               ))}
             </Form.Control>

@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Table, Row, Col, Button, Form } from 'react-bootstrap';
+import { Formik, Form as FormikForm } from 'formik';
+import * as Yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
@@ -7,9 +9,27 @@ import numeral from 'numeral';
 
 import Header from '../../components/Header/Header';
 import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
+import FormControl from '../../components/Formik/FormControl/FormControl';
 
 const EditNota = () => {
   const [dataBarang, setDataBarang] = useState([]);
+  const submitFormRef = useRef();
+
+  const initialValues = {
+    namaPengirim: 'gede nengah',
+    namaPenerima: 'wayan gede',
+    alamatPenerima: 'jalan brigjen ngurah rai',
+  };
+
+  const validationSchema = Yup.object({
+    namaPengirim: Yup.string().required('Diperlukan'),
+    namaPenerima: Yup.string().required('Diperlukan'),
+    alamatPenerima: Yup.string().required('Diperlukan'),
+  });
+
+  const onSubmit = () => {
+    alert('its working!!!!');
+  };
 
   const calculateTotalColli = () => {
     if (dataBarang.length > 0) {
@@ -60,6 +80,7 @@ const EditNota = () => {
               className='d-flex justify-content-between align-items-center'
               type='button'
               variant='primary'
+              onClick={(e) => submitFormRef.current()}
             >
               <FontAwesomeIcon icon={faSave} size='2x' />
               <span className='font-weight-bold ml-2 d-none d-sm-inline'>
@@ -68,81 +89,84 @@ const EditNota = () => {
             </Button>
           </div>
 
-          <Form>
-            <Row noGutters>
-              <Col xs={12} sm className='px-2'>
-                <Form.Group controlId='namaPengirim'>
-                  <Form.Label>Nama Pengirim</Form.Label>
+          <Row noGutters>
+            <Col xs={12} sm className='px-2'>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={onSubmit}
+              >
+                {(formik) => {
+                  submitFormRef.current = formik.submitForm;
 
-                  <Form.Control
-                    type='text'
-                    placeholder='Masukkan nama pengirim'
-                    value='Gede nengah'
-                    required
-                  />
-                </Form.Group>
+                  return (
+                    <FormikForm>
+                      <FormControl
+                        control='input'
+                        type='text'
+                        name='namaPengirim'
+                        label='Nama Pengirim'
+                        placeholder='Masukkan nama pengirim'
+                      />
 
-                <Form.Group controlId='namaPenerima'>
-                  <Form.Label>Nama Penerima</Form.Label>
+                      <FormControl
+                        control='input'
+                        type='text'
+                        name='namaPenerima'
+                        label='Nama Penerima'
+                        placeholder='Masukkan nama penerima'
+                      />
 
-                  <Form.Control
-                    type='text'
-                    placeholder='Masukkan nama penerima'
-                    value='Wayan gede'
-                    required
-                  />
-                </Form.Group>
+                      <FormControl
+                        control='input'
+                        type='text'
+                        name='alamatPenerima'
+                        label='Alamat Penerima'
+                        placeholder='Masukkan alamat penerima'
+                      />
+                    </FormikForm>
+                  );
+                }}
+              </Formik>
+            </Col>
 
-                <Form.Group controlId='alamatPenerima'>
-                  <Form.Label>Alamat Penerima</Form.Label>
+            <Col xs={12} sm className='px-2'>
+              <Form.Group controlId='totalColli'>
+                <Form.Label>Total Colli</Form.Label>
+                <Form.Control
+                  className='pl-3'
+                  type='text'
+                  value={`${calculateTotalColli()} Colli`}
+                  readOnly
+                  plaintext
+                />
+              </Form.Group>
 
-                  <Form.Control
-                    type='text'
-                    placeholder='Masukkan alamat penerima'
-                    value='jalan brigjen ngurah rai'
-                    required
-                  />
-                </Form.Group>
-              </Col>
+              <Form.Group controlId='totalBerat'>
+                <Form.Label>Total Berat</Form.Label>
+                <Form.Control
+                  className='pl-3'
+                  type='text'
+                  value={`${calculateTotalBerat()} Kg`}
+                  readOnly
+                  plaintext
+                />
+              </Form.Group>
 
-              <Col xs={12} sm className='px-2'>
-                <Form.Group controlId='totalColli'>
-                  <Form.Label>Total Colli</Form.Label>
-                  <Form.Control
-                    className='pl-3'
-                    type='text'
-                    value={`${calculateTotalColli()} Colli`}
-                    readOnly
-                    plaintext
-                  />
-                </Form.Group>
-
-                <Form.Group controlId='totalBerat'>
-                  <Form.Label>Total Berat</Form.Label>
-                  <Form.Control
-                    className='pl-3'
-                    type='text'
-                    value={`${calculateTotalBerat()} Kg`}
-                    readOnly
-                    plaintext
-                  />
-                </Form.Group>
-
-                <Form.Group controlId='totalBiaya'>
-                  <Form.Label>Total Biaya</Form.Label>
-                  <Form.Control
-                    className='pl-3'
-                    type='text'
-                    value={`Rp. ${numeral(calculateTotalBiaya()).format(
-                      '0,0.00'
-                    )}`}
-                    readOnly
-                    plaintext
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Form>
+              <Form.Group controlId='totalBiaya'>
+                <Form.Label>Total Biaya</Form.Label>
+                <Form.Control
+                  className='pl-3'
+                  type='text'
+                  value={`Rp. ${numeral(calculateTotalBiaya()).format(
+                    '0,0.00'
+                  )}`}
+                  readOnly
+                  plaintext
+                />
+              </Form.Group>
+            </Col>
+          </Row>
 
           <Row noGutters className='justify-content-between'>
             <h2 className='fs-xs-1-5'>Data Barang</h2>
