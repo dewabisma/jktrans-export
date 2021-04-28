@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTable } from 'react-table';
 import { Row, Col, Table, Card, Button } from 'react-bootstrap';
 
 import Header from '../../components/Header/Header';
@@ -19,6 +20,8 @@ import {
   fetchAllBookingan,
   selectBookingan,
 } from '../../redux/bookingan/bookinganListSlice.js';
+
+import { COLUMN_NOTA, COLUMN_REKAPAN } from './columns.js';
 
 const DashboardScreen = ({ history }) => {
   const dispatch = useDispatch();
@@ -46,15 +49,24 @@ const DashboardScreen = ({ history }) => {
     entities: dataBookingan,
   } = useSelector(selectBookingan);
 
+  const notaColumns = useMemo(() => COLUMN_NOTA, []);
+  const notaData = useMemo(() => dataNota, [dataNota]);
+
+  const tableNota = useTable({
+    columns: notaColumns,
+    data: notaData,
+  });
+
+  const rekapanColumns = useMemo(() => COLUMN_REKAPAN, []);
+  const rekapanData = useMemo(() => dataRekapan, [dataRekapan]);
+
+  const tableRekapan = useTable({
+    columns: rekapanColumns,
+    data: rekapanData,
+  });
+
   const getTotalTransaction = () =>
     totalRekapan + totalNota + dataBookingan.length;
-
-  const checkNotaHandler = (notaId) => {
-    history.push(`/nota/${notaId}`);
-  };
-  const checkRekapanHandler = (rekapanId) => {
-    history.push(`/rekapan/${rekapanId}`);
-  };
 
   useEffect(() => {
     if (!authToken) {
@@ -156,36 +168,36 @@ const DashboardScreen = ({ history }) => {
               {errorNota && <Message variant='danger'>{errorNota}</Message>}
               {notaStatus === 'loading' && <Loader />}
               {notaStatus === 'success' && (
-                <Table responsive>
+                <Table responsive {...tableNota.getTableProps()}>
                   <thead>
-                    <tr>
-                      <th>Sp Nota</th>
-                      <th>Nama Pengirim</th>
-                      <th>Alamat Tujuan</th>
-                      <th>Toko Tujuan</th>
-                      <th>Penginput</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-
-                  <tbody className={styles.table}>
-                    {dataNota.map((nota) => (
-                      <tr key={nota.noNota}>
-                        <td>{nota.noNota}</td>
-                        <td>{nota.namaPengirim}</td>
-                        <td>{nota.alamatPenerima}</td>
-                        <td>{nota.namaPenerima}</td>
-                        <td>{nota.pegawai.username}</td>
-                        <td>
-                          <Button
-                            onClick={(e) => checkNotaHandler(nota._id)}
-                            size='sm'
-                          >
-                            Check
-                          </Button>
-                        </td>
+                    {tableNota.headerGroups.map((headerGroup) => (
+                      <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map((column) => (
+                          <th {...column.getHeaderProps()}>
+                            {column.render('Header')}
+                          </th>
+                        ))}
                       </tr>
                     ))}
+                  </thead>
+
+                  <tbody
+                    className={styles.table}
+                    {...tableNota.getTableBodyProps()}
+                  >
+                    {tableNota.rows.map((row) => {
+                      tableNota.prepareRow(row);
+
+                      return (
+                        <tr {...row.getRowProps()}>
+                          {row.cells.map((cell) => (
+                            <td {...cell.getCellProps()}>
+                              {cell.render('Cell')}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </Table>
               )}
@@ -199,32 +211,36 @@ const DashboardScreen = ({ history }) => {
               )}
               {rekapanStatus === 'loading' && <Loader />}
               {rekapanStatus === 'success' && (
-                <Table responsive>
+                <Table responsive {...tableRekapan.getTableProps()}>
                   <thead>
-                    <tr>
-                      <th>No Rekapan</th>
-                      <th>No Polis</th>
-                      <th>Sopir</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-
-                  <tbody className={styles.table}>
-                    {dataRekapan.map((rekapan) => (
-                      <tr key={rekapan.noRekapan}>
-                        <td>{rekapan.noRekapan}</td>
-                        <td>{rekapan.noPolis}</td>
-                        <td>{rekapan.sopirPengirim}</td>
-                        <td>
-                          <Button
-                            onClick={(e) => checkRekapanHandler(rekapan._id)}
-                            size='sm'
-                          >
-                            Check
-                          </Button>
-                        </td>
+                    {tableRekapan.headerGroups.map((headerGroup) => (
+                      <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map((column) => (
+                          <th {...column.getHeaderProps()}>
+                            {column.render('Header')}
+                          </th>
+                        ))}
                       </tr>
                     ))}
+                  </thead>
+
+                  <tbody
+                    className={styles.table}
+                    {...tableRekapan.getTableBodyProps()}
+                  >
+                    {tableRekapan.rows.map((row) => {
+                      tableRekapan.prepareRow(row);
+
+                      return (
+                        <tr {...row.getRowProps()}>
+                          {row.cells.map((cell) => (
+                            <td {...cell.getCellProps()}>
+                              {cell.render('Cell')}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </Table>
               )}
