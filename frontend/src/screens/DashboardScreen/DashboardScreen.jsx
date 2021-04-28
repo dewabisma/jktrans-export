@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTable } from 'react-table';
-import { Row, Col, Table, Card, Button } from 'react-bootstrap';
+import { Row, Col, Table, Card } from 'react-bootstrap';
 
 import Header from '../../components/Header/Header';
 import Loader from '../../components/Loader/Loader';

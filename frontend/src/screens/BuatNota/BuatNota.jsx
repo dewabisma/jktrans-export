@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { useTable } from 'react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import { Row, Col, Button, Form, Table } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import numeral from 'numeral';
 import axios from 'axios';
 
@@ -12,12 +11,12 @@ import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
-import ModalFormEditBarang from '../../components/ModalFormEditBarang/ModalFormEditBarang';
 import FormControl from '../../components/Formik/FormControl/FormControl';
 
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import { addNew } from '../../redux/nota/notaListSlice.js';
 
+import { COLUMN_BARANG } from './columns.js';
 import styles from './BuatNota.module.scss';
 
 const BuatNota = ({ history }) => {
@@ -25,6 +24,13 @@ const BuatNota = ({ history }) => {
 
   const [errorBuatNota, setErrorBuatNota] = useState(null);
   const [dataBarang, setDataBarang] = useState([]);
+
+  const barangColumns = useMemo(() => COLUMN_BARANG, []);
+
+  const tableBarang = useTable({
+    columns: barangColumns,
+    data: dataBarang,
+  });
 
   const authToken = useSelector(selectAuthToken);
 
@@ -237,57 +243,42 @@ const BuatNota = ({ history }) => {
               </div>
 
               {dataBarang.length > 0 ? (
-                <Table striped bordered hover responsive>
+                <Table
+                  striped
+                  bordered
+                  hover
+                  responsive
+                  {...tableBarang.getTableProps()}
+                >
                   <thead>
-                    <tr>
-                      <th>No</th>
-                      <th>Banyak Colli</th>
-                      <th>Macam Colli</th>
-                      <th>Merek Colli</th>
-                      <th>Nama Barang</th>
-                      <th>Berat Kotor</th>
-                      <th>Biaya Angkut</th>
-                      <th>Keterangan</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataBarang.map((barang, index) => (
-                      <tr key={barang.noBarang}>
-                        <td>{barang.noBarang}</td>
-                        <td>{`${barang.banyakColli} Colli`}</td>
-                        <td>{barang.macamColli}</td>
-                        <td>{barang.merekColli}</td>
-                        <td>{barang.namaBarang}</td>
-                        <td>{`${barang.beratKotor} Kg`}</td>
-                        <td>{`Rp. ${numeral(barang.biayaAngkut).format(
-                          '0,0.00'
-                        )}`}</td>
-                        <td>{barang.keterangan}</td>
-                        <td>
-                          <div className='d-flex justify-content-around'>
-                            <ModalFormEditBarang
-                              indexBarang={index}
-                              dataBarang={dataBarang}
-                              setDataBarang={setDataBarang}
-                            />
-
-                            <Button
-                              variant='link'
-                              className='px-2 py-1'
-                              onClick={(e) => deleteBarang(index)}
-                            >
-                              <FontAwesomeIcon
-                                icon={faTrashAlt}
-                                size='2x'
-                                aria-roledescription='clicking this element will delete selected nota'
-                                className='text-danger'
-                              />
-                            </Button>
-                          </div>
-                        </td>
+                    {tableBarang.headerGroups.map((headerGroup) => (
+                      <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map((column) => (
+                          <th {...column.getHeaderProps()}>
+                            {column.render('Header')}
+                          </th>
+                        ))}
                       </tr>
                     ))}
+                  </thead>
+                  <tbody {...tableBarang.getTableBodyProps()}>
+                    {tableBarang.rows.map((row) => {
+                      tableBarang.prepareRow(row);
+
+                      return (
+                        <tr {...row.getRowProps()}>
+                          {row.cells.map((cell) => (
+                            <td {...cell.getCellProps()}>
+                              {cell.render('Cell', {
+                                dataBarang,
+                                setDataBarang,
+                                deleteBarang,
+                              })}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </Table>
               ) : (
