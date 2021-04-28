@@ -49,8 +49,12 @@ const DashboardScreen = ({ history }) => {
   const getTotalTransaction = () =>
     totalRekapan + totalNota + dataBookingan.length;
 
-  const checkNotaHandler = (notaId) => {};
-  const checkRekapanHandler = (rekapanId) => {};
+  const checkNotaHandler = (notaId) => {
+    history.push(`/nota/${notaId}`);
+  };
+  const checkRekapanHandler = (rekapanId) => {
+    history.push(`/rekapan/${rekapanId}`);
+  };
 
   useEffect(() => {
     if (!authToken) {
@@ -174,7 +178,7 @@ const DashboardScreen = ({ history }) => {
                         <td>{nota.pegawai.username}</td>
                         <td>
                           <Button
-                            onClick={checkNotaHandler(nota._id)}
+                            onClick={(e) => checkNotaHandler(nota._id)}
                             size='sm'
                           >
                             Check
@@ -213,7 +217,7 @@ const DashboardScreen = ({ history }) => {
                         <td>{rekapan.sopirPengirim}</td>
                         <td>
                           <Button
-                            onClick={checkRekapanHandler(rekapan._id)}
+                            onClick={(e) => checkRekapanHandler(rekapan._id)}
                             size='sm'
                           >
                             Check

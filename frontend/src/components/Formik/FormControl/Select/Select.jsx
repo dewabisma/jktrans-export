@@ -2,6 +2,8 @@ import React from 'react';
 import { Field, ErrorMessage } from 'formik';
 import { Form } from 'react-bootstrap';
 
+import FormErrorMessage from '../../FormErrorMessage/FormErrorMessage';
+
 const Select = (props) => {
   const { name, label, options, optionsKeyValue, ...rest } = props;
   return (
@@ -27,7 +29,7 @@ const Select = (props) => {
         }}
       </Field>
 
-      <ErrorMessage name={name} />
+      <ErrorMessage name={name} component={FormErrorMessage} />
     </Form.Group>
   );
 };

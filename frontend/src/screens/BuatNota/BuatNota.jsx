@@ -4,15 +4,15 @@ import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import { Row, Col, Button, Form, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import numeral from 'numeral';
 import axios from 'axios';
 
 import Header from '../../components/Header/Header';
-import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
+import ModalFormEditBarang from '../../components/ModalFormEditBarang/ModalFormEditBarang';
 import FormControl from '../../components/Formik/FormControl/FormControl';
 
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
@@ -23,6 +23,7 @@ import styles from './BuatNota.module.scss';
 const BuatNota = ({ history }) => {
   const dispatch = useDispatch();
 
+  const [errorBuatNota, setErrorBuatNota] = useState(null);
   const [dataBarang, setDataBarang] = useState([]);
 
   const authToken = useSelector(selectAuthToken);
@@ -77,6 +78,10 @@ const BuatNota = ({ history }) => {
       return;
     }
   };
+  const deleteBarang = (indexBarang) => {
+    dataBarang.splice(indexBarang, 1);
+    setDataBarang([...dataBarang]);
+  };
   const formSubmitHandler = async (values) => {
     const { namaPengirim, namaPenerima, alamatPenerima } = values;
 
@@ -107,6 +112,8 @@ const BuatNota = ({ history }) => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message;
+
+      setErrorBuatNota(message);
     }
 
     setDataBarang([]);
@@ -230,7 +237,7 @@ const BuatNota = ({ history }) => {
               </div>
 
               {dataBarang.length > 0 ? (
-                <Table striped bordered hover responsive='md'>
+                <Table striped bordered hover responsive>
                   <thead>
                     <tr>
                       <th>No</th>
@@ -245,7 +252,7 @@ const BuatNota = ({ history }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {dataBarang.map((barang) => (
+                    {dataBarang.map((barang, index) => (
                       <tr key={barang.noBarang}>
                         <td>{barang.noBarang}</td>
                         <td>{`${barang.banyakColli} Colli`}</td>
@@ -259,16 +266,17 @@ const BuatNota = ({ history }) => {
                         <td>{barang.keterangan}</td>
                         <td>
                           <div className='d-flex justify-content-around'>
-                            <Button variant='link' className='px-2 py-1'>
-                              <FontAwesomeIcon
-                                icon={faEdit}
-                                size='2x'
-                                aria-roledescription='clicking this element to edit selected nota'
-                                className='text-secondary'
-                              />
-                            </Button>
+                            <ModalFormEditBarang
+                              indexBarang={index}
+                              dataBarang={dataBarang}
+                              setDataBarang={setDataBarang}
+                            />
 
-                            <Button variant='link' className='px-2 py-1'>
+                            <Button
+                              variant='link'
+                              className='px-2 py-1'
+                              onClick={(e) => deleteBarang(index)}
+                            >
                               <FontAwesomeIcon
                                 icon={faTrashAlt}
                                 size='2x'

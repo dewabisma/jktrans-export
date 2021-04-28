@@ -20,6 +20,14 @@ th {
   height: 100%;
 }
 
+.form-error-text {
+  color: red;
+}
+
+.form-error-input {
+  border: 1px solid red !important;
+}
+
 .w10 {
   width: 10%;
 }

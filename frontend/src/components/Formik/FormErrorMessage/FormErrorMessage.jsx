@@ -1,7 +1,7 @@
 import React from 'react';
 
-const FormErrorMessage = () => {
-  return <div></div>;
+const FormErrorMessage = ({ children }) => {
+  return <div className='form-error-text'>{children}</div>;
 };
 
 export default FormErrorMessage;

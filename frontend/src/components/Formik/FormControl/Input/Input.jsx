@@ -2,6 +2,8 @@ import React from 'react';
 import { Field, ErrorMessage } from 'formik';
 import { Form } from 'react-bootstrap';
 
+import FormErrorMessage from '../../FormErrorMessage/FormErrorMessage';
+
 const Input = (props) => {
   const { name, label, ...rest } = props;
 
@@ -15,7 +17,7 @@ const Input = (props) => {
           return <Form.Control {...field} {...rest} />;
         }}
       </Field>
-      <ErrorMessage name={name} />
+      <ErrorMessage name={name} component={FormErrorMessage} />
     </Form.Group>
   );
 };

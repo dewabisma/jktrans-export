@@ -2,6 +2,8 @@ import React from 'react';
 import { Field, ErrorMessage } from 'formik';
 import { Form } from 'react-bootstrap';
 
+import FormErrorMessage from '../../FormErrorMessage/FormErrorMessage';
+
 const Checkbox = (props) => {
   const { name, label, ...rest } = props;
   return (
@@ -16,7 +18,7 @@ const Checkbox = (props) => {
         }}
       </Field>
 
-      <ErrorMessage name={name} />
+      <ErrorMessage name={name} component={FormErrorMessage} />
     </Form.Group>
   );
 };
