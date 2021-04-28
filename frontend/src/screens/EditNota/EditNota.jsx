@@ -13,7 +13,7 @@ import FormControl from '../../components/Formik/FormControl/FormControl';
 
 const EditNota = () => {
   const [dataBarang, setDataBarang] = useState([]);
-  const formikRef = useRef();
+  const formikRef = useRef({ isValid: false, isSubmitting: false });
 
   const initialValues = {
     namaPengirim: 'gede nengah',
