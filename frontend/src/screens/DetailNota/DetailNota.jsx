@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useTable } from 'react-table';
 import { useSelector } from 'react-redux';
 import { Table, Row, Col, Button, Form } from 'react-bootstrap';
 import numeral from 'numeral';
@@ -8,13 +9,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import { selectNotaById } from '../../redux/nota/notaListSlice';
+import { COLUMN_BARANG } from './columns.js';
 
-const DetailNota = ({ match }) => {
+const DetailNota = ({ match, history }) => {
   const { notaId } = match.params;
   const dataNota = useSelector((state) => selectNotaById(state, notaId));
   const { noNota, namaPenerima, namaPengirim, alamatPenerima } = dataNota;
 
   const [dataBarang, setDataBarang] = useState(dataNota.detailBarang);
+
+  const barangColumns = useMemo(() => COLUMN_BARANG, []);
+  const tableBarang = useTable({
+    columns: barangColumns,
+    data: dataBarang,
+  });
 
   const calculateTotalColli = () => {
     if (dataBarang.length > 0) {
@@ -52,6 +60,9 @@ const DetailNota = ({ match }) => {
       return;
     }
   };
+  const goEditNotaPage = () => {
+    history.push(`/nota/${notaId}/edit`);
+  };
 
   return (
     <>
@@ -61,7 +72,7 @@ const DetailNota = ({ match }) => {
           <div className='d-flex justify-content-between'>
             <h1 className='fs-xs-1-5'>Nota - S.P. {noNota}</h1>
 
-            <Button type='button' variant='secondary'>
+            <Button type='button' variant='secondary' onClick={goEditNotaPage}>
               <FontAwesomeIcon icon={faEdit} size='2x' />
             </Button>
           </div>
@@ -147,52 +158,36 @@ const DetailNota = ({ match }) => {
 
           <h2 className='fs-xs-1-5'>Data Barang</h2>
 
-          <Table striped bordered hover responsive>
+          <Table
+            striped
+            bordered
+            hover
+            responsive
+            {...tableBarang.getTableProps()}
+          >
             <thead>
-              <tr>
-                <th>No</th>
-                <th>Banyak Colli</th>
-                <th>Macam Colli</th>
-                <th>Merek Colli</th>
-                <th>Nama Barang</th>
-                <th>Berat Kotor</th>
-                <th>Biaya Angkut</th>
-                <th>Keterangan</th>
-              </tr>
+              {tableBarang.headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th {...column.getHeaderProps()}>
+                      {column.render('Header')}
+                    </th>
+                  ))}
+                </tr>
+              ))}
             </thead>
-            <tbody>
-              <tr>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>siap dikirim</td>
-              </tr>
+            <tbody {...tableBarang.getTableBodyProps()}>
+              {tableBarang.rows.map((row) => {
+                tableBarang.prepareRow(row);
 
-              <tr>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>siap dikirim</td>
-              </tr>
-
-              <tr>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>1234</td>
-                <td>siap dikirim</td>
-              </tr>
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    ))}
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
         </Col>
