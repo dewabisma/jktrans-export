@@ -89,10 +89,12 @@ const BuatRekapan = ({ history }) => {
     };
 
     try {
-      const { data } = await axios.post('/api/rekapan', newRekapan, config);
+      const {
+        data: { message, createdRekapan },
+      } = await axios.post('/api/rekapan', newRekapan, config);
 
-      if (data) {
-        dispatch(addNew(data));
+      if (createdRekapan) {
+        dispatch(addNew(createdRekapan));
       }
     } catch (error) {
       const message =
