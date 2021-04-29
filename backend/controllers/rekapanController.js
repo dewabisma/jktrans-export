@@ -45,7 +45,14 @@ const getAllRekapan = asyncHandler(async (req, res) => {
 
     const allRekapan = await RekapanNota.find({ ...keyword })
       .limit(pageSize)
-      .skip(pageSize * (pageNumber - 1));
+      .skip(pageSize * (pageNumber - 1))
+      .populate({
+        path: 'detailRekapanNota',
+        populate: {
+          path: 'nota',
+          select: 'noNota',
+        },
+      });
 
     if (allRekapan) {
       res.json({

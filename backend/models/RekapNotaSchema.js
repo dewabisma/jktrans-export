@@ -4,7 +4,7 @@ const rekapNotaSchema = mongoose.Schema({
   nota: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'nota',
+    ref: 'Nota',
   },
   colli: {
     type: Number,
