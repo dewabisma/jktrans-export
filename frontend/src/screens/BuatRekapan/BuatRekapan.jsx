@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTable } from 'react-table';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import { Row, Col, Button, Form, Table } from 'react-bootstrap';
-import numeral from 'numeral';
 import axios from 'axios';
 
 import Header from '../../components/Header/Header';
@@ -16,6 +16,7 @@ import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import { selectAllNota } from '../../redux/nota/notaListSlice.js';
 import { addNew } from '../../redux/rekapan/rekapanListSlice.js';
 
+import { COLUMN_NOTA } from './columns.js';
 import styles from './BuatRekapan.module.scss';
 
 const BuatRekapan = ({ history }) => {
@@ -24,10 +25,15 @@ const BuatRekapan = ({ history }) => {
   const authToken = useSelector(selectAuthToken);
   const listNota = useSelector(selectAllNota);
 
-  // Form 1 - Rincian Pengiriman
-  const [sopirPengirim, setSopirPengirim] = useState('');
-  const [noPolis, setNoPolis] = useState('');
+  const [errorBuatRekapan, setErrorBuatRekapan] = useState(null);
   const [kumpulanIdNota, setKumpulanIdNota] = useState([]);
+
+  const notaColumns = useMemo(() => COLUMN_NOTA, []);
+
+  const tableNota = useTable({
+    columns: notaColumns,
+    data: listNota,
+  });
 
   // Form initial values
   const initialValues = {
@@ -93,6 +99,8 @@ const BuatRekapan = ({ history }) => {
         error.response && error.response.data.message
           ? error.response.data.message
           : error.message;
+
+      setErrorBuatRekapan(message);
     }
 
     setKumpulanIdNota([]);
@@ -114,6 +122,9 @@ const BuatRekapan = ({ history }) => {
         </Col>
 
         <Col className='p-4' md={9}>
+          {errorBuatRekapan && (
+            <Message variant='danger'>{errorBuatRekapan}</Message>
+          )}
           <h1 className=''>Input Rekapan</h1>
 
           <Row noGutters>
@@ -168,40 +179,38 @@ const BuatRekapan = ({ history }) => {
                 <h2 className='mb-2'>List Nota</h2>
               </div>
 
-              <Table striped bordered hover responsive>
+              <Table
+                striped
+                bordered
+                hover
+                responsive
+                {...tableNota.getTableProps()}
+              >
                 <thead>
-                  <tr>
-                    <th>No.</th>
-                    <th>Total Colli</th>
-                    <th>Total Berat</th>
-                    <th>Total Biaya</th>
-                    <th>Pengirim Barang</th>
-                    <th>Penerima Barang</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {listNota.map((nota) => (
-                    <tr key={nota._id}>
-                      <td>{nota.noNota}</td>
-                      <td>{`${nota.totalColli} Colli`}</td>
-                      <td>{`${nota.totalBerat} Kg`}</td>
-                      <td>{`Rp. ${numeral(nota.totalHarga).format(
-                        '0,0.00'
-                      )}`}</td>
-                      <td>{nota.namaPengirim}</td>
-                      <td>{nota.namaPenerima}</td>
-                      <td>
-                        <Form.Check
-                          type='checkbox'
-                          label='tambahkan'
-                          value={nota._id}
-                          id={`nota-${nota.noNota}`}
-                          onChange={tambahNotaHandler}
-                        />
-                      </td>
+                  {tableNota.headerGroups.map((headerGroup) => (
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                      {headerGroup.headers.map((column) => (
+                        <th {...column.getHeaderProps()}>
+                          {column.render('Header')}
+                        </th>
+                      ))}
                     </tr>
                   ))}
+                </thead>
+                <tbody {...tableNota.getTableBodyProps()}>
+                  {tableNota.rows.map((row) => {
+                    tableNota.prepareRow(row);
+
+                    return (
+                      <tr {...row.getRowProps()}>
+                        {row.cells.map((cell) => (
+                          <td {...cell.getCellProps()}>
+                            {cell.render('Cell', { tambahNotaHandler })}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </Table>
             </Col>

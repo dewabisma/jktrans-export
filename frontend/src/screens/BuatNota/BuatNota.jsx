@@ -141,6 +141,7 @@ const BuatNota = ({ history }) => {
         </Col>
 
         <Col className='p-4' md={9}>
+          {errorBuatNota && <Message variant='danger'>{errorBuatNota}</Message>}
           <h1 className={styles.heading1}>Input Nota</h1>
 
           <Row noGutters>
