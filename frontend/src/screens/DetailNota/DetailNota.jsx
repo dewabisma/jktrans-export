@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Table, Row, Col, Button, Form } from 'react-bootstrap';
 import numeral from 'numeral';
 
@@ -6,8 +7,14 @@ import Header from '../../components/Header/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
-const DetailNota = () => {
-  const [dataBarang, setDataBarang] = useState([]);
+import { selectNotaById } from '../../redux/nota/notaListSlice';
+
+const DetailNota = ({ match }) => {
+  const { notaId } = match.params;
+  const dataNota = useSelector((state) => selectNotaById(state, notaId));
+  const { noNota, namaPenerima, namaPengirim, alamatPenerima } = dataNota;
+
+  const [dataBarang, setDataBarang] = useState(dataNota.detailBarang);
 
   const calculateTotalColli = () => {
     if (dataBarang.length > 0) {
@@ -52,7 +59,7 @@ const DetailNota = () => {
       <Row noGutters>
         <Col className='p-4'>
           <div className='d-flex justify-content-between'>
-            <h1 className='fs-xs-1-5'>Nota - S.P. 12343</h1>
+            <h1 className='fs-xs-1-5'>Nota - S.P. {noNota}</h1>
 
             <Button type='button' variant='secondary'>
               <FontAwesomeIcon icon={faEdit} size='2x' />
@@ -68,7 +75,7 @@ const DetailNota = () => {
                   <Form.Control
                     type='text'
                     placeholder='Masukkan nama pengirim'
-                    value='Gede nengah'
+                    value={namaPengirim}
                     readOnly
                     required
                   />
@@ -80,7 +87,7 @@ const DetailNota = () => {
                   <Form.Control
                     type='text'
                     placeholder='Masukkan nama penerima'
-                    value='Wayan gede'
+                    value={namaPenerima}
                     readOnly
                     required
                   />
@@ -92,7 +99,7 @@ const DetailNota = () => {
                   <Form.Control
                     type='text'
                     placeholder='Masukkan alamat penerima'
-                    value='jalan brigjen ngurah rai'
+                    value={alamatPenerima}
                     readOnly
                     required
                   />
