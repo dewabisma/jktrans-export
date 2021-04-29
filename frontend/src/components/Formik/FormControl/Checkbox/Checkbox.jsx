@@ -13,7 +13,13 @@ const Checkbox = (props) => {
           const { field, meta, form } = fieldProps;
 
           return (
-            <Form.Check type='checkbox' label={label} {...field} {...rest} />
+            <Form.Check
+              type='checkbox'
+              label={label}
+              isInvalid={meta.error && meta.touched}
+              {...field}
+              {...rest}
+            />
           );
         }}
       </Field>

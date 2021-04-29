@@ -14,7 +14,13 @@ const Input = (props) => {
         {(fieldProps) => {
           const { form, field, meta } = fieldProps;
 
-          return <Form.Control {...field} {...rest} />;
+          return (
+            <Form.Control
+              isInvalid={meta.error && meta.touched}
+              {...field}
+              {...rest}
+            />
+          );
         }}
       </Field>
       <ErrorMessage name={name} component={FormErrorMessage} />

@@ -14,7 +14,12 @@ const Select = (props) => {
           const { field, meta, form } = fieldProps;
 
           return (
-            <Form.Control as='select' {...field} {...rest}>
+            <Form.Control
+              as='select'
+              isInvalid={meta.error && meta.touched}
+              {...field}
+              {...rest}
+            >
               {options.map((option) => (
                 <option
                   key={option[optionsKeyValue.key]}
