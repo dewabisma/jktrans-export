@@ -36,7 +36,7 @@ export const fetchAllNota = createAsyncThunk(
 
     const config = {
       headers: {
-        authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
       },
     };
 
@@ -71,13 +71,13 @@ export const editNotaById = createAsyncThunk(
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        authorzation: `Bearer ${authToken}`,
+        Authorization: `Bearer ${authToken}`,
       },
     };
 
     try {
       const { data } = await axios.put(
-        `/api/nota/${notaId}/edit`,
+        `/api/nota/${notaId}`,
         editedNota,
         config
       );
@@ -89,7 +89,7 @@ export const editNotaById = createAsyncThunk(
           ? error.response.data.message
           : error.message;
 
-      rejectWithValue(message);
+      return rejectWithValue(message);
     }
   }
 );
@@ -140,7 +140,7 @@ const notaListSlice = createSlice({
     [editNotaById.fulfilled]: (state, action) => {
       const { message, data } = action.payload;
 
-      state.status = 'success';
+      state.status = 'successUpdating';
       state.totalNota += 1;
       state.message = message;
       notaListAdapter.upsertOne(state, data);

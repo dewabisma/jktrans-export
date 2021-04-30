@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 import { Table, Row, Col, Button, Form } from 'react-bootstrap';
@@ -9,15 +9,22 @@ import { faSave } from '@fortawesome/free-regular-svg-icons';
 import numeral from 'numeral';
 
 import Header from '../../components/Header/Header';
+import Message from '../../components/Message/Message';
 import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
 import FormControl from '../../components/Formik/FormControl/FormControl';
 
-import { selectNotaById, editNotaById } from '../../redux/nota/notaListSlice';
+import {
+  selectNotaById,
+  editNotaById,
+  selectNota,
+} from '../../redux/nota/notaListSlice';
 import { COLUMN_BARANG } from './columns.js';
 
 const EditNota = ({ match, history }) => {
   const dispatch = useDispatch();
   const { notaId } = match.params;
+
+  const { error: errorNota, status: statusNota } = useSelector(selectNota);
 
   const dataNota = useSelector((state) => selectNotaById(state, notaId));
   const {
@@ -97,13 +104,40 @@ const EditNota = ({ match, history }) => {
     setDataBarang(updatedData);
   };
 
-  const onSubmit = () => {};
+  const onSubmit = (values) => {
+    const { namaPengirim, namaPenerima, alamatPenerima } = values;
+
+    const editedNota = {
+      namaPengirim,
+      namaPenerima,
+      alamatPenerima,
+      detailBarang: dataBarang,
+      totalColli: calculateTotalColli(),
+      totalBerat: calculateTotalBerat(),
+      totalHarga: calculateTotalBiaya(),
+    };
+
+    const data = {
+      notaId,
+      editedNota,
+    };
+
+    dispatch(editNotaById(data));
+  };
+
+  useEffect(() => {
+    if (statusNota === 'successUpdating') {
+      history.push(`/nota/${notaId}`);
+    }
+  }, [statusNota, notaId, history]);
 
   return (
     <>
       <Header />
       <Row noGutters>
         <Col className='p-4'>
+          {errorNota && <Message variant='danger'>{errorNota}</Message>}
+
           <div className='d-flex justify-content-between'>
             <h1 className='fs-xs-1-5'>Nota - S.P. {noNota}</h1>
 
