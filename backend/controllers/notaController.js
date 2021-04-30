@@ -143,7 +143,7 @@ const createNewNota = asyncHandler(async (req, res) => {
 });
 
 // @desc    edit nota by ID
-// @route   /api/nota/:notaId/edit
+// @route   PUT /api/nota/:notaId/edit
 // @access  Private (super user only)
 const editNotaById = asyncHandler(async (req, res) => {
   const {
@@ -172,6 +172,7 @@ const editNotaById = asyncHandler(async (req, res) => {
     const updatedNota = await nota.save();
     res.json({
       message: `Nota dengan nomor nota ${updatedNota.noNota} telah berhasil diubah`,
+      data: updatedNota,
     });
   } else {
     res.status(404);

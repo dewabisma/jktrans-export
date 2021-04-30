@@ -13,6 +13,7 @@ const notaListAdapter = createEntityAdapter({
 const initialState = notaListAdapter.getInitialState({
   status: 'idle',
   error: null,
+  message: null,
   currentPage: null,
   totalPageCount: null,
   totalNota: null,
@@ -57,6 +58,42 @@ export const fetchAllNota = createAsyncThunk(
   }
 );
 
+export const editNotaById = createAsyncThunk(
+  'nota/edit',
+  async (data, { rejectWithValue, getState }) => {
+    const { notaId, editedNota } = data;
+    const {
+      currentUser: {
+        entity: { authToken },
+      },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        authorzation: `Bearer ${authToken}`,
+      },
+    };
+
+    try {
+      const { data } = await axios.put(
+        `/api/nota/${notaId}/edit`,
+        editedNota,
+        config
+      );
+
+      return data;
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+
+      rejectWithValue(message);
+    }
+  }
+);
+
 const notaListSlice = createSlice({
   name: 'nota',
   initialState,
@@ -94,6 +131,21 @@ const notaListSlice = createSlice({
       notaListAdapter.addMany(state, allNota);
     },
     [fetchAllNota.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.error = action.payload;
+    },
+    [editNotaById.pending]: (state, action) => {
+      state.status = 'loading';
+    },
+    [editNotaById.fulfilled]: (state, action) => {
+      const { message, data } = action.payload;
+
+      state.status = 'success';
+      state.totalNota += 1;
+      state.message = message;
+      notaListAdapter.upsertOne(state, data);
+    },
+    [editNotaById.rejected]: (state, action) => {
       state.status = 'failed';
       state.error = action.payload;
     },

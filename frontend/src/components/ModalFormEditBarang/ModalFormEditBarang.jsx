@@ -39,7 +39,9 @@ const ModalFormEditBarang = ({ indexBarang, dataBarang, setDataBarang }) => {
     banyakColli: Yup.number()
       .moreThan(0, 'Jumlah tidak valid')
       .required('Diperlukan'),
-    macamColli: Yup.string().required('Diperlukan'),
+    macamColli: Yup.string()
+      .oneOf(['Kaca'], 'Tidak Valid')
+      .required('Diperlukan'),
     merekColli: Yup.string().required('Diperlukan'),
     namaBarang: Yup.string().required('Diperlukan'),
     beratKotor: Yup.number()
@@ -107,9 +109,15 @@ const ModalFormEditBarang = ({ indexBarang, dataBarang, setDataBarang }) => {
       keterangan,
     };
 
-    dataBarang.splice(indexBarang, 1, editedBarang);
+    const newData = dataBarang.map((data, index) => {
+      if (index === indexBarang) {
+        return editedBarang;
+      } else {
+        return data;
+      }
+    });
 
-    setDataBarang([...dataBarang]);
+    setDataBarang(newData);
 
     handleClose();
   };

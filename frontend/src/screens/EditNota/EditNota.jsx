@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTable } from 'react-table';
 import { Table, Row, Col, Button, Form } from 'react-bootstrap';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 import numeral from 'numeral';
 
@@ -11,14 +12,38 @@ import Header from '../../components/Header/Header';
 import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
 import FormControl from '../../components/Formik/FormControl/FormControl';
 
-const EditNota = () => {
-  const [dataBarang, setDataBarang] = useState([]);
+import { selectNotaById, editNotaById } from '../../redux/nota/notaListSlice';
+import { COLUMN_BARANG } from './columns.js';
+
+const EditNota = ({ match, history }) => {
+  const dispatch = useDispatch();
+  const { notaId } = match.params;
+
+  const dataNota = useSelector((state) => selectNotaById(state, notaId));
+  const {
+    noNota,
+    namaPengirim,
+    namaPenerima,
+    alamatPenerima,
+    detailBarang,
+  } = dataNota;
+
+  const [dataBarang, setDataBarang] = useState(detailBarang);
+
+  // React-Table
+  const barangColumns = useMemo(() => COLUMN_BARANG, []);
+  const tableBarang = useTable({
+    columns: barangColumns,
+    data: dataBarang,
+  });
+
+  // Formik
   const formikRef = useRef({ isValid: false, isSubmitting: false });
 
   const initialValues = {
-    namaPengirim: 'gede nengah',
-    namaPenerima: 'wayan gede',
-    alamatPenerima: 'jalan brigjen ngurah rai',
+    namaPengirim,
+    namaPenerima,
+    alamatPenerima,
   };
 
   const validationSchema = Yup.object({
@@ -26,10 +51,6 @@ const EditNota = () => {
     namaPenerima: Yup.string().required('Diperlukan'),
     alamatPenerima: Yup.string().required('Diperlukan'),
   });
-
-  const onSubmit = () => {
-    alert('its working!!!!');
-  };
 
   const calculateTotalColli = () => {
     if (dataBarang.length > 0) {
@@ -68,13 +89,23 @@ const EditNota = () => {
     }
   };
 
+  const deleteBarang = (index) => {
+    const updatedData = dataBarang.filter((data, indexData) => {
+      return index !== indexData;
+    });
+
+    setDataBarang(updatedData);
+  };
+
+  const onSubmit = () => {};
+
   return (
     <>
       <Header />
       <Row noGutters>
         <Col className='p-4'>
           <div className='d-flex justify-content-between'>
-            <h1 className='fs-xs-1-5'>Nota - S.P. 12343</h1>
+            <h1 className='fs-xs-1-5'>Nota - S.P. {noNota}</h1>
 
             <Button
               className='d-flex justify-content-between align-items-center'
@@ -181,116 +212,42 @@ const EditNota = () => {
             />
           </Row>
 
-          <Table striped bordered hover responsive>
+          <Table
+            striped
+            bordered
+            hover
+            responsive
+            {...tableBarang.getTableProps()}
+          >
             <thead>
-              <tr>
-                <th>No</th>
-                <th>Banyak Colli</th>
-                <th>Macam Colli</th>
-                <th>Merek Colli</th>
-                <th>Nama Barang</th>
-                <th>Berat Kotor</th>
-                <th>Biaya Angkut</th>
-                <th>Keterangan</th>
-                <th></th>
-              </tr>
+              {tableBarang.headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th {...column.getHeaderProps()}>
+                      {column.render('Header')}
+                    </th>
+                  ))}
+                </tr>
+              ))}
             </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>12 colli</td>
-                <td>Karung</td>
-                <td>dunno</td>
-                <td>Jamu</td>
-                <td>123 kg</td>
-                <td>Rp. 123,400.00</td>
-                <td>siap dikirim</td>
-                <td>
-                  <div className='d-flex justify-content-around'>
-                    <Button variant='link' className='px-2 py-1'>
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        size='2x'
-                        aria-roledescription='clicking this element to edit selected nota'
-                        className='text-secondary'
-                      />
-                    </Button>
+            <tbody {...tableBarang.getTableBodyProps()}>
+              {tableBarang.rows.map((row) => {
+                tableBarang.prepareRow(row);
 
-                    <Button variant='link' className='px-2 py-1'>
-                      <FontAwesomeIcon
-                        icon={faTrashAlt}
-                        size='2x'
-                        aria-roledescription='clicking this element will delete selected nota'
-                        className='text-danger'
-                      />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>1</td>
-                <td>12 colli</td>
-                <td>Karung</td>
-                <td>dunno</td>
-                <td>Jamu</td>
-                <td>123 kg</td>
-                <td>Rp. 123,400.00</td>
-                <td>siap dikirim</td>
-                <td>
-                  <div className='d-flex justify-content-around'>
-                    <Button variant='link' className='px-2 py-1'>
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        size='2x'
-                        aria-roledescription='clicking this element to edit selected nota'
-                        className='text-secondary'
-                      />
-                    </Button>
-
-                    <Button variant='link' className='px-2 py-1'>
-                      <FontAwesomeIcon
-                        icon={faTrashAlt}
-                        size='2x'
-                        aria-roledescription='clicking this element will delete selected nota'
-                        className='text-danger'
-                      />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>1</td>
-                <td>12 colli</td>
-                <td>Karung</td>
-                <td>dunno</td>
-                <td>Jamu</td>
-                <td>123 kg</td>
-                <td>Rp. 123,400.00</td>
-                <td>siap dikirim</td>
-                <td>
-                  <div className='d-flex justify-content-around'>
-                    <Button variant='link' className='px-2 py-1'>
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        size='2x'
-                        aria-roledescription='clicking this element to edit selected nota'
-                        className='text-secondary'
-                      />
-                    </Button>
-
-                    <Button variant='link' className='px-2 py-1'>
-                      <FontAwesomeIcon
-                        icon={faTrashAlt}
-                        size='2x'
-                        aria-roledescription='clicking this element will delete selected nota'
-                        className='text-danger'
-                      />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => (
+                      <td {...cell.getCellProps()}>
+                        {cell.render('Cell', {
+                          dataBarang,
+                          setDataBarang,
+                          deleteBarang,
+                        })}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
         </Col>
