@@ -8,7 +8,7 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import Message from '../Message/Message';
 import FormControl from '../Formik/FormControl/FormControl';
 
-const ModalStatusNota = () => {
+const ModalStatusNota = ({ index, dataNota, setDataNota }) => {
   const [show, setShow] = useState(false);
   const formikRef = useRef();
 
@@ -20,9 +20,6 @@ const ModalStatusNota = () => {
     {
       key: 'Belum Dibayar',
       value: false,
-      props: {
-        selected: true,
-      },
     },
   ];
 
@@ -32,22 +29,18 @@ const ModalStatusNota = () => {
       value: true,
     },
     {
-      key: 'Sudah Dikirim',
+      key: 'Sedang Dikirim',
       value: false,
-      props: {
-        selected: true,
-      },
     },
   ];
 
   const initialValues = {
-    franco: false,
-    statusPembayaran: false,
-    statusPengiriman: false,
+    franco: dataNota[index].franco,
+    statusPembayaran: dataNota[index].isPaid,
+    statusPengiriman: dataNota[index].isDelivered,
   };
 
   const validationSchema = Yup.object({
-    franco: Yup.boolean().required('Diperlukan'),
     statusPembayaran: Yup.boolean().required('Diperlukan'),
     statusPengiriman: Yup.boolean().required('Diperlukan'),
   });
@@ -55,7 +48,55 @@ const ModalStatusNota = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const submitHandler = () => {
+  const changeBeingMade = (currentValue) => {
+    const { franco, statusPembayaran, statusPengiriman } = currentValue;
+    return (
+      franco !== dataNota[index].franco ||
+      statusPembayaran !== dataNota[index].isPaid ||
+      statusPengiriman !== dataNota[index].isDelivered
+    );
+  };
+
+  const submitHandler = (values) => {
+    const isChanged = changeBeingMade(values);
+
+    if (isChanged) {
+      const { franco, statusPembayaran, statusPengiriman } = values;
+
+      const pembayaran = statusPembayaran === 'true';
+      const pengiriman = statusPengiriman === 'true';
+
+      const newData = dataNota.map((nota, indexNota) => {
+        if (index === indexNota) {
+          const editedData = { ...nota };
+
+          editedData.franco = Boolean(franco);
+
+          if (pembayaran) {
+            editedData.isPaid = pembayaran;
+            editedData.paidAt = new Date().toISOString();
+          } else {
+            editedData.isPaid = pembayaran;
+            editedData.paidAt = null;
+          }
+
+          if (pengiriman) {
+            editedData.isDelivered = pengiriman;
+            editedData.deliveredAt = new Date().toISOString();
+          } else {
+            editedData.isDelivered = pengiriman;
+            editedData.deliveredAt = null;
+          }
+
+          return editedData;
+        } else {
+          return nota;
+        }
+      });
+
+      setDataNota(newData);
+    }
+
     handleClose();
   };
 

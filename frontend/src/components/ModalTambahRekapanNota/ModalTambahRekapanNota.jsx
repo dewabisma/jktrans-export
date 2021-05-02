@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useTable } from 'react-table';
 import { useSelector } from 'react-redux';
-import { Button, Form, Modal, Table } from 'react-bootstrap';
+import { Button, Modal, Table } from 'react-bootstrap';
 import { selectAllNota } from '../../redux/nota/notaListSlice';
 
 import Message from '../Message/Message';
@@ -10,26 +10,45 @@ import styles from './ModalTambahRekapanNota.module.scss';
 
 const ModalFormRekapan = ({ dataNota, setDataNota }) => {
   const listNota = useSelector(selectAllNota);
-
-  console.log(listNota);
   const notaBelumRekap = listNota.filter((nota) => nota.sudahDirekap === false);
 
   const [show, setShow] = useState(false);
-  const [notaAvailable, setNotaAvailable] = useState(notaBelumRekap);
+  const [kumpulanIdNota, setKumpulanIdNota] = useState([]);
 
   // React Table
   const notaColumns = useMemo(() => COLUMN_NOTA, []);
+  const availableNota = useMemo(() => notaBelumRekap, [notaBelumRekap]);
   const tableNota = useTable({
     columns: notaColumns,
-    data: notaAvailable,
+    data: availableNota,
   });
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const isIdNotaAlreadyExist = () => {};
-  const removeFromKumpulanIdNota = () => {};
-  const tambahKumpulanIdNota = (idNota) => {};
+  const isIdNotaAlreadyExist = (idNota) => {
+    const isExist = kumpulanIdNota.find((id) => String(id) === String(idNota));
+
+    if (isExist) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const removeFromKumpulanIdNota = (idNota) => {
+    const filtered = kumpulanIdNota.filter((id) => id !== idNota);
+
+    setKumpulanIdNota(filtered);
+  };
+  const tambahKumpulanIdNota = (idNota) => {
+    const isExist = isIdNotaAlreadyExist(idNota);
+
+    if (isExist) {
+      removeFromKumpulanIdNota(idNota);
+    } else {
+      setKumpulanIdNota([...kumpulanIdNota, idNota]);
+    }
+  };
   const tembahDataNota = () => {};
   const tambahNotaHandler = () => {};
   const buttonHandler = () => {

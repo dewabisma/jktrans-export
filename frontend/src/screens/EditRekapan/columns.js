@@ -1,13 +1,8 @@
 import numeral from 'numeral';
 import parseISO from 'date-fns/parseISO';
 import format from 'date-fns/format';
-import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faTrashAlt,
-  faCheck,
-  faTimes,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import ModalStatusNota from '../../components/ModalStatusNota/ModalStatusNota';
 
 export const COLUMN_NOTA = [
@@ -81,18 +76,13 @@ export const COLUMN_NOTA = [
   {
     Header: 'Actions',
     accessor: '_id',
-    Cell: ({ row, deleteNota }) => (
+    Cell: ({ row, dataNota, setDataNota }) => (
       <div className='d-flex justify-content-around'>
-        <ModalStatusNota />
-
-        <Button variant='link' onClick={(e) => deleteNota(row.index)}>
-          <FontAwesomeIcon
-            icon={faTrashAlt}
-            size='2x'
-            aria-roledescription='clicking this element will delete selected nota'
-            className='text-danger'
-          />
-        </Button>
+        <ModalStatusNota
+          index={row.index}
+          dataNota={dataNota}
+          setDataNota={setDataNota}
+        />
       </div>
     ),
   },

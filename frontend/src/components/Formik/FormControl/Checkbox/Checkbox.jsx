@@ -10,13 +10,14 @@ const Checkbox = (props) => {
     <Form.Group controlId={name}>
       <Field name={name}>
         {(fieldProps) => {
-          const { field, meta, form } = fieldProps;
+          const { field, meta } = fieldProps;
 
           return (
             <Form.Check
               type='checkbox'
               label={label}
               isInvalid={meta.error && meta.touched}
+              checked={field.value}
               {...field}
               {...rest}
             />

@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 
 import Header from '../../components/Header/Header';
-import ModalTambahRekapanNota from '../../components/ModalTambahRekapanNota/ModalTambahRekapanNota';
+import Message from '../../components/Message/Message';
 import FormControl from '../../components/Formik/FormControl/FormControl';
 
 import {
@@ -56,26 +56,22 @@ const EditRekapan = ({ history, match }) => {
     data: dataNota,
   });
 
-  // Functions
-  const deleteNota = (indexNota) => {
-    const filteredNota = dataNota.filter((nota, index) => index !== indexNota);
-
-    setDataNota(filteredNota);
-  };
-
   useEffect(() => {
     if (updateStatus === 'success') {
+      alert(message);
       dispatch(resetUpdateRekapanState());
 
       history.push(`/rekapan/${rekapanId}`);
     }
-  }, [dispatch, updateStatus, history, rekapanId]);
+  }, [dispatch, updateStatus, history, rekapanId, message]);
 
   return (
     <>
       <Header />
       <Row noGutters>
         <Col className='p-4'>
+          {updateError && <Message variant='danger'>{updateError}</Message>}
+
           <div className='d-flex justify-content-between'>
             <h1 className='fs-xs-1-5'>Rekapan - {noRekapan}</h1>
 
@@ -131,11 +127,6 @@ const EditRekapan = ({ history, match }) => {
 
           <Row noGutters className='justify-content-between'>
             <h2 className='fs-xs-1-5'>Data Nota</h2>
-
-            <ModalTambahRekapanNota
-              dataNota={dataNota}
-              setDataNota={setDataNota}
-            />
           </Row>
 
           <Table
@@ -164,7 +155,7 @@ const EditRekapan = ({ history, match }) => {
                   <tr {...row.getRowProps()}>
                     {row.cells.map((cell) => (
                       <td {...cell.getCellProps()}>
-                        {cell.render('Cell', { deleteNota })}
+                        {cell.render('Cell', { dataNota, setDataNota })}
                       </td>
                     ))}
                   </tr>

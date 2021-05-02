@@ -32,13 +32,13 @@ export const COLUMN_NOTA = [
   {
     Header: 'Tambah Nota',
     accessor: '_id',
-    Cell: ({ value, tambahIdNota }) => (
+    Cell: ({ value, tambahKumpulanIdNota }) => (
       <Form.Check
         type='checkbox'
         label='tambahkan'
-        value='id-nota'
-        id='id-nota'
-        onChange={(e) => tambahIdNota(value)}
+        value={value}
+        id={value}
+        onChange={(e) => tambahKumpulanIdNota(value)}
       />
     ),
   },
