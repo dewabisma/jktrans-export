@@ -9,16 +9,27 @@ import { COLUMN_NOTA } from './columns.js';
 import styles from './ModalTambahRekapanNota.module.scss';
 
 const ModalFormRekapan = ({ dataNota, setDataNota }) => {
-  const [show, setShow] = useState(false);
-
   const listNota = useSelector(selectAllNota);
+
+  console.log(listNota);
+  const notaBelumRekap = listNota.filter((nota) => nota.sudahDirekap === false);
+
+  const [show, setShow] = useState(false);
+  const [notaAvailable, setNotaAvailable] = useState(notaBelumRekap);
+
+  // React Table
+  const notaColumns = useMemo(() => COLUMN_NOTA, []);
+  const tableNota = useTable({
+    columns: notaColumns,
+    data: notaAvailable,
+  });
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const isIdNotaAlreadyExist = () => {};
   const removeFromKumpulanIdNota = () => {};
-  const tambahKumpulanIdNota = () => {};
+  const tambahKumpulanIdNota = (idNota) => {};
   const tembahDataNota = () => {};
   const tambahNotaHandler = () => {};
   const buttonHandler = () => {
@@ -48,72 +59,38 @@ const ModalFormRekapan = ({ dataNota, setDataNota }) => {
           <Modal.Title>Pilih Nota</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Table striped bordered hover responsive>
+          <Table
+            striped
+            bordered
+            hover
+            responsive
+            {...tableNota.getTableProps()}
+          >
             <thead>
-              <tr>
-                <th>No.</th>
-                <th>Total Colli</th>
-                <th>Total Berat</th>
-                <th>Total Biaya</th>
-                <th>Pengirim Barang</th>
-                <th>Penerima Barang</th>
-                <th></th>
-              </tr>
+              {tableNota.headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th {...column.getHeaderProps()}>
+                      {column.render('Header')}
+                    </th>
+                  ))}
+                </tr>
+              ))}
             </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>123 Colli</td>
-                <td>100 kg</td>
-                <td>Rp. 9,999,999.00</td>
-                <td>Wayan</td>
-                <td>Ngurah</td>
-                <td>
-                  <Form.Check
-                    type='checkbox'
-                    label='tambahkan'
-                    value='id-nota'
-                    id='id-nota'
-                    onChange={tambahNotaHandler}
-                  />
-                </td>
-              </tr>
+            <tbody {...tableNota.getTableBodyProps()}>
+              {tableNota.rows.map((row) => {
+                tableNota.prepareRow(row);
 
-              <tr>
-                <td>1</td>
-                <td>123 Colli</td>
-                <td>100 kg</td>
-                <td>Rp. 9,999,999.00</td>
-                <td>Wayan</td>
-                <td>Ngurah</td>
-                <td>
-                  <Form.Check
-                    type='checkbox'
-                    label='tambahkan'
-                    value='id-nota1'
-                    id='id-nota1'
-                    onChange={tambahNotaHandler}
-                  />
-                </td>
-              </tr>
-
-              <tr>
-                <td>1</td>
-                <td>123 Colli</td>
-                <td>100 kg</td>
-                <td>Rp. 9,999,999.00</td>
-                <td>Wayan</td>
-                <td>Ngurah</td>
-                <td>
-                  <Form.Check
-                    type='checkbox'
-                    label='tambahkan'
-                    value='id-nota2'
-                    id='id-nota2'
-                    onChange={tambahNotaHandler}
-                  />
-                </td>
-              </tr>
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => (
+                      <td {...cell.getCellProps()}>
+                        {cell.render('Cell', { tambahKumpulanIdNota })}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
         </Modal.Body>

@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 
 const users = [
   {
-    username: 'wayan',
+    username: 'wayan@gmail.com',
     password: bcrypt.hashSync('123456', 10),
     alamat: 'bangli',
     noHP: '123456789',
@@ -11,7 +11,7 @@ const users = [
     isSuperUser: true,
   },
   {
-    username: 'gede',
+    username: 'gede@gmail.com',
     password: bcrypt.hashSync('123456', 10),
     alamat: 'bangli',
     noHP: '123456789',
@@ -19,7 +19,7 @@ const users = [
     cabang: 'BALI',
   },
   {
-    username: 'nengah',
+    username: 'nengah@gmail.com',
     password: bcrypt.hashSync('123456', 10),
     alamat: 'bangli',
     noHP: '1234567891',

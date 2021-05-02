@@ -20,7 +20,7 @@ const importData = async () => {
     await Sequence.deleteMany();
 
     // Create counter for id
-    await Sequence.create({ _id: 'counter', sequenceNota: 3 });
+    await Sequence.create({ _id: 'counter', sequenceNota: 5 });
 
     const createdUsers = await User.insertMany(users);
 
@@ -32,7 +32,13 @@ const importData = async () => {
 
     const allSampleNota = await Nota.insertMany(sampleNota);
 
-    let sampleDetailRekapanNota = allSampleNota.map((notanya) => {
+    const notaForRekap = allSampleNota.filter((nota, index) => index < 3);
+
+    const idNotaSudahDirekap = [];
+
+    let sampleDetailRekapanNota = notaForRekap.map((notanya) => {
+      idNotaSudahDirekap.push(notanya._id);
+
       return {
         nota: notanya._id,
         colli: notanya.totalColli,
@@ -49,6 +55,10 @@ const importData = async () => {
     };
 
     await RekapanNota.create(sampleRekapan);
+    await Nota.updateMany(
+      { _id: { $in: idNotaSudahDirekap } },
+      { sudahDirekap: true }
+    );
 
     console.log('Data Imported!'.green.inverse);
     process.exit();
