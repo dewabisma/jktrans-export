@@ -43,6 +43,11 @@ const notaSchema = mongoose.Schema(
       type: Number,
       required: [true, 'total harga tidak boleh kosong'],
     },
+    sudahDirekap: {
+      type: Boolean,
+      required: [true, 'status direkapan tidak boleh kosong'],
+      default: false,
+    },
     permohonanPerubahan: {
       type: permohonanSchema,
     },

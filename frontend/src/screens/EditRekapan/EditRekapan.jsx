@@ -5,12 +5,10 @@ import { Table, Row, Col, Button } from 'react-bootstrap';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faCheck, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { faSave } from '@fortawesome/free-regular-svg-icons';
 
 import Header from '../../components/Header/Header';
 import ModalTambahRekapanNota from '../../components/ModalTambahRekapanNota/ModalTambahRekapanNota';
-import ModalStatusNota from '../../components/ModalStatusNota/ModalStatusNota';
 import FormControl from '../../components/Formik/FormControl/FormControl';
 
 import {

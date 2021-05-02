@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { useTable } from 'react-table';
 import { useSelector } from 'react-redux';
 import { Button, Form, Modal, Table } from 'react-bootstrap';
 import { selectAllNota } from '../../redux/nota/notaListSlice';
-import numeral from 'numeral';
 
 import Message from '../Message/Message';
+import { COLUMN_NOTA } from './columns.js';
 import styles from './ModalTambahRekapanNota.module.scss';
 
 const ModalFormRekapan = ({ dataNota, setDataNota }) => {
@@ -15,6 +16,10 @@ const ModalFormRekapan = ({ dataNota, setDataNota }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const isIdNotaAlreadyExist = () => {};
+  const removeFromKumpulanIdNota = () => {};
+  const tambahKumpulanIdNota = () => {};
+  const tembahDataNota = () => {};
   const tambahNotaHandler = () => {};
   const buttonHandler = () => {
     handleClose();
