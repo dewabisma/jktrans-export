@@ -12,7 +12,9 @@ const notaListAdapter = createEntityAdapter({
 
 const initialState = notaListAdapter.getInitialState({
   status: 'idle',
+  updateStatus: null,
   error: null,
+  updateError: null,
   message: null,
   currentPage: null,
   totalPageCount: null,
@@ -106,10 +108,18 @@ const notaListSlice = createSlice({
       state.ids = [];
       state.entities = {};
       state.status = 'idle';
+      state.updateStatus = null;
       state.error = null;
+      state.updateError = null;
+      state.message = null;
       state.currentPage = null;
       state.totalPageCount = null;
       state.totalNota = null;
+    },
+    resetUpdateNotaState: (state, action) => {
+      state.updateStatus = null;
+      state.updateError = null;
+      state.message = null;
     },
   },
   extraReducers: {
@@ -135,24 +145,28 @@ const notaListSlice = createSlice({
       state.error = action.payload;
     },
     [editNotaById.pending]: (state, action) => {
-      state.status = 'loading';
+      state.updateStatus = 'loading';
     },
     [editNotaById.fulfilled]: (state, action) => {
       const { message, data } = action.payload;
 
-      state.status = 'successUpdating';
+      state.updateStatus = 'success';
       state.totalNota += 1;
       state.message = message;
       notaListAdapter.upsertOne(state, data);
     },
     [editNotaById.rejected]: (state, action) => {
-      state.status = 'failed';
-      state.error = action.payload;
+      state.updateStatus = 'failed';
+      state.updateError = action.payload;
     },
   },
 });
 
-export const { addNew, resetNotaState } = notaListSlice.actions;
+export const {
+  addNew,
+  resetNotaState,
+  resetUpdateNotaState,
+} = notaListSlice.actions;
 
 export default notaListSlice.reducer;
 

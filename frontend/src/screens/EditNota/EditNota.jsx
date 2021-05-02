@@ -17,6 +17,7 @@ import {
   selectNotaById,
   editNotaById,
   selectNota,
+  resetUpdateNotaState,
 } from '../../redux/nota/notaListSlice';
 import { COLUMN_BARANG } from './columns.js';
 
@@ -24,7 +25,9 @@ const EditNota = ({ match, history }) => {
   const dispatch = useDispatch();
   const { notaId } = match.params;
 
-  const { error: errorNota, status: statusNota } = useSelector(selectNota);
+  const { updateError: errorNota, updateStatus: statusNota } = useSelector(
+    selectNota
+  );
 
   const dataNota = useSelector((state) => selectNotaById(state, notaId));
   const {
@@ -126,10 +129,12 @@ const EditNota = ({ match, history }) => {
   };
 
   useEffect(() => {
-    if (statusNota === 'successUpdating') {
+    if (statusNota === 'success') {
+      dispatch(resetUpdateNotaState());
+
       history.push(`/nota/${notaId}`);
     }
-  }, [statusNota, notaId, history]);
+  }, [statusNota, notaId, history, dispatch]);
 
   return (
     <>

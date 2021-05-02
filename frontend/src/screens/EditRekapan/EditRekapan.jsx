@@ -1,5 +1,7 @@
-import React, { useState, useRef } from 'react';
-import { Table, Row, Col, Form, Button } from 'react-bootstrap';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTable } from 'react-table';
+import { Table, Row, Col, Button } from 'react-bootstrap';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,16 +13,33 @@ import ModalTambahRekapanNota from '../../components/ModalTambahRekapanNota/Moda
 import ModalStatusNota from '../../components/ModalStatusNota/ModalStatusNota';
 import FormControl from '../../components/Formik/FormControl/FormControl';
 
+import {
+  selectRekapanById,
+  selectRekapan,
+  resetUpdateRekapanState,
+} from '../../redux/rekapan/rekapanListSlice.js';
+import { COLUMN_NOTA } from './columns.js';
 import styles from './EditRekapan.module.scss';
 
-const EditRekapan = () => {
-  const [dataNota, setDataNota] = useState([]);
+const EditRekapan = ({ history, match }) => {
+  const { rekapanId } = match.params;
+  const dispatch = useDispatch();
 
+  const { updateStatus, updateError, message } = useSelector(selectRekapan);
+
+  const dataRekapan = useSelector((state) =>
+    selectRekapanById(state, rekapanId)
+  );
+  const { noRekapan, sopirPengirim, noPolis, detailRekapanNota } = dataRekapan;
+
+  const [dataNota, setDataNota] = useState(detailRekapanNota);
+
+  // Formik
   const formikRef = useRef({ isValid: false, isSubmitting: false });
 
   const initialValues = {
-    namaSopir: 'wyan gede',
-    nomorPolisi: '817-KBD',
+    namaSopir: sopirPengirim,
+    nomorPolisi: noPolis,
   };
 
   const validationSchema = Yup.object({
@@ -28,9 +47,24 @@ const EditRekapan = () => {
     nomorPolisi: Yup.string().required('Diperlukan'),
   });
 
-  const onSubmit = () => {
+  const onSubmit = (values) => {
     alert('wroking');
   };
+
+  // Functions
+  const deleteNota = (indexNota) => {
+    const filteredNota = dataNota.filter((nota, index) => index !== indexNota);
+
+    setDataNota(filteredNota);
+  };
+
+  useEffect(() => {
+    if (updateStatus === 'success') {
+      dispatch(resetUpdateRekapanState());
+
+      history.push(`/rekapan/${rekapanId}`);
+    }
+  }, [dispatch, updateStatus, history, rekapanId]);
 
   return (
     <>
@@ -38,7 +72,7 @@ const EditRekapan = () => {
       <Row noGutters>
         <Col className='p-4'>
           <div className='d-flex justify-content-between'>
-            <h1 className='fs-xs-1-5'>Rekapan - 12343</h1>
+            <h1 className='fs-xs-1-5'>Rekapan - {noRekapan}</h1>
 
             <Button
               type='submit'

@@ -12,7 +12,10 @@ const rekapanListAdapter = createEntityAdapter({
 
 const initialState = rekapanListAdapter.getInitialState({
   status: 'idle',
+  updateStatus: null,
   error: null,
+  updateError: null,
+  message: null,
   totalRekapan: null,
   currentPage: null,
   totalPageCount: null,
@@ -48,6 +51,43 @@ export const fetchAllRekapan = createAsyncThunk(
   }
 );
 
+export const editRekapanById = createAsyncThunk(
+  'rekapan/edit',
+  async (data, { rejectWithValue, getState }) => {
+    const { rekapanId, editedRekapan } = data;
+
+    const {
+      currentUser: {
+        entity: { authToken },
+      },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    try {
+      const { data } = await axios.put(
+        `/api/rekapan/${rekapanId}`,
+        editedRekapan,
+        config
+      );
+
+      return data;
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+
+      return rejectWithValue(message);
+    }
+  }
+);
+
 const rekapanListSlice = createSlice({
   name: 'rekapan',
   initialState,
@@ -60,10 +100,18 @@ const rekapanListSlice = createSlice({
       state.ids = [];
       state.entities = {};
       state.status = 'idle';
+      state.updateStatus = null;
       state.error = null;
+      state.updateError = null;
+      state.message = null;
       state.currentPage = null;
       state.totalPageCount = null;
       state.totalRekapan = null;
+    },
+    resetUpdateRekapanState: (state, action) => {
+      state.updateStatus = null;
+      state.updateError = null;
+      state.message = null;
     },
   },
   extraReducers: {
@@ -88,10 +136,29 @@ const rekapanListSlice = createSlice({
       state.status = 'failed';
       state.error = action.payload;
     },
+    [editRekapanById.pending]: (state, action) => {
+      state.updateStatus = 'loading';
+    },
+    [editRekapanById.fulfilled]: (state, action) => {
+      const { message, data } = action.payload;
+
+      state.updateStatus = 'success';
+      state.message = message;
+      state.totalRekapan += 1;
+      rekapanListAdapter.upsertOne(state, data);
+    },
+    [editRekapanById.rejected]: (state, action) => {
+      state.updateStatus = 'failed';
+      state.updateError = action.payload;
+    },
   },
 });
 
-export const { addNew, resetRekapanState } = rekapanListSlice.actions;
+export const {
+  addNew,
+  resetRekapanState,
+  resetUpdateRekapanState,
+} = rekapanListSlice.actions;
 
 export default rekapanListSlice.reducer;
 
