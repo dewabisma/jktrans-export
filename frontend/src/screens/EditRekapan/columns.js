@@ -17,7 +17,7 @@ export const COLUMN_NOTA = [
   },
   {
     Header: 'S.P.',
-    accessor: 'noNota',
+    accessor: 'nota.noNota',
   },
   {
     Header: 'Colli',

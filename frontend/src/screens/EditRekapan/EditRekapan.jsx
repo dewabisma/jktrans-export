@@ -51,6 +51,13 @@ const EditRekapan = ({ history, match }) => {
     alert('wroking');
   };
 
+  // React Table
+  const notaColumns = useMemo(() => COLUMN_NOTA, []);
+  const tableNota = useTable({
+    columns: notaColumns,
+    data: dataNota,
+  });
+
   // Functions
   const deleteNota = (indexNota) => {
     const filteredNota = dataNota.filter((nota, index) => index !== indexNota);
@@ -133,119 +140,38 @@ const EditRekapan = ({ history, match }) => {
             />
           </Row>
 
-          <Table striped bordered hover responsive>
+          <Table
+            striped
+            bordered
+            hover
+            responsive
+            {...tableNota.getTableProps()}
+          >
             <thead>
-              <tr>
-                <th>No</th>
-                <th>S.P.</th>
-                <th>Colli</th>
-                <th>Berat</th>
-                <th>Franco</th>
-                <th>Confrankert</th>
-                <th>Penerima</th>
-                <th className='w-10'>Keterangan Pembayaran</th>
-                <th className='w-10'>Keterangan Pengiriman</th>
-                <th></th>
-              </tr>
+              {tableNota.headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th {...column.getHeaderProps()}>
+                      {column.render('Header')}
+                    </th>
+                  ))}
+                </tr>
+              ))}
             </thead>
-            <tbody>
-              <tr>
-                <td>1234</td>
-                <td>12-AB5J</td>
-                <td>1234 Colli</td>
-                <td>1234 Kg</td>
-                <td>
-                  <FontAwesomeIcon icon={faCheck} />
-                </td>
-                <td>Rp. 123,123,123.00</td>
-                <td>Wayan</td>
-                <td>Belum dibayar</td>
-                <td>Sudah diterima</td>
-                <td>
-                  <div className='d-flex justify-content-around'>
-                    <ModalStatusNota />
+            <tbody {...tableNota.getTableBodyProps()}>
+              {tableNota.rows.map((row) => {
+                tableNota.prepareRow(row);
 
-                    <Button variant='link'>
-                      <FontAwesomeIcon
-                        icon={faTrashAlt}
-                        size='2x'
-                        aria-roledescription='clicking this element will delete selected nota'
-                        className='text-danger'
-                      />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>1234</td>
-                <td>12-AB5J</td>
-                <td>1234 Colli</td>
-                <td>1234 Kg</td>
-                <td>
-                  <FontAwesomeIcon icon={faCheck} />
-                </td>
-                <td>Rp. 123,123,123.00</td>
-                <td>Wayan</td>
-                <td>Belum dibayar</td>
-                <td>Sudah diterima</td>
-                <td>
-                  <div className='d-flex justify-content-around'>
-                    <Button variant='link' className='px-2 py-1'>
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        size='2x'
-                        aria-roledescription='clicking this element to edit selected nota'
-                        className='text-secondary'
-                      />
-                    </Button>
-
-                    <Button variant='link' className='px-2 py-1'>
-                      <FontAwesomeIcon
-                        icon={faTrashAlt}
-                        size='2x'
-                        aria-roledescription='clicking this element will delete selected nota'
-                        className='text-danger'
-                      />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-
-              <tr>
-                <td>1234</td>
-                <td>12-AB5J</td>
-                <td>1234 Colli</td>
-                <td>1234 Kg</td>
-                <td>
-                  <FontAwesomeIcon icon={faCheck} />
-                </td>
-                <td>Rp. 123,123,123.00</td>
-                <td>Wayan</td>
-                <td>Belum dibayar</td>
-                <td>Sudah diterima</td>
-                <td>
-                  <div className='d-flex justify-content-around'>
-                    <Button variant='link' className='px-2 py-1'>
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        size='2x'
-                        aria-roledescription='clicking this element to edit selected nota'
-                        className='text-secondary'
-                      />
-                    </Button>
-
-                    <Button variant='link' className='px-2 py-1'>
-                      <FontAwesomeIcon
-                        icon={faTrashAlt}
-                        size='2x'
-                        aria-roledescription='clicking this element will delete selected nota'
-                        className='text-danger'
-                      />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => (
+                      <td {...cell.getCellProps()}>
+                        {cell.render('Cell', { deleteNota })}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
         </Col>
