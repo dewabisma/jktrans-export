@@ -4,7 +4,7 @@ import { Form } from 'react-bootstrap';
 export const COLUMN_NOTA = [
   {
     Header: 'No',
-    accessor: 'noNota',
+    Cell: ({ row }) => String(Number(row.index) + 1),
   },
   {
     Header: 'Total Colli',
@@ -32,12 +32,13 @@ export const COLUMN_NOTA = [
   {
     Header: 'Actions',
     accessor: '_id',
-    Cell: ({ value, tambahNotaHandler }) => (
+    Cell: ({ value, tambahNotaHandler, checkIfNotaIdExist }) => (
       <Form.Check
         type='checkbox'
         label='tambahkan'
         value={value}
         id={`nota-${value}`}
+        checked={checkIfNotaIdExist(value)}
         onChange={tambahNotaHandler}
       />
     ),

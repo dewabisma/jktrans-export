@@ -23,6 +23,7 @@ const BuatNota = ({ history }) => {
   const dispatch = useDispatch();
 
   const [errorBuatNota, setErrorBuatNota] = useState(null);
+  const [message, setMessage] = useState(null);
   const [dataBarang, setDataBarang] = useState([]);
 
   const barangColumns = useMemo(() => COLUMN_BARANG, []);
@@ -85,10 +86,12 @@ const BuatNota = ({ history }) => {
     }
   };
   const deleteBarang = (indexBarang) => {
-    dataBarang.splice(indexBarang, 1);
-    setDataBarang([...dataBarang]);
+    const copyDataBarang = [...dataBarang];
+    copyDataBarang.splice(indexBarang, 1);
+
+    setDataBarang([...copyDataBarang]);
   };
-  const formSubmitHandler = async (values) => {
+  const formSubmitHandler = async (values, props) => {
     const { namaPengirim, namaPenerima, alamatPenerima } = values;
 
     const newNota = {
@@ -111,7 +114,10 @@ const BuatNota = ({ history }) => {
       const { data } = await axios.post('/api/nota', newNota, config);
 
       if (data) {
+        setMessage(`Berhasil membuat nota dengan id ${data._id}`);
         dispatch(addNew(data));
+
+        props.resetForm();
       }
     } catch (error) {
       const message =
@@ -129,7 +135,13 @@ const BuatNota = ({ history }) => {
     if (!authToken) {
       history.push('/');
     }
-  }, [history, authToken]);
+
+    if (message) {
+      alert(message);
+
+      setMessage(null);
+    }
+  }, [history, authToken, message]);
 
   return (
     <>

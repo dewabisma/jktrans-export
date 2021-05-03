@@ -96,6 +96,11 @@ const createNewRekapan = asyncHandler(async (req, res) => {
 
     const createdRekapan = await RekapanNota.create(newRekapan);
 
+    await Nota.updateMany(
+      { _id: { $in: kumpulanIdNota } },
+      { sudahDirekap: true }
+    );
+
     res
       .status(201)
       .json({ message: 'Rekapan berhasil dibuat', createdRekapan });

@@ -7,13 +7,15 @@ import { Row, Col, Button, Form, Table } from 'react-bootstrap';
 import axios from 'axios';
 
 import Header from '../../components/Header/Header';
-import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import FormControl from '../../components/Formik/FormControl/FormControl';
 
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
-import { selectAllNota } from '../../redux/nota/notaListSlice.js';
+import {
+  selectAllNota,
+  updateSudahRekapTrue,
+} from '../../redux/nota/notaListSlice.js';
 import { addNew } from '../../redux/rekapan/rekapanListSlice.js';
 
 import { COLUMN_NOTA } from './columns.js';
@@ -24,15 +26,18 @@ const BuatRekapan = ({ history }) => {
 
   const authToken = useSelector(selectAuthToken);
   const listNota = useSelector(selectAllNota);
+  const notaBelumRekap = listNota.filter((nota) => nota.sudahDirekap === false);
 
   const [errorBuatRekapan, setErrorBuatRekapan] = useState(null);
+  const [message, setMessage] = useState(null);
   const [kumpulanIdNota, setKumpulanIdNota] = useState([]);
 
   const notaColumns = useMemo(() => COLUMN_NOTA, []);
+  const availableNota = useMemo(() => notaBelumRekap, [notaBelumRekap]);
 
   const tableNota = useTable({
     columns: notaColumns,
-    data: listNota,
+    data: availableNota,
   });
 
   // Form initial values
@@ -73,7 +78,7 @@ const BuatRekapan = ({ history }) => {
     }
   };
 
-  const formSubmitHandler = async (values) => {
+  const formSubmitHandler = async (values, props) => {
     const { sopirPengirim, noPolis } = values;
 
     const newRekapan = {
@@ -94,7 +99,9 @@ const BuatRekapan = ({ history }) => {
       } = await axios.post('/api/rekapan', newRekapan, config);
 
       if (createdRekapan) {
+        setMessage(message);
         dispatch(addNew(createdRekapan));
+        props.resetForm();
       }
     } catch (error) {
       const message =
@@ -112,7 +119,14 @@ const BuatRekapan = ({ history }) => {
     if (!authToken) {
       history.push('/');
     }
-  }, [history, authToken]);
+
+    if (message) {
+      dispatch(updateSudahRekapTrue(kumpulanIdNota));
+      alert(message);
+
+      setMessage(null);
+    }
+  }, [history, authToken, message, kumpulanIdNota, dispatch]);
 
   return (
     <>
@@ -181,40 +195,47 @@ const BuatRekapan = ({ history }) => {
                 <h2 className='mb-2'>List Nota</h2>
               </div>
 
-              <Table
-                striped
-                bordered
-                hover
-                responsive
-                {...tableNota.getTableProps()}
-              >
-                <thead>
-                  {tableNota.headerGroups.map((headerGroup) => (
-                    <tr {...headerGroup.getHeaderGroupProps()}>
-                      {headerGroup.headers.map((column) => (
-                        <th {...column.getHeaderProps()}>
-                          {column.render('Header')}
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-                <tbody {...tableNota.getTableBodyProps()}>
-                  {tableNota.rows.map((row) => {
-                    tableNota.prepareRow(row);
-
-                    return (
-                      <tr {...row.getRowProps()}>
-                        {row.cells.map((cell) => (
-                          <td {...cell.getCellProps()}>
-                            {cell.render('Cell', { tambahNotaHandler })}
-                          </td>
+              {availableNota.length > 0 ? (
+                <Table
+                  striped
+                  bordered
+                  hover
+                  responsive
+                  {...tableNota.getTableProps()}
+                >
+                  <thead>
+                    {tableNota.headerGroups.map((headerGroup) => (
+                      <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map((column) => (
+                          <th {...column.getHeaderProps()}>
+                            {column.render('Header')}
+                          </th>
                         ))}
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
+                    ))}
+                  </thead>
+                  <tbody {...tableNota.getTableBodyProps()}>
+                    {tableNota.rows.map((row) => {
+                      tableNota.prepareRow(row);
+
+                      return (
+                        <tr {...row.getRowProps()}>
+                          {row.cells.map((cell) => (
+                            <td {...cell.getCellProps()}>
+                              {cell.render('Cell', {
+                                tambahNotaHandler,
+                                checkIfNotaIdExist,
+                              })}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              ) : (
+                <Message>Semua nota telah direkap</Message>
+              )}
             </Col>
           </Row>
         </Col>

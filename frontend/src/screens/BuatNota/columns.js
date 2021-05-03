@@ -30,7 +30,6 @@ export const COLUMN_BARANG = [
     Header: 'Berat Kotor',
     accessor: 'beratKotor',
     Cell: (props) => {
-      console.log(props);
       return `${props.value} Kg`;
     },
   },

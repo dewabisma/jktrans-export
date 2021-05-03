@@ -137,6 +137,7 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
                     name='banyakColli'
                     label='Banyak Colli'
                     placeholder='Masukkan banyak colli'
+                    min='0'
                   />
 
                   <FormControl
@@ -183,6 +184,7 @@ const ModalFormNota = ({ dataBarang, setDataBarang }) => {
                     name='beratKotor'
                     label='Berat Kotor'
                     placeholder='Masukkan berat kotor'
+                    min='0'
                   />
 
                   <Form.Group controlId='biayaAngkut'>
