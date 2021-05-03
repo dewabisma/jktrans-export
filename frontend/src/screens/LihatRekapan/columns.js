@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashAlt, faPrint } from '@fortawesome/free-solid-svg-icons';
 
 export const COLUMN_REKAPAN = [
   {
@@ -25,6 +25,17 @@ export const COLUMN_REKAPAN = [
         <Link to={`/rekapan/${value}`}>
           <Button type='button' variant='secondary' className='px-2 py-1 mr-2'>
             Detail
+          </Button>
+        </Link>
+
+        <Link to={`/rekapan/${value}/cetak`}>
+          <Button variant='link' className='px-2 py-1'>
+            <FontAwesomeIcon
+              icon={faPrint}
+              size='2x'
+              aria-roledescription='clicking this element to print selected rekapan'
+              className='text-secondary'
+            />
           </Button>
         </Link>
 
