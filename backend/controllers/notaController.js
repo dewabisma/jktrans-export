@@ -170,6 +170,9 @@ const editNotaById = asyncHandler(async (req, res) => {
     nota.totalHarga = totalHarga || nota.totalHarga;
 
     const updatedNota = await nota.save();
+
+    await updatedNota.populate('pegawai', '-password').execPopulate();
+
     res.json({
       message: `Nota dengan nomor nota ${updatedNota.noNota} telah berhasil diubah`,
       data: updatedNota,

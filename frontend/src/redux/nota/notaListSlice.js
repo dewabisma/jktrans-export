@@ -153,7 +153,7 @@ const notaListSlice = createSlice({
       state.updateStatus = 'success';
       state.totalNota += 1;
       state.message = message;
-      notaListAdapter.upsertOne(state, data);
+      notaListAdapter.updateOne(state, data);
     },
     [editNotaById.rejected]: (state, action) => {
       state.updateStatus = 'failed';

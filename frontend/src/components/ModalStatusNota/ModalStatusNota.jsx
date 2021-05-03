@@ -63,8 +63,10 @@ const ModalStatusNota = ({ index, dataNota, setDataNota }) => {
     if (isChanged) {
       const { franco, statusPembayaran, statusPengiriman } = values;
 
-      const pembayaran = statusPembayaran === 'true';
-      const pengiriman = statusPengiriman === 'true';
+      const pembayaran =
+        statusPembayaran === 'true' || statusPembayaran === true;
+      const pengiriman =
+        statusPengiriman === 'true' || statusPengiriman === true;
 
       const newData = dataNota.map((nota, indexNota) => {
         if (index === indexNota) {

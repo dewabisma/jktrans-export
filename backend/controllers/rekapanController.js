@@ -136,28 +136,14 @@ const updateRekapan = asyncHandler(async (req, res) => {
     if (rekapan) {
       rekapan.sopirPengirim = change.sopirPengirim || rekapan.sopirPengirim;
       rekapan.noPolis = change.noPolis || rekapan.noPolis;
-      if (change.kumpulanIdNota) {
-        const kumpulanNota = await Nota.find({
-          _id: { $in: change.kumpulanIdNota },
-        });
-
-        const detailRekapanNota = kumpulanNota.map((nota) => {
-          return {
-            nota: nota._id,
-            colli: nota.totalColli,
-            berat: nota.totalBerat,
-            confrankert: nota.totalHarga,
-            penerimaBarang: nota.namaPenerima,
-          };
-        });
-
-        rekapan.detailRekapanNota = detailRekapanNota;
-      }
+      rekapan.detailRekapanNota =
+        change.detailRekapanNota || rekapan.detailRekapanNota;
 
       const updatedRekapan = await rekapan.save();
 
       res.json({
         message: `Rekapan dengan id ${updatedRekapan._id} berhasil diupdate`,
+        data: updatedRekapan,
       });
     } else {
       res.status(404).json({ message: 'Rekapan tidak ditemukan' });

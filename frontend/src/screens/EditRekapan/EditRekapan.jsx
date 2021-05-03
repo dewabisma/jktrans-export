@@ -14,6 +14,7 @@ import FormControl from '../../components/Formik/FormControl/FormControl';
 import {
   selectRekapanById,
   selectRekapan,
+  editRekapanById,
   resetUpdateRekapanState,
 } from '../../redux/rekapan/rekapanListSlice.js';
 import { COLUMN_NOTA } from './columns.js';
@@ -24,7 +25,6 @@ const EditRekapan = ({ history, match }) => {
   const dispatch = useDispatch();
 
   const { updateStatus, updateError, message } = useSelector(selectRekapan);
-
   const dataRekapan = useSelector((state) =>
     selectRekapanById(state, rekapanId)
   );
@@ -45,8 +45,29 @@ const EditRekapan = ({ history, match }) => {
     nomorPolisi: Yup.string().required('Diperlukan'),
   });
 
+  const changeBeingMade = (currentValue) => {
+    const { namaSopir, nomorPolisi, dataNota } = currentValue;
+    return (
+      sopirPengirim !== namaSopir ||
+      noPolis !== nomorPolisi ||
+      detailRekapanNota !== dataNota
+    );
+  };
+
   const onSubmit = (values) => {
-    alert('wroking');
+    const { namaSopir, nomorPolisi } = values;
+
+    if (changeBeingMade({ ...values, dataNota })) {
+      const updatedRekapan = {
+        sopirPengirim: namaSopir,
+        noPolis: nomorPolisi,
+        detailRekapanNota: dataNota,
+      };
+
+      const data = { rekapanId, editedRekapan: updatedRekapan };
+
+      dispatch(editRekapanById(data));
+    }
   };
 
   // React Table
