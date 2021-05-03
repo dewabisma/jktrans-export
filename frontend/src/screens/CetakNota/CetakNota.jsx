@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 import { Row, Col, Table, Container } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
+import numeral from 'numeral';
 
 import { selectNotaById } from '../../redux/nota/notaListSlice.js';
 import { COLUMN_BARANG } from './columns.js';
@@ -104,6 +105,44 @@ const CetakNota = ({ match }) => {
           </Table>
 
           <div className='dropdown-divider'></div>
+
+          <div className='d-flex align-items-center'>
+            <Table bordered className='mt-2 w30'>
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>Total Colli</strong>
+                  </td>
+                  <td>{`${totalColli} Colli`}</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <strong>Total Berat</strong>
+                  </td>
+                  <td>{`${totalBerat} Kg`}</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <strong>Total Biaya</strong>
+                  </td>
+                  <td>{`Rp. ${numeral(totalHarga).format('0,0')}`}</td>
+                </tr>
+              </tbody>
+            </Table>
+
+            <Col className='ml-5'>
+              <p>Tanga Tangan Sopir</p>
+
+              <div className={styles.tandaTangan}>...................</div>
+            </Col>
+            <Col className='text-right'>
+              <p>Denpasar, {todayDate}</p>
+
+              <div className={styles.tandaTangan}>...................</div>
+            </Col>
+          </div>
         </Col>
       </Row>
     </Container>

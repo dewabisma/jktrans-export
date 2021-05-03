@@ -30,7 +30,7 @@ export const COLUMN_BARANG = [
   {
     Header: 'Biaya Angkut',
     accessor: 'biayaAngkut',
-    Cell: ({ value }) => `Rp. ${numeral(value).format('0,0.00')}`,
+    Cell: ({ value }) => `Rp. ${numeral(value).format('0,0')}`,
   },
   {
     Header: 'Keterangan',
