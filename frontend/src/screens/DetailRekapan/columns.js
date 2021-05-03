@@ -16,10 +16,12 @@ export const COLUMN_NOTA = [
   {
     Header: 'Colli',
     accessor: 'colli',
+    Cell: ({ value }) => `${value} Colli`,
   },
   {
     Header: 'Berat',
     accessor: 'berat',
+    Cell: ({ value }) => `${value} Kg`,
   },
   {
     Header: 'Franco',
@@ -34,6 +36,7 @@ export const COLUMN_NOTA = [
   {
     Header: 'Confrankert',
     accessor: 'confrankert',
+    Cell: ({ value }) => `Rp. ${numeral(value).format('0,0.00')}`,
   },
   {
     Header: 'Penerima',
