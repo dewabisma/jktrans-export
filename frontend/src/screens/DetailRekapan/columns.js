@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import numeral from 'numeral';
 import format from 'date-fns/format';
 import parseISO from 'date-fns/parseISO';
 
