@@ -6,7 +6,7 @@ import { faEdit, faTrashAlt, faPrint } from '@fortawesome/free-solid-svg-icons';
 
 export const COLUMN_NOTA = [
   {
-    Header: 'No',
+    Header: 'S.P. Nota',
     accessor: 'noNota',
   },
   {
@@ -69,7 +69,11 @@ export const COLUMN_NOTA = [
           </Button>
         </Link>
 
-        <Button variant='link' className='px-2 py-1'>
+        <Button
+          variant='link'
+          className='px-2 py-1'
+          onClick={(e) => deleteNota(value)}
+        >
           <FontAwesomeIcon
             icon={faTrashAlt}
             size='2x'

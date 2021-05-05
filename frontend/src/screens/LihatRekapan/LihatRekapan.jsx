@@ -4,17 +4,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Table } from 'react-bootstrap';
 
 import Header from '../../components/Header/Header';
-import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 
-import { selectAllRekapan } from '../../redux/rekapan/rekapanListSlice';
+import {
+  selectAllRekapan,
+  selectRekapan,
+  deleteRekapanById,
+  resetDeleteRekapanState,
+} from '../../redux/rekapan/rekapanListSlice';
+import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import { COLUMN_REKAPAN } from './columns.js';
 import styles from './LihatRekapan.module.scss';
 
 const LihatRekapan = ({ history }) => {
   const dispatch = useDispatch();
 
+  const dataRekapan = useSelector(selectRekapan);
+  const { deleteStatus, deleteError, message } = dataRekapan;
+
+  const authToken = useSelector(selectAuthToken);
   const listRekapan = useSelector(selectAllRekapan);
   const rekapanColumns = useMemo(() => COLUMN_REKAPAN, []);
 
@@ -23,11 +32,21 @@ const LihatRekapan = ({ history }) => {
     data: listRekapan,
   });
 
+  const deleteRekapan = (rekapanId) => {
+    dispatch(deleteRekapanById(rekapanId));
+  };
+
   useEffect(() => {
-    if (false) {
-      history.push('/');
+    if (!authToken) {
+      history.replace('/');
     }
-  }, [history]);
+
+    if (deleteStatus === 'success') {
+      alert(message);
+
+      dispatch(resetDeleteRekapanState());
+    }
+  }, [history, authToken, dispatch, message, deleteStatus]);
 
   return (
     <>
@@ -39,6 +58,8 @@ const LihatRekapan = ({ history }) => {
         </Col>
 
         <Col className='p-4' md={9}>
+          {deleteError && <Message variant='danger'>{deleteError}</Message>}
+
           <h1>List Rekapan</h1>
 
           <Table
@@ -72,7 +93,9 @@ const LihatRekapan = ({ history }) => {
                 return (
                   <tr {...row.getRowProps()}>
                     {row.cells.map((cell) => (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      <td {...cell.getCellProps()}>
+                        {cell.render('Cell', { deleteRekapan })}
+                      </td>
                     ))}
                   </tr>
                 );

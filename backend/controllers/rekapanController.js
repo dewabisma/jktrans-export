@@ -121,6 +121,7 @@ const deleteRekapan = asyncHandler(async (req, res) => {
 
       res.json({
         message: `Rekapan dengan id ${deletedRekapan._id} berhasil dihapus`,
+        deletedRekapan,
       });
     } else {
       res.status(404).json({ message: 'Rekapan tidak ditemukan' });

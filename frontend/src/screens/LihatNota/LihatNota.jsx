@@ -4,11 +4,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Table } from 'react-bootstrap';
 
 import Header from '../../components/Header/Header';
-import Loader from '../../components/Loader/Loader';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 
-import { selectAllNota } from '../../redux/nota/notaListSlice.js';
+import {
+  selectAllNota,
+  deleteNotaById,
+  selectNota,
+  resetDeleteNotaState,
+} from '../../redux/nota/notaListSlice.js';
+import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 
 import { COLUMN_NOTA } from './columns.js';
 import styles from './LihatNota.module.scss';
@@ -16,6 +21,10 @@ import styles from './LihatNota.module.scss';
 const LihatNota = ({ history }) => {
   const dispatch = useDispatch();
 
+  const dataNota = useSelector(selectNota);
+  const { deleteStatus, deleteError, message } = dataNota;
+
+  const authToken = useSelector(selectAuthToken);
   const listNota = useSelector(selectAllNota);
 
   const notaColumns = useMemo(() => COLUMN_NOTA, []);
@@ -25,11 +34,21 @@ const LihatNota = ({ history }) => {
     data: listNota,
   });
 
+  const deleteNota = (notaId) => {
+    dispatch(deleteNotaById(notaId));
+  };
+
   useEffect(() => {
-    if (false) {
-      history.push('/');
+    if (!authToken) {
+      history.replace('/');
     }
-  }, [history]);
+
+    if (deleteStatus === 'success') {
+      alert(message);
+
+      dispatch(resetDeleteNotaState());
+    }
+  }, [history, authToken, dispatch, deleteStatus, message]);
 
   return (
     <>
@@ -41,6 +60,8 @@ const LihatNota = ({ history }) => {
         </Col>
 
         <Col className='p-4' md={9}>
+          {deleteError && <Message variant='danger'>{deleteError}</Message>}
+
           <h1>List Nota</h1>
 
           <Table
@@ -68,7 +89,9 @@ const LihatNota = ({ history }) => {
                 return (
                   <tr {...row.getRowProps()}>
                     {row.cells.map((cell) => (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      <td {...cell.getCellProps()}>
+                        {cell.render('Cell', { deleteNota })}
+                      </td>
                     ))}
                   </tr>
                 );

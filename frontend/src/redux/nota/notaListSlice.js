@@ -13,8 +13,10 @@ const notaListAdapter = createEntityAdapter({
 const initialState = notaListAdapter.getInitialState({
   status: 'idle',
   updateStatus: null,
+  deleteStatus: null,
   error: null,
   updateError: null,
+  deleteError: null,
   message: null,
   currentPage: null,
   totalPageCount: null,
@@ -38,7 +40,6 @@ export const fetchAllNota = createAsyncThunk(
 
     try {
       const { data } = await axios.get(`/api/nota?pageSize=999`, config);
-      console.log(data);
 
       return data;
     } catch (error) {
@@ -88,6 +89,36 @@ export const editNotaById = createAsyncThunk(
   }
 );
 
+export const deleteNotaById = createAsyncThunk(
+  'nota/delete',
+  async (notaId, { rejectWithValue, getState }) => {
+    const {
+      currentUser: {
+        entity: { authToken },
+      },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    try {
+      const { data } = await axios.delete(`/api/nota/${notaId}`, config);
+
+      return data;
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+
+      return rejectWithValue(message);
+    }
+  }
+);
+
 const notaListSlice = createSlice({
   name: 'nota',
   initialState,
@@ -106,8 +137,10 @@ const notaListSlice = createSlice({
       state.entities = {};
       state.status = 'idle';
       state.updateStatus = null;
+      state.deleteStatus = null;
       state.error = null;
       state.updateError = null;
+      state.deleteError = null;
       state.message = null;
       state.currentPage = null;
       state.totalPageCount = null;
@@ -116,6 +149,11 @@ const notaListSlice = createSlice({
     resetUpdateNotaState: (state, action) => {
       state.updateStatus = null;
       state.updateError = null;
+      state.message = null;
+    },
+    resetDeleteNotaState: (state, action) => {
+      state.deleteStatus = null;
+      state.deleteError = null;
       state.message = null;
     },
   },
@@ -148,13 +186,28 @@ const notaListSlice = createSlice({
       const { message, data } = action.payload;
 
       state.updateStatus = 'success';
-      state.totalNota += 1;
       state.message = message;
       notaListAdapter.updateOne(state, data);
     },
     [editNotaById.rejected]: (state, action) => {
       state.updateStatus = 'failed';
       state.updateError = action.payload;
+    },
+    [deleteNotaById.pending]: (state, action) => {
+      state.deleteStatus = 'loading';
+    },
+    [deleteNotaById.fulfilled]: (state, action) => {
+      const { message, deletedNota } = action.payload;
+      const deletedNotaId = deletedNota._id;
+
+      state.deleteStatus = 'success';
+      state.totalNota -= 1;
+      state.message = message;
+      notaListAdapter.removeOne(state, deletedNotaId);
+    },
+    [deleteNotaById.rejected]: (state, action) => {
+      state.deleteStatus = 'failed';
+      state.deleteError = action.payload;
     },
   },
 });
@@ -164,6 +217,7 @@ export const {
   updateSudahRekapTrue,
   resetNotaState,
   resetUpdateNotaState,
+  resetDeleteNotaState,
 } = notaListSlice.actions;
 
 export default notaListSlice.reducer;

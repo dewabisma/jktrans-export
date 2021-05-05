@@ -13,8 +13,10 @@ const rekapanListAdapter = createEntityAdapter({
 const initialState = rekapanListAdapter.getInitialState({
   status: 'idle',
   updateStatus: null,
+  deleteStatus: null,
   error: null,
   updateError: null,
+  deleteError: null,
   message: null,
   totalRekapan: null,
   currentPage: null,
@@ -88,6 +90,36 @@ export const editRekapanById = createAsyncThunk(
   }
 );
 
+export const deleteRekapanById = createAsyncThunk(
+  'rekapan/delete',
+  async (rekapanId, { rejectWithValue, getState }) => {
+    const {
+      currentUser: {
+        entity: { authToken },
+      },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    };
+
+    try {
+      const { data } = await axios.delete(`/api/rekapan/${rekapanId}`, config);
+
+      return data;
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+
+      return rejectWithValue(message);
+    }
+  }
+);
+
 const rekapanListSlice = createSlice({
   name: 'rekapan',
   initialState,
@@ -111,6 +143,11 @@ const rekapanListSlice = createSlice({
     resetUpdateRekapanState: (state, action) => {
       state.updateStatus = null;
       state.updateError = null;
+      state.message = null;
+    },
+    resetDeleteRekapanState: (state, action) => {
+      state.deleteStatus = null;
+      state.deleteError = null;
       state.message = null;
     },
   },
@@ -151,6 +188,21 @@ const rekapanListSlice = createSlice({
       state.updateStatus = 'failed';
       state.updateError = action.payload;
     },
+    [deleteRekapanById.pending]: (state, action) => {
+      state.deleteStatus = 'loading';
+    },
+    [deleteRekapanById.fulfilled]: (state, action) => {
+      const { message, deletedRekapan } = action.payload;
+
+      state.deleteStatus = 'success';
+      state.message = message;
+      state.totalRekapan -= 1;
+      rekapanListAdapter.removeOne(state, deletedRekapan._id);
+    },
+    [deleteRekapanById.rejected]: (state, action) => {
+      state.deleteStatus = 'failed';
+      state.deleteError = action.payload;
+    },
   },
 });
 
@@ -158,6 +210,7 @@ export const {
   addNew,
   resetRekapanState,
   resetUpdateRekapanState,
+  resetDeleteRekapanState,
 } = rekapanListSlice.actions;
 
 export default rekapanListSlice.reducer;
