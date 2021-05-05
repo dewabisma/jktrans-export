@@ -132,6 +132,11 @@ const notaListSlice = createSlice({
         state.entities[idNota].sudahDirekap = true;
       });
     },
+    updateSudahRekapFalse: (state, action) => {
+      action.payload.forEach((idNota) => {
+        state.entities[idNota].sudahDirekap = false;
+      });
+    },
     resetNotaState: (state, action) => {
       state.ids = [];
       state.entities = {};
@@ -187,7 +192,7 @@ const notaListSlice = createSlice({
 
       state.updateStatus = 'success';
       state.message = message;
-      notaListAdapter.updateOne(state, data);
+      notaListAdapter.upsertOne(state, data);
     },
     [editNotaById.rejected]: (state, action) => {
       state.updateStatus = 'failed';
@@ -215,6 +220,7 @@ const notaListSlice = createSlice({
 export const {
   addNew,
   updateSudahRekapTrue,
+  updateSudahRekapFalse,
   resetNotaState,
   resetUpdateNotaState,
   resetDeleteNotaState,

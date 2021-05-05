@@ -18,6 +18,7 @@ const initialState = rekapanListAdapter.getInitialState({
   updateError: null,
   deleteError: null,
   message: null,
+  deletedNotaIds: [],
   totalRekapan: null,
   currentPage: null,
   totalPageCount: null,
@@ -192,10 +193,11 @@ const rekapanListSlice = createSlice({
       state.deleteStatus = 'loading';
     },
     [deleteRekapanById.fulfilled]: (state, action) => {
-      const { message, deletedRekapan } = action.payload;
+      const { message, deletedRekapan, kumpulanIdNota } = action.payload;
 
       state.deleteStatus = 'success';
       state.message = message;
+      state.deletedNotaIds = kumpulanIdNota;
       state.totalRekapan -= 1;
       rekapanListAdapter.removeOne(state, deletedRekapan._id);
     },

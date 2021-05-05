@@ -13,6 +13,7 @@ import {
   deleteRekapanById,
   resetDeleteRekapanState,
 } from '../../redux/rekapan/rekapanListSlice';
+import { updateSudahRekapFalse } from '../../redux/nota/notaListSlice.js';
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import { COLUMN_REKAPAN } from './columns.js';
 import styles from './LihatRekapan.module.scss';
@@ -21,7 +22,7 @@ const LihatRekapan = ({ history }) => {
   const dispatch = useDispatch();
 
   const dataRekapan = useSelector(selectRekapan);
-  const { deleteStatus, deleteError, message } = dataRekapan;
+  const { deleteStatus, deleteError, message, deletedNotaIds } = dataRekapan;
 
   const authToken = useSelector(selectAuthToken);
   const listRekapan = useSelector(selectAllRekapan);
@@ -43,10 +44,11 @@ const LihatRekapan = ({ history }) => {
 
     if (deleteStatus === 'success') {
       alert(message);
+      dispatch(updateSudahRekapFalse(deletedNotaIds));
 
       dispatch(resetDeleteRekapanState());
     }
-  }, [history, authToken, dispatch, message, deleteStatus]);
+  }, [history, authToken, dispatch, message, deleteStatus, deletedNotaIds]);
 
   return (
     <>

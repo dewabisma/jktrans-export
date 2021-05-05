@@ -117,11 +117,18 @@ const deleteRekapan = asyncHandler(async (req, res) => {
     const rekapan = await RekapanNota.findById(req.params.rekapanId);
 
     if (rekapan) {
+      const kumpulanIdNota = rekapan.detailRekapanNota.map((nota) => nota.nota);
       const deletedRekapan = await rekapan.delete();
+
+      await Nota.updateMany(
+        { _id: { $in: kumpulanIdNota } },
+        { sudahDirekap: false }
+      );
 
       res.json({
         message: `Rekapan dengan id ${deletedRekapan._id} berhasil dihapus`,
         deletedRekapan,
+        kumpulanIdNota,
       });
     } else {
       res.status(404).json({ message: 'Rekapan tidak ditemukan' });
