@@ -6,13 +6,16 @@ import { format, parseISO } from 'date-fns';
 import numeral from 'numeral';
 
 import { selectNotaById } from '../../redux/nota/notaListSlice.js';
+import { selectAuthToken } from '../../redux/user/userLoginSlice';
 import { COLUMN_BARANG } from './columns.js';
 import styles from './CetakNota.module.scss';
 
-const CetakNota = ({ match }) => {
+const CetakNota = ({ match, history }) => {
   const { notaId } = match.params;
   const dateNow = parseISO(new Date().toISOString());
   const todayDate = format(dateNow, 'dd/MM/yyyy');
+
+  const authToken = useSelector(selectAuthToken);
 
   const dataNota = useSelector((state) => selectNotaById(state, notaId));
   const {
@@ -33,7 +36,11 @@ const CetakNota = ({ match }) => {
     data: dataBarang,
   });
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (!authToken) {
+      history.replace('/');
+    }
+  }, [history, authToken]);
 
   return (
     <Container>

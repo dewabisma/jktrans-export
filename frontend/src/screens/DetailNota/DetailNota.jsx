@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useTable } from 'react-table';
 import { useSelector } from 'react-redux';
 import { Table, Row, Col, Button, Form } from 'react-bootstrap';
@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import { selectNotaById } from '../../redux/nota/notaListSlice';
+import { authToken } from '../../redux/user/userLoginSlice';
 import { COLUMN_BARANG } from './columns.js';
 
 const DetailNota = ({ match, history }) => {
@@ -63,6 +64,12 @@ const DetailNota = ({ match, history }) => {
   const goEditNotaPage = () => {
     history.push(`/nota/${notaId}/edit`);
   };
+
+  useEffect(() => {
+    if (!authToken) {
+      history.replace('/');
+    }
+  }, [history, authToken]);
 
   return (
     <>

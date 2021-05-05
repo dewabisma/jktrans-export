@@ -17,12 +17,15 @@ import {
   editRekapanById,
   resetUpdateRekapanState,
 } from '../../redux/rekapan/rekapanListSlice.js';
+import { selectAuthToken } from '../../redux/user/userLoginSlice';
 import { COLUMN_NOTA } from './columns.js';
 import styles from './EditRekapan.module.scss';
 
 const EditRekapan = ({ history, match }) => {
   const { rekapanId } = match.params;
   const dispatch = useDispatch();
+
+  const authToken = useSelector(selectAuthToken);
 
   const { updateStatus, updateError, message } = useSelector(selectRekapan);
   const dataRekapan = useSelector((state) =>
@@ -78,13 +81,17 @@ const EditRekapan = ({ history, match }) => {
   });
 
   useEffect(() => {
+    if (!authToken) {
+      history.replace('/');
+    }
+
     if (updateStatus === 'success') {
       alert(message);
       dispatch(resetUpdateRekapanState());
 
       history.push(`/rekapan/${rekapanId}`);
     }
-  }, [dispatch, updateStatus, history, rekapanId, message]);
+  }, [dispatch, updateStatus, history, rekapanId, message, authToken]);
 
   return (
     <>

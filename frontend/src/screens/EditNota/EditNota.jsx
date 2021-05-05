@@ -19,6 +19,7 @@ import {
   selectNota,
   resetUpdateNotaState,
 } from '../../redux/nota/notaListSlice';
+import { selectAuthToken } from '../../redux/user/userLoginSlice';
 import { COLUMN_BARANG } from './columns.js';
 
 const EditNota = ({ match, history }) => {
@@ -28,6 +29,8 @@ const EditNota = ({ match, history }) => {
   const { updateError: errorNota, updateStatus: statusNota } = useSelector(
     selectNota
   );
+
+  const authToken = useSelector(selectAuthToken);
 
   const dataNota = useSelector((state) => selectNotaById(state, notaId));
   const {
@@ -129,12 +132,16 @@ const EditNota = ({ match, history }) => {
   };
 
   useEffect(() => {
+    if (!authToken) {
+      history.replace('/');
+    }
+
     if (statusNota === 'success') {
       dispatch(resetUpdateNotaState());
 
       history.push(`/nota/${notaId}`);
     }
-  }, [statusNota, notaId, history, dispatch]);
+  }, [statusNota, notaId, history, dispatch, authToken]);
 
   return (
     <>

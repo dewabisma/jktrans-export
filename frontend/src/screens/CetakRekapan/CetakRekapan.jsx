@@ -6,12 +6,15 @@ import { format, parseISO } from 'date-fns';
 
 import { COLUMN_NOTA } from './columns.js';
 import { selectRekapanById } from '../../redux/rekapan/rekapanListSlice.js';
+import { selectAuthToken } from '../../redux/user/userLoginSlice';
 import styles from './CetakRekapan.module.scss';
 
 const CetakNota = ({ history, match }) => {
   const { rekapanId } = match.params;
   const dateNow = new Date().toISOString();
   const todayDate = format(parseISO(dateNow), 'dd/MM/yyyy');
+
+  const authToken = useSelector(selectAuthToken);
 
   const dataRekapan = useSelector((state) =>
     selectRekapanById(state, rekapanId)
@@ -25,7 +28,11 @@ const CetakNota = ({ history, match }) => {
     data: dataNota,
   });
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (!authToken) {
+      history.replace('/');
+    }
+  }, [history, authToken]);
 
   return (
     <Container>

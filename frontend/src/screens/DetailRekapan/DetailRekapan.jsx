@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 import { Table, Row, Col, Form, Button } from 'react-bootstrap';
@@ -8,10 +8,13 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import Header from '../../components/Header/Header';
 
 import { selectRekapanById } from '../../redux/rekapan/rekapanListSlice.js';
+import { selectAuthToken } from '../../redux/user/userLoginSlice';
 import { COLUMN_NOTA } from './columns.js';
 
 const DetailRekapan = ({ match, history }) => {
   const { rekapanId } = match.params;
+
+  const authToken = useSelector(selectAuthToken);
 
   const dataRekapan = useSelector((state) =>
     selectRekapanById(state, rekapanId)
@@ -27,6 +30,12 @@ const DetailRekapan = ({ match, history }) => {
   const goEditRekapanPage = () => {
     history.push(`/rekapan/${rekapanId}/edit`);
   };
+
+  useEffect(() => {
+    if (!authToken) {
+      history.replace('/');
+    }
+  }, [authToken, history]);
 
   return (
     <>
