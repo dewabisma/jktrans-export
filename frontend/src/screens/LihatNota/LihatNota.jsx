@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { useTable } from 'react-table';
+import { useTable, useGlobalFilter } from 'react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Table } from 'react-bootstrap';
 
@@ -17,6 +17,7 @@ import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 
 import { COLUMN_NOTA } from './columns.js';
 import styles from './LihatNota.module.scss';
+import TableGlobalFilter from '../../components/TableGlobalFilter/TableGlobalFilter';
 
 const LihatNota = ({ history }) => {
   const dispatch = useDispatch();
@@ -29,10 +30,18 @@ const LihatNota = ({ history }) => {
 
   const notaColumns = useMemo(() => COLUMN_NOTA, []);
 
-  const tableNota = useTable({
-    columns: notaColumns,
-    data: listNota,
-  });
+  const tableNota = useTable(
+    {
+      columns: notaColumns,
+      data: listNota,
+    },
+    useGlobalFilter
+  );
+
+  const {
+    state: { globalFilter },
+    setGlobalFilter,
+  } = tableNota;
 
   const deleteNota = (notaId) => {
     dispatch(deleteNotaById(notaId));
@@ -62,7 +71,14 @@ const LihatNota = ({ history }) => {
         <Col className='p-4' md={9}>
           {deleteError && <Message variant='danger'>{deleteError}</Message>}
 
-          <h1>List Nota</h1>
+          <div className='d-flex justify-content-between'>
+            <h1>List Nota</h1>
+
+            <TableGlobalFilter
+              globalFilter={globalFilter}
+              setGlobalFilter={setGlobalFilter}
+            />
+          </div>
 
           <Table
             striped
