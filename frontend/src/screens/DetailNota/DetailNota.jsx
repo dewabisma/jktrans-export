@@ -9,11 +9,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import { selectNotaById } from '../../redux/nota/notaListSlice';
-import { authToken } from '../../redux/user/userLoginSlice';
+import { selectAuthToken } from '../../redux/user/userLoginSlice';
 import { COLUMN_BARANG } from './columns.js';
 
 const DetailNota = ({ match, history }) => {
   const { notaId } = match.params;
+
+  const authToken = useSelector(selectAuthToken);
+
   const dataNota = useSelector((state) => selectNotaById(state, notaId));
   const { noNota, namaPenerima, namaPengirim, alamatPenerima } = dataNota;
 
