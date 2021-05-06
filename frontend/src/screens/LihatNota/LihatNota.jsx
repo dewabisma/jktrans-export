@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo } from 'react';
-import { useTable, useGlobalFilter } from 'react-table';
+import { useTable, useGlobalFilter, usePagination } from 'react-table';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, Table } from 'react-bootstrap';
+import { Row, Col, Table, Form, Button } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
+import TableGlobalFilter from '../../components/TableGlobalFilter/TableGlobalFilter';
 
 import {
   selectAllNota,
@@ -14,10 +17,7 @@ import {
   resetDeleteNotaState,
 } from '../../redux/nota/notaListSlice.js';
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
-
 import { COLUMN_NOTA } from './columns.js';
-import styles from './LihatNota.module.scss';
-import TableGlobalFilter from '../../components/TableGlobalFilter/TableGlobalFilter';
 
 const LihatNota = ({ history }) => {
   const dispatch = useDispatch();
@@ -35,12 +35,20 @@ const LihatNota = ({ history }) => {
       columns: notaColumns,
       data: listNota,
     },
-    useGlobalFilter
+    useGlobalFilter,
+    usePagination
   );
 
   const {
-    state: { globalFilter },
+    state: { globalFilter, pageIndex },
     setGlobalFilter,
+    pageCount,
+    pageOptions,
+    gotoPage,
+    nextPage,
+    previousPage,
+    canNextPage,
+    canPreviousPage,
   } = tableNota;
 
   const deleteNota = (notaId) => {
@@ -99,7 +107,7 @@ const LihatNota = ({ history }) => {
               ))}
             </thead>
             <tbody {...tableNota.getTableBodyProps()}>
-              {tableNota.rows.map((row) => {
+              {tableNota.page.map((row) => {
                 tableNota.prepareRow(row);
 
                 return (
@@ -114,6 +122,38 @@ const LihatNota = ({ history }) => {
               })}
             </tbody>
           </Table>
+          <div className='d-flex justify-content-center align-items-center mt-2'>
+            <div className='mr-2'>
+              Page{' '}
+              <Form.Control
+                style={{ width: '50px', display: 'inline' }}
+                type='number'
+                value={pageIndex + 1}
+                onChange={(e) => {
+                  const pageNumber = Number(e.target.value) - 1;
+
+                  gotoPage(pageNumber);
+                }}
+              />
+              <strong>{` of ${pageCount}`}</strong>
+            </div>
+            <Button
+              type='button'
+              onClick={() => previousPage()}
+              disabled={!canPreviousPage}
+            >
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </Button>
+
+            <Button
+              className='ml-2'
+              type='button'
+              onClick={() => nextPage()}
+              disabled={!canNextPage}
+            >
+              <FontAwesomeIcon icon={faArrowRight} />
+            </Button>
+          </div>
         </Col>
       </Row>
     </>

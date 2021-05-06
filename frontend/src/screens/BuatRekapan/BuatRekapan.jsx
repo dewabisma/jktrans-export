@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTable } from 'react-table';
+import { useTable, useGlobalFilter } from 'react-table';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
 import { Row, Col, Button, Form, Table } from 'react-bootstrap';
@@ -9,6 +9,7 @@ import axios from 'axios';
 import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
+import TableGlobalFilter from '../../components/TableGlobalFilter/TableGlobalFilter';
 import FormControl from '../../components/Formik/FormControl/FormControl';
 
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
@@ -26,19 +27,29 @@ const BuatRekapan = ({ history }) => {
 
   const authToken = useSelector(selectAuthToken);
   const listNota = useSelector(selectAllNota);
-  const notaBelumRekap = listNota.filter((nota) => nota.sudahDirekap === false);
 
   const [errorBuatRekapan, setErrorBuatRekapan] = useState(null);
   const [message, setMessage] = useState(null);
   const [kumpulanIdNota, setKumpulanIdNota] = useState([]);
 
   const notaColumns = useMemo(() => COLUMN_NOTA, []);
-  const availableNota = useMemo(() => notaBelumRekap, [notaBelumRekap]);
+  const availableNota = useMemo(
+    () => listNota.filter((nota) => nota.sudahDirekap === false),
+    [listNota]
+  );
 
-  const tableNota = useTable({
-    columns: notaColumns,
-    data: availableNota,
-  });
+  const tableNota = useTable(
+    {
+      columns: notaColumns,
+      data: availableNota,
+    },
+    useGlobalFilter
+  );
+
+  const {
+    state: { globalFilter },
+    setGlobalFilter,
+  } = tableNota;
 
   // Form initial values
   const initialValues = {
@@ -193,6 +204,11 @@ const BuatRekapan = ({ history }) => {
             <Col>
               <div className='d-flex justify-content-between'>
                 <h2 className='mb-2'>List Nota</h2>
+
+                <TableGlobalFilter
+                  globalFilter={globalFilter}
+                  setGlobalFilter={setGlobalFilter}
+                />
               </div>
 
               {availableNota.length > 0 ? (

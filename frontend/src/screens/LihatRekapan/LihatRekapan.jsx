@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
-import { useTable } from 'react-table';
+import { useTable, useGlobalFilter } from 'react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Table } from 'react-bootstrap';
 
 import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
+import TableGlobalFilter from '../../components/TableGlobalFilter/TableGlobalFilter';
 
 import {
   selectAllRekapan,
@@ -28,10 +29,18 @@ const LihatRekapan = ({ history }) => {
   const listRekapan = useSelector(selectAllRekapan);
   const rekapanColumns = useMemo(() => COLUMN_REKAPAN, []);
 
-  const tableRekapan = useTable({
-    columns: rekapanColumns,
-    data: listRekapan,
-  });
+  const tableRekapan = useTable(
+    {
+      columns: rekapanColumns,
+      data: listRekapan,
+    },
+    useGlobalFilter
+  );
+
+  const {
+    state: { globalFilter },
+    setGlobalFilter,
+  } = tableRekapan;
 
   const deleteRekapan = (rekapanId) => {
     dispatch(deleteRekapanById(rekapanId));
@@ -62,7 +71,14 @@ const LihatRekapan = ({ history }) => {
         <Col className='p-4' md={9}>
           {deleteError && <Message variant='danger'>{deleteError}</Message>}
 
-          <h1>List Rekapan</h1>
+          <div className='d-flex justify-content-between'>
+            <h1>List Rekapan</h1>
+
+            <TableGlobalFilter
+              globalFilter={globalFilter}
+              setGlobalFilter={setGlobalFilter}
+            />
+          </div>
 
           <Table
             striped

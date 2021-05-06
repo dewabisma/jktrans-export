@@ -14,6 +14,7 @@ const TableGlobalFilter = ({ globalFilter, setGlobalFilter }) => {
         />
         <Form.Control
           className='input-with-icon'
+          value={globalFilter || ''}
           type='text'
           onChange={(e) => setGlobalFilter(e.target.value)}
         />
