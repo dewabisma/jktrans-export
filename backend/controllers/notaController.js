@@ -89,11 +89,20 @@ const deleteNotaById = asyncHandler(async (req, res) => {
   const nota = await Nota.findById(req.params.notaId);
 
   if (nota) {
-    const deletedNota = await nota.remove();
-    if (deletedNota) {
-      res.json({ message: 'Nota berhasil dihapus', deletedNota });
+    if (nota.sudahDirekap) {
+      res
+        .status(400)
+        .json({
+          message:
+            'Nota tercantum dalam rekapan! Silahkan hapus rekapan tersebut terlebih dahulu!',
+        });
     } else {
-      res.json({ message: 'Gagal menghapus nota' });
+      const deletedNota = await nota.remove();
+      if (deletedNota) {
+        res.json({ message: 'Nota berhasil dihapus', deletedNota });
+      } else {
+        res.json({ message: 'Gagal menghapus nota' });
+      }
     }
   } else {
     res.status(404).json({ message: 'Nota tidak ditemukan' });

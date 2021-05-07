@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTable } from 'react-table';
+import { useTable, usePagination } from 'react-table';
 import { Table, Row, Col, Button, Form } from 'react-bootstrap';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
@@ -12,6 +12,7 @@ import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
 import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
 import FormControl from '../../components/Formik/FormControl/FormControl';
+import TablePagination from '../../components/TablePagination/TablePagination';
 
 import {
   selectNotaById,
@@ -45,10 +46,14 @@ const EditNota = ({ match, history }) => {
 
   // React-Table
   const barangColumns = useMemo(() => COLUMN_BARANG, []);
-  const tableBarang = useTable({
-    columns: barangColumns,
-    data: dataBarang,
-  });
+  const tableBarang = useTable(
+    {
+      columns: barangColumns,
+      data: dataBarang,
+      initialState: { pageSize: 5 },
+    },
+    usePagination
+  );
 
   // Formik
   const formikRef = useRef({ isValid: false, isSubmitting: false });
@@ -277,7 +282,7 @@ const EditNota = ({ match, history }) => {
               ))}
             </thead>
             <tbody {...tableBarang.getTableBodyProps()}>
-              {tableBarang.rows.map((row) => {
+              {tableBarang.page.map((row) => {
                 tableBarang.prepareRow(row);
 
                 return (
@@ -296,6 +301,8 @@ const EditNota = ({ match, history }) => {
               })}
             </tbody>
           </Table>
+
+          <TablePagination tableProps={tableBarang} />
         </Col>
       </Row>
     </>

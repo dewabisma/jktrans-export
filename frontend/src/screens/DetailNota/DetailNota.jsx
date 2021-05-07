@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useTable } from 'react-table';
+import { useTable, usePagination } from 'react-table';
 import { useSelector } from 'react-redux';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import { Table, Row, Col, Button, Form } from 'react-bootstrap';
 import numeral from 'numeral';
 
 import Header from '../../components/Header/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import TablePagination from '../../components/TablePagination/TablePagination';
 
 import { selectNotaById } from '../../redux/nota/notaListSlice';
 import { selectAuthToken } from '../../redux/user/userLoginSlice';
@@ -23,10 +24,14 @@ const DetailNota = ({ match, history }) => {
   const [dataBarang, setDataBarang] = useState(dataNota.detailBarang);
 
   const barangColumns = useMemo(() => COLUMN_BARANG, []);
-  const tableBarang = useTable({
-    columns: barangColumns,
-    data: dataBarang,
-  });
+  const tableBarang = useTable(
+    {
+      columns: barangColumns,
+      data: dataBarang,
+      initialState: { pageSize: 5 },
+    },
+    usePagination
+  );
 
   const calculateTotalColli = () => {
     if (dataBarang.length > 0) {
@@ -187,7 +192,7 @@ const DetailNota = ({ match, history }) => {
               ))}
             </thead>
             <tbody {...tableBarang.getTableBodyProps()}>
-              {tableBarang.rows.map((row) => {
+              {tableBarang.page.map((row) => {
                 tableBarang.prepareRow(row);
 
                 return (
@@ -200,6 +205,8 @@ const DetailNota = ({ match, history }) => {
               })}
             </tbody>
           </Table>
+
+          <TablePagination tableProps={tableBarang} />
         </Col>
       </Row>
     </>

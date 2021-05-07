@@ -1,13 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
 import { useTable, useGlobalFilter, usePagination } from 'react-table';
 import { useDispatch, useSelector } from 'react-redux';
-import { Row, Col, Table, Form, Button } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { Row, Col, Table } from 'react-bootstrap';
 
 import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
+import TablePagination from '../../components/TablePagination/TablePagination';
 import TableGlobalFilter from '../../components/TableGlobalFilter/TableGlobalFilter';
 
 import {
@@ -34,21 +33,15 @@ const LihatNota = ({ history }) => {
     {
       columns: notaColumns,
       data: listNota,
+      initialState: { pageSize: 5 },
     },
     useGlobalFilter,
     usePagination
   );
 
   const {
-    state: { globalFilter, pageIndex },
+    state: { globalFilter },
     setGlobalFilter,
-    pageCount,
-    pageOptions,
-    gotoPage,
-    nextPage,
-    previousPage,
-    canNextPage,
-    canPreviousPage,
   } = tableNota;
 
   const deleteNota = (notaId) => {
@@ -122,38 +115,8 @@ const LihatNota = ({ history }) => {
               })}
             </tbody>
           </Table>
-          <div className='d-flex justify-content-center align-items-center mt-2'>
-            <div className='mr-2'>
-              Page{' '}
-              <Form.Control
-                style={{ width: '50px', display: 'inline' }}
-                type='number'
-                value={pageIndex + 1}
-                onChange={(e) => {
-                  const pageNumber = Number(e.target.value) - 1;
 
-                  gotoPage(pageNumber);
-                }}
-              />
-              <strong>{` of ${pageCount}`}</strong>
-            </div>
-            <Button
-              type='button'
-              onClick={() => previousPage()}
-              disabled={!canPreviousPage}
-            >
-              <FontAwesomeIcon icon={faArrowLeft} />
-            </Button>
-
-            <Button
-              className='ml-2'
-              type='button'
-              onClick={() => nextPage()}
-              disabled={!canNextPage}
-            >
-              <FontAwesomeIcon icon={faArrowRight} />
-            </Button>
-          </div>
+          <TablePagination tableProps={tableNota} />
         </Col>
       </Row>
     </>

@@ -50,7 +50,9 @@ const DashboardScreen = ({ history }) => {
   } = useSelector(selectBookingan);
 
   const notaColumns = useMemo(() => COLUMN_NOTA, []);
-  const notaData = useMemo(() => dataNota, [dataNota]);
+  const notaData = useMemo(() => dataNota.filter((nota, index) => index < 10), [
+    dataNota,
+  ]);
 
   const tableNota = useTable({
     columns: notaColumns,
@@ -58,7 +60,10 @@ const DashboardScreen = ({ history }) => {
   });
 
   const rekapanColumns = useMemo(() => COLUMN_REKAPAN, []);
-  const rekapanData = useMemo(() => dataRekapan, [dataRekapan]);
+  const rekapanData = useMemo(
+    () => dataRekapan.filter((nota, index) => index < 10),
+    [dataRekapan]
+  );
 
   const tableRekapan = useTable({
     columns: rekapanColumns,

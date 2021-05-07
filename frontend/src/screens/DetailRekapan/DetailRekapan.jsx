@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { useTable } from 'react-table';
+import { useTable, usePagination } from 'react-table';
 import { Table, Row, Col, Form, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 
 import Header from '../../components/Header/Header';
+import TablePagination from '../../components/TablePagination/TablePagination';
 
 import { selectRekapanById } from '../../redux/rekapan/rekapanListSlice.js';
 import { selectAuthToken } from '../../redux/user/userLoginSlice';
@@ -22,10 +23,14 @@ const DetailRekapan = ({ match, history }) => {
   const { noRekapan, sopirPengirim, noPolis, detailRekapanNota } = dataRekapan;
 
   const notaColumns = useMemo(() => COLUMN_NOTA, []);
-  const tableNota = useTable({
-    columns: notaColumns,
-    data: detailRekapanNota,
-  });
+  const tableNota = useTable(
+    {
+      columns: notaColumns,
+      data: detailRekapanNota,
+      initialState: { pageSize: 5 },
+    },
+    usePagination
+  );
 
   const goEditRekapanPage = () => {
     history.push(`/rekapan/${rekapanId}/edit`);
@@ -105,7 +110,7 @@ const DetailRekapan = ({ match, history }) => {
               ))}
             </thead>
             <tbody {...tableNota.getTableBodyProps()}>
-              {tableNota.rows.map((row) => {
+              {tableNota.page.map((row) => {
                 tableNota.prepareRow(row);
 
                 return (
@@ -118,6 +123,8 @@ const DetailRekapan = ({ match, history }) => {
               })}
             </tbody>
           </Table>
+
+          <TablePagination tableProps={tableNota} />
         </Col>
       </Row>
     </>

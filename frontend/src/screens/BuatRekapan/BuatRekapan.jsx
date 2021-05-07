@@ -1,15 +1,16 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTable, useGlobalFilter } from 'react-table';
+import { useTable, useGlobalFilter, usePagination } from 'react-table';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
-import { Row, Col, Button, Form, Table } from 'react-bootstrap';
+import { Row, Col, Button, Table } from 'react-bootstrap';
 import axios from 'axios';
 
 import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import TableGlobalFilter from '../../components/TableGlobalFilter/TableGlobalFilter';
+import TablePagination from '../../components/TablePagination/TablePagination';
 import FormControl from '../../components/Formik/FormControl/FormControl';
 
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
@@ -18,7 +19,6 @@ import {
   updateSudahRekapTrue,
 } from '../../redux/nota/notaListSlice.js';
 import { addNew } from '../../redux/rekapan/rekapanListSlice.js';
-
 import { COLUMN_NOTA } from './columns.js';
 import styles from './BuatRekapan.module.scss';
 
@@ -42,8 +42,10 @@ const BuatRekapan = ({ history }) => {
     {
       columns: notaColumns,
       data: availableNota,
+      initialState: { pageSize: 5 },
     },
-    useGlobalFilter
+    useGlobalFilter,
+    usePagination
   );
 
   const {
@@ -205,10 +207,12 @@ const BuatRekapan = ({ history }) => {
               <div className='d-flex justify-content-between'>
                 <h2 className='mb-2'>List Nota</h2>
 
-                <TableGlobalFilter
-                  globalFilter={globalFilter}
-                  setGlobalFilter={setGlobalFilter}
-                />
+                {availableNota.length > 0 && (
+                  <TableGlobalFilter
+                    globalFilter={globalFilter}
+                    setGlobalFilter={setGlobalFilter}
+                  />
+                )}
               </div>
 
               {availableNota.length > 0 ? (
@@ -231,7 +235,7 @@ const BuatRekapan = ({ history }) => {
                     ))}
                   </thead>
                   <tbody {...tableNota.getTableBodyProps()}>
-                    {tableNota.rows.map((row) => {
+                    {tableNota.page.map((row) => {
                       tableNota.prepareRow(row);
 
                       return (
@@ -251,6 +255,10 @@ const BuatRekapan = ({ history }) => {
                 </Table>
               ) : (
                 <Message>Semua nota telah direkap</Message>
+              )}
+
+              {availableNota.length > 0 && (
+                <TablePagination tableProps={tableNota} />
               )}
             </Col>
           </Row>

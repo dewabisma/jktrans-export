@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo } from 'react';
-import { useTable, useGlobalFilter } from 'react-table';
+import { useTable, useGlobalFilter, usePagination } from 'react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Table } from 'react-bootstrap';
 
 import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
+import TablePagination from '../../components/TablePagination/TablePagination';
 import TableGlobalFilter from '../../components/TableGlobalFilter/TableGlobalFilter';
 
 import {
@@ -33,8 +34,10 @@ const LihatRekapan = ({ history }) => {
     {
       columns: rekapanColumns,
       data: listRekapan,
+      initialState: { pageSize: 5 },
     },
-    useGlobalFilter
+    useGlobalFilter,
+    usePagination
   );
 
   const {
@@ -105,7 +108,7 @@ const LihatRekapan = ({ history }) => {
               ))}
             </thead>
             <tbody {...tableRekapan.getTableBodyProps()}>
-              {tableRekapan.rows.map((row) => {
+              {tableRekapan.page.map((row) => {
                 tableRekapan.prepareRow(row);
 
                 return (
@@ -120,6 +123,8 @@ const LihatRekapan = ({ history }) => {
               })}
             </tbody>
           </Table>
+
+          <TablePagination tableProps={tableRekapan} />
         </Col>
       </Row>
     </>

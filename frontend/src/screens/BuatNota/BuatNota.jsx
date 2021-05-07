@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { useTable } from 'react-table';
+import { useTable, usePagination } from 'react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
@@ -12,10 +12,10 @@ import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 import ModalFormNota from '../../components/ModalFormNota/ModalFormNota';
 import FormControl from '../../components/Formik/FormControl/FormControl';
+import TablePagination from '../../components/TablePagination/TablePagination';
 
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import { addNew } from '../../redux/nota/notaListSlice.js';
-
 import { COLUMN_BARANG } from './columns.js';
 import styles from './BuatNota.module.scss';
 
@@ -28,10 +28,14 @@ const BuatNota = ({ history }) => {
 
   const barangColumns = useMemo(() => COLUMN_BARANG, []);
 
-  const tableBarang = useTable({
-    columns: barangColumns,
-    data: dataBarang,
-  });
+  const tableBarang = useTable(
+    {
+      columns: barangColumns,
+      data: dataBarang,
+      initialState: { pageSize: 5 },
+    },
+    usePagination
+  );
 
   const authToken = useSelector(selectAuthToken);
 
@@ -275,7 +279,7 @@ const BuatNota = ({ history }) => {
                     ))}
                   </thead>
                   <tbody {...tableBarang.getTableBodyProps()}>
-                    {tableBarang.rows.map((row) => {
+                    {tableBarang.page.map((row) => {
                       tableBarang.prepareRow(row);
 
                       return (
@@ -298,6 +302,10 @@ const BuatNota = ({ history }) => {
                 <Message>
                   Belum ada barang yang ditambahkan kedalam list
                 </Message>
+              )}
+
+              {dataBarang.length > 0 && (
+                <TablePagination tableProps={tableBarang} />
               )}
             </Col>
           </Row>

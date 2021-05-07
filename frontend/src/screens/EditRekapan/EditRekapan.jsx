@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTable } from 'react-table';
+import { useTable, usePagination } from 'react-table';
 import { Table, Row, Col, Button } from 'react-bootstrap';
 import { Formik, Form as FormikForm } from 'formik';
 import * as Yup from 'yup';
@@ -10,6 +10,7 @@ import { faSave } from '@fortawesome/free-regular-svg-icons';
 import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
 import FormControl from '../../components/Formik/FormControl/FormControl';
+import TablePagination from '../../components/TablePagination/TablePagination';
 
 import {
   selectRekapanById,
@@ -75,10 +76,14 @@ const EditRekapan = ({ history, match }) => {
 
   // React Table
   const notaColumns = useMemo(() => COLUMN_NOTA, []);
-  const tableNota = useTable({
-    columns: notaColumns,
-    data: dataNota,
-  });
+  const tableNota = useTable(
+    {
+      columns: notaColumns,
+      data: dataNota,
+      initialState: { pageSize: 5 },
+    },
+    usePagination
+  );
 
   useEffect(() => {
     if (!authToken) {
@@ -176,7 +181,7 @@ const EditRekapan = ({ history, match }) => {
               ))}
             </thead>
             <tbody {...tableNota.getTableBodyProps()}>
-              {tableNota.rows.map((row) => {
+              {tableNota.page.map((row) => {
                 tableNota.prepareRow(row);
 
                 return (
@@ -191,6 +196,8 @@ const EditRekapan = ({ history, match }) => {
               })}
             </tbody>
           </Table>
+
+          <TablePagination tableProps={tableNota} />
         </Col>
       </Row>
     </>
