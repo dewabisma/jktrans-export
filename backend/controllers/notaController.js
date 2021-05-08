@@ -39,7 +39,7 @@ const browserLogin = async (page) => {
 };
 
 const generatePDF = async (notaId) => {
-  const filename = `notaBaru-${notaId}.pdf`;
+  const filename = `nota-${notaId}.pdf`;
   const tempDir = 'temp/pdf/';
   const filepath = `temp/pdf/${filename}`;
 

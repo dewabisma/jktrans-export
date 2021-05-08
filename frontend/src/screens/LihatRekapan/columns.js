@@ -20,7 +20,7 @@ export const COLUMN_REKAPAN = [
     Header: 'Actions',
     accessor: '_id',
     className: 'w-25',
-    Cell: ({ value, deleteRekapan }) => (
+    Cell: ({ value, deleteRekapan, savePDF }) => (
       <div className='d-flex justify-content-around align-items-center'>
         <Link to={`/rekapan/${value}`}>
           <Button type='button' variant='secondary' className='px-2 py-1 mr-2'>
@@ -28,16 +28,18 @@ export const COLUMN_REKAPAN = [
           </Button>
         </Link>
 
-        <Link to={`/rekapan/${value}/cetak`}>
-          <Button variant='link' className='px-2 py-1'>
-            <FontAwesomeIcon
-              icon={faPrint}
-              size='2x'
-              aria-roledescription='clicking this element to print selected rekapan'
-              className='text-secondary'
-            />
-          </Button>
-        </Link>
+        <Button
+          variant='link'
+          className='px-2 py-1'
+          onClick={() => savePDF(value)}
+        >
+          <FontAwesomeIcon
+            icon={faPrint}
+            size='2x'
+            aria-roledescription='clicking this element to print selected rekapan'
+            className='text-secondary'
+          />
+        </Button>
 
         <Link to={`/rekapan/${value}/edit`}>
           <Button variant='link' className='px-2 py-1'>

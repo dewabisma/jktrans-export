@@ -5,6 +5,7 @@ import {
   createNewRekapan,
   deleteRekapan,
   updateRekapan,
+  generatePDFbyId,
   changeRekapanStatusToDelivered,
   changeRekapanStatusToPaid,
 } from '../controllers/rekapanController.js';
@@ -16,6 +17,7 @@ router
   .route('/:rekapanId')
   .put(protect, updateRekapan)
   .delete(protect, superUser, deleteRekapan);
+router.get('/:rekapanId/print', generatePDFbyId);
 router.put(
   '/:rekapanId/nota/:notaId/delivered',
   protect,

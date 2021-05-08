@@ -1,11 +1,13 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTable, useGlobalFilter, usePagination } from 'react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Table } from 'react-bootstrap';
+import axios from 'axios';
 
 import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
+import ModalLoadingPDF from '../../components/ModalLoadingPDF/ModalLoadingPDF';
 import TablePagination from '../../components/TablePagination/TablePagination';
 import TableGlobalFilter from '../../components/TableGlobalFilter/TableGlobalFilter';
 
@@ -22,6 +24,8 @@ import styles from './LihatRekapan.module.scss';
 
 const LihatRekapan = ({ history }) => {
   const dispatch = useDispatch();
+
+  const [show, setShow] = useState(false);
 
   const dataRekapan = useSelector(selectRekapan);
   const { deleteStatus, deleteError, message, deletedNotaIds } = dataRekapan;
@@ -49,6 +53,35 @@ const LihatRekapan = ({ history }) => {
     dispatch(deleteRekapanById(rekapanId));
   };
 
+  const getRekapanPDF = async (rekapanId) => {
+    try {
+      const config = {
+        headers: {
+          authorization: `Bearer ${authToken}`,
+        },
+      };
+
+      const { data } = await axios.get(
+        `/api/rekapan/${rekapanId}/print`,
+        config
+      );
+
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const savePDF = async (rekapanId) => {
+    setShow(true);
+    const { filename } = await getRekapanPDF(rekapanId);
+
+    if (filename) {
+      setShow(false);
+      window.open('http://localhost:5000/pdf/' + filename);
+    }
+  };
+
   useEffect(() => {
     if (!authToken) {
       history.replace('/');
@@ -65,6 +98,8 @@ const LihatRekapan = ({ history }) => {
   return (
     <>
       <Header />
+
+      <ModalLoadingPDF show={show} />
 
       <Row className='fullHeight' noGutters>
         <Col className='d-flex flex-column bg-light pt-3 pb-3' md={3}>
@@ -115,7 +150,7 @@ const LihatRekapan = ({ history }) => {
                   <tr {...row.getRowProps()}>
                     {row.cells.map((cell) => (
                       <td {...cell.getCellProps()}>
-                        {cell.render('Cell', { deleteRekapan })}
+                        {cell.render('Cell', { deleteRekapan, savePDF })}
                       </td>
                     ))}
                   </tr>

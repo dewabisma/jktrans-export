@@ -1,6 +1,77 @@
 import RekapanNota from '../models/RekapanSchema.js';
 import Nota from '../models/NotaSchema.js';
 import asyncHandler from 'express-async-handler';
+import puppeteer from 'puppeteer';
+import { promises as fs } from 'fs';
+import path from 'path';
+
+// Functions
+const pageFullyRendered = async (page) => {
+  const timeout = 10000;
+  const checkingTime = 500;
+  const maxCheckingCount = timeout / checkingTime;
+  let lastHTMLSize = 0;
+  let checkingCount = 0;
+  let stableCheckingIterationCount = 0;
+  const minStableCheckingIterationCount = 4;
+
+  while (checkingCount++ < maxCheckingCount) {
+    let html = await page.content();
+    let currentHTMLSize = html.length;
+
+    if (lastHTMLSize != 0 && currentHTMLSize == lastHTMLSize)
+      stableCheckingIterationCount++;
+    else stableCheckingIterationCount = 0;
+
+    if (stableCheckingIterationCount >= minStableCheckingIterationCount) {
+      console.log('Page rendered fully..');
+      break;
+    }
+
+    lastHTMLSize = currentHTMLSize;
+    await page.waitForTimeout(checkingTime);
+  }
+};
+
+const browserLogin = async (page) => {
+  await page.type('#email', process.env.PDF_EMAIL);
+  await page.type('#password', process.env.PDF_PASSWORD);
+  await page.click('#login');
+};
+
+const generatePDF = async (rekapanId) => {
+  const filename = `rekapan-${rekapanId}.pdf`;
+  const tempDir = 'temp/pdf/';
+  const filepath = `temp/pdf/${filename}`;
+
+  const files = await fs.readdir(path.join(path.resolve(), tempDir));
+
+  const fileAlreadyExist = files.find((file) => file === filename);
+
+  if (fileAlreadyExist) {
+    return filename;
+  } else {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(`http://localhost:3000/rekapan/${rekapanId}/cetak`, {
+      waitUntil: 'networkidle0',
+    });
+
+    await browserLogin(page);
+
+    await page.waitForNavigation({
+      waitUntil: 'networkidle0',
+    });
+
+    await pageFullyRendered(page);
+
+    await page.pdf({ path: filepath, format: 'a4' });
+
+    await browser.close();
+
+    return filename;
+  }
+};
 
 // @desc    get all rekapan
 // @route   GET /api/rekapan
@@ -166,6 +237,22 @@ const updateRekapan = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    generate PDF from rekapan by Id
+// @route   GET /api/rekapan/:rekapanId/print
+// @access  Private
+const generatePDFbyId = asyncHandler(async (req, res) => {
+  const rekapanId = req.params.rekapanId;
+
+  try {
+    const filename = await generatePDF(rekapanId);
+
+    res.json({ filename });
+  } catch (error) {
+    res.status(500);
+    res.json({ message: error.message });
+  }
+});
+
 // @desc    change a nota status in rekapan to paid by ID
 // @route   PUT /api/rekapan/:rekapanId/nota/:notaId/paid
 // @access  Private/Super User
@@ -235,6 +322,7 @@ export {
   createNewRekapan,
   deleteRekapan,
   updateRekapan,
+  generatePDFbyId,
   changeRekapanStatusToPaid,
   changeRekapanStatusToDelivered,
 };

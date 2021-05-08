@@ -52,7 +52,6 @@ const LihatNota = ({ history }) => {
   };
 
   const getNotaPDF = async (notaId) => {
-    console.log('is it working?');
     try {
       const config = {
         headers: {

@@ -1,24 +1,39 @@
 import React, { useMemo, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTable } from 'react-table';
 import { Row, Col, Table, Container } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
 
 import { COLUMN_NOTA } from './columns.js';
-import { selectRekapanById } from '../../redux/rekapan/rekapanListSlice.js';
+import {
+  selectRekapanById,
+  selectRekapan,
+  fetchAllRekapan,
+} from '../../redux/rekapan/rekapanListSlice.js';
 import { selectAuthToken } from '../../redux/user/userLoginSlice';
 import styles from './CetakRekapan.module.scss';
 
 const CetakNota = ({ history, match }) => {
   const { rekapanId } = match.params;
+  const dispatch = useDispatch();
+
   const dateNow = new Date().toISOString();
   const todayDate = format(parseISO(dateNow), 'dd/MM/yyyy');
 
   const authToken = useSelector(selectAuthToken);
 
-  const dataRekapan = useSelector((state) =>
-    selectRekapanById(state, rekapanId)
-  );
+  const { status: rekapanStatus } = useSelector(selectRekapan);
+  let dataRekapan = useSelector((state) => selectRekapanById(state, rekapanId));
+
+  if (!dataRekapan) {
+    dataRekapan = {
+      noRekapan: '',
+      sopirPengirim: '',
+      noPolis: '',
+      detailRekapanNota: [],
+    };
+  }
+
   const { noRekapan, sopirPengirim, noPolis, detailRekapanNota } = dataRekapan;
 
   const columnsNota = useMemo(() => COLUMN_NOTA, []);
@@ -30,13 +45,17 @@ const CetakNota = ({ history, match }) => {
 
   useEffect(() => {
     if (!authToken) {
-      history.replace('/');
+      history.replace(`/?redirect=rekapan/${rekapanId}/cetak`);
     }
-  }, [history, authToken]);
+
+    if (authToken && rekapanStatus === 'idle') {
+      dispatch(fetchAllRekapan());
+    }
+  }, [history, authToken, rekapanId, dispatch, rekapanStatus]);
 
   return (
     <Container>
-      <Row>
+      <Row className='pt-5'>
         <Col className='text-left'>
           <h1>JKTRANS</h1>
           <h3>Indonesia, Bali & Surabaya</h3>
