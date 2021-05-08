@@ -39,7 +39,7 @@ export const COLUMN_NOTA = [
   {
     Header: 'Actions',
     accessor: '_id',
-    Cell: ({ value, deleteNota }) => (
+    Cell: ({ value, deleteNota, savePDF }) => (
       <div className='d-flex justify-content-around align-items-center'>
         <Link to={`/nota/${value}`}>
           <Button type='button' variant='secondary' className='px-2 py-1 mr-2'>
@@ -47,16 +47,18 @@ export const COLUMN_NOTA = [
           </Button>
         </Link>
 
-        <Link to={`/nota/${value}/cetak`}>
-          <Button variant='link' className='px-2 py-1'>
-            <FontAwesomeIcon
-              icon={faPrint}
-              size='2x'
-              aria-roledescription='clicking this element to print selected nota'
-              className='text-secondary'
-            />
-          </Button>
-        </Link>
+        <Button
+          variant='link'
+          className='px-2 py-1'
+          onClick={(e) => savePDF(value)}
+        >
+          <FontAwesomeIcon
+            icon={faPrint}
+            size='2x'
+            aria-roledescription='clicking this element to print selected nota'
+            className='text-secondary'
+          />
+        </Button>
 
         <Link to={`/nota/${value}/edit`}>
           <Button variant='link' className='px-2 py-1'>

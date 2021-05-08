@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useTable, useGlobalFilter, usePagination } from 'react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import { Row, Col, Table } from 'react-bootstrap';
@@ -6,6 +6,7 @@ import { Row, Col, Table } from 'react-bootstrap';
 import Header from '../../components/Header/Header';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
+import ModalLoadingPDF from '../../components/ModalLoadingPDF/ModalLoadingPDF';
 import TablePagination from '../../components/TablePagination/TablePagination';
 import TableGlobalFilter from '../../components/TableGlobalFilter/TableGlobalFilter';
 
@@ -17,9 +18,11 @@ import {
 } from '../../redux/nota/notaListSlice.js';
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import { COLUMN_NOTA } from './columns.js';
+import axios from 'axios';
 
 const LihatNota = ({ history }) => {
   const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
 
   const dataNota = useSelector(selectNota);
   const { deleteStatus, deleteError, message } = dataNota;
@@ -48,6 +51,33 @@ const LihatNota = ({ history }) => {
     dispatch(deleteNotaById(notaId));
   };
 
+  const getNotaPDF = async (notaId) => {
+    console.log('is it working?');
+    try {
+      const config = {
+        headers: {
+          authorization: `Bearer ${authToken}`,
+        },
+      };
+
+      const { data } = await axios.get(`/api/nota/${notaId}/print`, config);
+
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const savePDF = async (notaId) => {
+    setShow(true);
+    const { filename } = await getNotaPDF(notaId);
+
+    if (filename) {
+      setShow(false);
+      window.open('http://localhost:5000/pdf/' + filename);
+    }
+  };
+
   useEffect(() => {
     if (!authToken) {
       history.replace('/');
@@ -63,6 +93,8 @@ const LihatNota = ({ history }) => {
   return (
     <>
       <Header />
+
+      <ModalLoadingPDF show={show} />
 
       <Row className='fullHeight' noGutters>
         <Col className='d-flex flex-column bg-light pt-3 pb-3' md={3}>
@@ -107,7 +139,7 @@ const LihatNota = ({ history }) => {
                   <tr {...row.getRowProps()}>
                     {row.cells.map((cell) => (
                       <td {...cell.getCellProps()}>
-                        {cell.render('Cell', { deleteNota })}
+                        {cell.render('Cell', { deleteNota, savePDF })}
                       </td>
                     ))}
                   </tr>

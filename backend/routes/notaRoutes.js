@@ -5,6 +5,7 @@ import {
   deleteNotaById,
   createNewNota,
   editNotaById,
+  generatePDFbyId,
   requestEditNotaById,
   requestDeleteNotaById,
 } from '../controllers/notaController.js';
@@ -18,6 +19,7 @@ router
   .get(protect, getNotaById)
   .put(protect, superUser, editNotaById)
   .delete(protect, superUser, deleteNotaById);
+router.get('/:notaId/print', generatePDFbyId);
 router.put('/:notaId/change-request', protect, requestEditNotaById);
 router.put('/:notaId/delete-request', protect, requestDeleteNotaById);
 

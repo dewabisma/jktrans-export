@@ -1,23 +1,43 @@
 import React, { useMemo, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 import { Row, Col, Table, Container } from 'react-bootstrap';
 import { format, parseISO } from 'date-fns';
 import numeral from 'numeral';
 
-import { selectNotaById } from '../../redux/nota/notaListSlice.js';
+import {
+  selectNotaById,
+  fetchAllNota,
+  selectNota,
+} from '../../redux/nota/notaListSlice.js';
 import { selectAuthToken } from '../../redux/user/userLoginSlice';
 import { COLUMN_BARANG } from './columns.js';
 import styles from './CetakNota.module.scss';
 
 const CetakNota = ({ match, history }) => {
   const { notaId } = match.params;
+  const dispatch = useDispatch();
+
   const dateNow = parseISO(new Date().toISOString());
   const todayDate = format(dateNow, 'dd/MM/yyyy');
 
   const authToken = useSelector(selectAuthToken);
+  const { status: notaStatus } = useSelector(selectNota);
+  let dataNota = useSelector((state) => selectNotaById(state, notaId));
 
-  const dataNota = useSelector((state) => selectNotaById(state, notaId));
+  if (!dataNota) {
+    dataNota = {
+      noNota: '',
+      namaPengirim: '',
+      namaPenerima: '',
+      alamatPenerima: '',
+      detailBarang: [],
+      totalColli: '',
+      totalBerat: '',
+      totalHarga: '',
+    };
+  }
+
   const {
     noNota,
     namaPengirim,
@@ -38,13 +58,15 @@ const CetakNota = ({ match, history }) => {
 
   useEffect(() => {
     if (!authToken) {
-      history.replace('/');
+      history.replace(`/?redirect=nota/${notaId}/cetak`);
     }
-  }, [history, authToken]);
+
+    if (authToken && notaStatus === 'idle') dispatch(fetchAllNota());
+  }, [history, authToken, notaId, notaStatus, dispatch]);
 
   return (
     <Container>
-      <Row>
+      <Row className='pt-5'>
         <Col className='d-flex flex-column'>
           <h1>JKTRANS</h1>
           <h4>Indonesia, Bali & Surabaya</h4>

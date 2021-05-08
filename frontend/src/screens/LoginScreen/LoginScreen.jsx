@@ -8,12 +8,13 @@ import styles from './LoginScreen.module.scss';
 import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 import Message from '../../components/Message/Message';
 
-const LoginScreen = ({ history }) => {
+const LoginScreen = ({ history, location }) => {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
+  const redirect = location.search ? location.search.split('=')[1] : null;
 
   const { status, error: loginError } = useSelector(
     (state) => state.currentUser
@@ -35,7 +36,11 @@ const LoginScreen = ({ history }) => {
 
   useEffect(() => {
     if (status === 'success') {
-      history.push('/dashboard');
+      if (redirect) {
+        history.push(`/${redirect}`);
+      } else {
+        history.push('/dashboard');
+      }
     } else if (loading) {
       const setLoadingFalse = () => {
         setTimeout(() => {
@@ -45,7 +50,7 @@ const LoginScreen = ({ history }) => {
 
       setLoadingFalse();
     }
-  }, [history, status, dispatch, loginError, loading]);
+  }, [history, status, dispatch, loginError, loading, redirect]);
 
   return loading ? (
     <LoadingScreen />
@@ -62,7 +67,7 @@ const LoginScreen = ({ history }) => {
         <Form className='mx-3 mx-sm-0' onSubmit={submitFormHandler}>
           <Form.Group
             as={Row}
-            controlId='formBasicEmail'
+            controlId='email'
             className='m-0 mb-3 flex-column flex-sm-row'
           >
             <Form.Label column sm={4} className='px-0'>
@@ -82,7 +87,7 @@ const LoginScreen = ({ history }) => {
 
           <Form.Group
             as={Row}
-            controlId='formBasicPassword'
+            controlId='password'
             className='m-0 mb-3 flex-column flex-sm-row'
           >
             <Form.Label column sm={4} className='px-0'>
@@ -104,6 +109,7 @@ const LoginScreen = ({ history }) => {
           <div className='d-flex justify-content-center '>
             <Button
               variant='primary'
+              id='login'
               type='submit'
               disabled={status === 'loading'}
             >

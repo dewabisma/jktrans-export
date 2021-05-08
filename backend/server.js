@@ -23,6 +23,7 @@ connectDB();
 
 // __Dirname
 const __dirname = path.resolve();
+global.__basedir = __dirname;
 
 // Middleware
 app.use(express.json());
@@ -35,6 +36,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/rekapan', rekapanRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/prices', priceListRoutes);
+app.use('/pdf', express.static(path.join(__dirname, '/temp/pdf')));
 
 // Send file for production
 if (process.env.NODE_ENV === 'Production') {
