@@ -20,7 +20,6 @@ import {
 import { updateSudahRekapFalse } from '../../redux/nota/notaListSlice.js';
 import { selectAuthToken } from '../../redux/user/userLoginSlice.js';
 import { COLUMN_REKAPAN } from './columns.js';
-import styles from './LihatRekapan.module.scss';
 
 const LihatRekapan = ({ history }) => {
   const dispatch = useDispatch();
@@ -78,7 +77,7 @@ const LihatRekapan = ({ history }) => {
 
     if (filename) {
       setShow(false);
-      window.open('http://localhost:5000/pdf/' + filename);
+      history.push(`/pdf/${filename}`);
     }
   };
 

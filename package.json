@@ -10,9 +10,10 @@
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node backend/data/seedTestData",
-    "data:destroy": "node backend/data/seedTestData -d"
+    "data:destroy": "node backend/data/seedTestData -d",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
-  "author": "Dewa Bisma & Eka Laksamana",
+  "author": "Dewa Bisma",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
