@@ -77,7 +77,7 @@ const LihatRekapan = ({ history }) => {
 
     if (filename) {
       setShow(false);
-      history.push(`/pdf/${filename}`);
+      window.open('http://localhost:5000/pdf/' + filename);
     }
   };
 

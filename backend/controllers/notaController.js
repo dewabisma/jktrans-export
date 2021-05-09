@@ -23,7 +23,6 @@ const pageFullyRendered = async (page) => {
     else stableCheckingIterationCount = 0;
 
     if (stableCheckingIterationCount >= minStableCheckingIterationCount) {
-      console.log('Page rendered fully..');
       break;
     }
 
@@ -52,7 +51,7 @@ const generatePDF = async (notaId) => {
   } else {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto(`http://localhost:3000/nota/${notaId}/cetak`, {
+    await page.goto(`http://localhost:5000/nota/${notaId}/cetak`, {
       waitUntil: 'networkidle0',
     });
 

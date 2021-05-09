@@ -78,6 +78,11 @@ const destroyData = async () => {
     await Bookingan.deleteMany();
     await Sequence.deleteMany();
 
+    await User.insertMany(users);
+    await Sequence.create({
+      _id: 'counter',
+    });
+
     console.log('Data Destroyed!'.red.inverse);
     process.exit();
   } catch (error) {
