@@ -6,6 +6,12 @@ import { promises as fs } from 'fs';
 import path from 'path';
 
 // Functions
+const createPdfDir = async () => {
+  await fs.mkdir(path.join(path.resolve(), 'pdf'), {
+    recursive: true,
+  });
+};
+
 const pageFullyRendered = async (page) => {
   const timeout = 10000;
   const checkingTime = 500;
@@ -39,11 +45,13 @@ const browserLogin = async (page) => {
 };
 
 const generatePDF = async (rekapanId) => {
-  const filename = `rekapan-${rekapanId}.pdf`;
-  const tempDir = 'temp/pdf/';
-  const filepath = `temp/pdf/${filename}`;
+  await createPdfDir();
 
-  const files = await fs.readdir(path.join(path.resolve(), tempDir));
+  const currentDir = path.resolve();
+  const filename = `rekapan-${rekapanId}.pdf`;
+  const filepath = `pdf/${filename}`;
+
+  const files = await fs.readdir(path.resolve(currentDir, 'pdf'));
 
   const fileAlreadyExist = files.find((file) => file === filename);
 

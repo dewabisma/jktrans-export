@@ -5,6 +5,12 @@ import Nota from '../models/NotaSchema.js';
 import asyncHandler from 'express-async-handler';
 
 // Functions
+const createPdfDir = async () => {
+  await fs.mkdir(path.join(path.resolve(), 'pdf'), {
+    recursive: true,
+  });
+};
+
 const pageFullyRendered = async (page) => {
   const timeout = 10000;
   const checkingTime = 500;
@@ -38,11 +44,13 @@ const browserLogin = async (page) => {
 };
 
 const generatePDF = async (notaId) => {
+  await createPdfDir();
+
   const currentDir = path.resolve();
   const filename = `nota-${notaId}.pdf`;
-  const filepath = `temp/pdf/${filename}`;
+  const filepath = `pdf/${filename}`;
 
-  const files = await fs.readdir(path.resolve(currentDir, 'temp', 'pdf'));
+  const files = await fs.readdir(path.resolve(currentDir, 'pdf'));
 
   const fileAlreadyExist = files.find((file) => file === filename);
 

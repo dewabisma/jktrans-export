@@ -36,7 +36,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/rekapan', rekapanRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/prices', priceListRoutes);
-app.use('/pdf', express.static(path.join(__dirname, '/temp/pdf')));
+app.use('/pdf', express.static(path.join(__dirname, '/pdf')));
 
 // Send file for production
 if (process.env.NODE_ENV === 'Production') {
