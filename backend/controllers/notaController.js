@@ -38,11 +38,11 @@ const browserLogin = async (page) => {
 };
 
 const generatePDF = async (notaId) => {
+  const currentDir = path.resolve();
   const filename = `nota-${notaId}.pdf`;
-  const tempDir = 'temp/pdf/';
   const filepath = `temp/pdf/${filename}`;
 
-  const files = await fs.readdir(path.join(path.resolve(), tempDir));
+  const files = await fs.readdir(path.resolve(currentDir, 'temp', 'pdf'));
 
   const fileAlreadyExist = files.find((file) => file === filename);
 
