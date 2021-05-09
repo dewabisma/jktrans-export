@@ -57,7 +57,7 @@ const generatePDF = async (notaId) => {
   if (fileAlreadyExist) {
     return filename;
   } else {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     await page.goto(`https://jktrans.herokuapp.com/nota/${notaId}/cetak`, {
       waitUntil: 'networkidle0',
