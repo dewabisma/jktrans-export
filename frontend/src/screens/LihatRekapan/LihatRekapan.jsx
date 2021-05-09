@@ -77,7 +77,7 @@ const LihatRekapan = ({ history }) => {
 
     if (filename) {
       setShow(false);
-      window.open('http://localhost:5000/pdf/' + filename);
+      window.open('https://jktrans.herokuapp.com/pdf/' + filename);
     }
   };
 
