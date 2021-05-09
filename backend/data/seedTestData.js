@@ -6,6 +6,7 @@ import User from '../models/UserSchema.js';
 import Nota from '../models/NotaSchema.js';
 import RekapanNota from '../models/RekapanSchema.js';
 import Sequence from '../models/SequenceSchema.js';
+import Bookingan from '../models/BookingSchema.js';
 import connectDB from '../config/db.js';
 
 dotenv.config();
@@ -18,6 +19,7 @@ const importData = async () => {
     await User.deleteMany();
     await RekapanNota.deleteMany();
     await Sequence.deleteMany();
+    await Bookingan.deleteMany();
 
     // Create counter for id
     await Sequence.create({ _id: 'counter', sequenceNota: 5 });
@@ -72,6 +74,9 @@ const destroyData = async () => {
   try {
     await Nota.deleteMany();
     await User.deleteMany();
+    await RekapanNota.deleteMany();
+    await Bookingan.deleteMany();
+    await Sequence.deleteMany();
 
     console.log('Data Destroyed!'.red.inverse);
     process.exit();
