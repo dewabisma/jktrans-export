@@ -52,9 +52,12 @@ const generatePDF = async (rekapanId) => {
   } else {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto(`http://localhost:5000/rekapan/${rekapanId}/cetak`, {
-      waitUntil: 'networkidle0',
-    });
+    await page.goto(
+      `https://jktrans.herokuapp.com/rekapan/${rekapanId}/cetak`,
+      {
+        waitUntil: 'networkidle0',
+      }
+    );
 
     await browserLogin(page);
 

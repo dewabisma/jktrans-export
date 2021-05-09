@@ -5,6 +5,7 @@ import { Row, Col, Table, Card } from 'react-bootstrap';
 
 import Header from '../../components/Header/Header';
 import Loader from '../../components/Loader/Loader';
+import Meta from '../../components/Meta/Meta';
 import Message from '../../components/Message/Message';
 import SideMenu from '../../components/SideMenu/SideMenu';
 
@@ -92,6 +93,7 @@ const DashboardScreen = ({ history }) => {
 
   return (
     <>
+      <Meta title='Jktrans App | Dashboard' />
       <Header />
 
       <Row className='fullHeight' noGutters>

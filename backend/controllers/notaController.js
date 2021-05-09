@@ -51,7 +51,7 @@ const generatePDF = async (notaId) => {
   } else {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
-    await page.goto(`http://localhost:5000/nota/${notaId}/cetak`, {
+    await page.goto(`https://jktrans.herokuapp.com/nota/${notaId}/cetak`, {
       waitUntil: 'networkidle0',
     });
 
